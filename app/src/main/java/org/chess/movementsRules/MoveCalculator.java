@@ -1,8 +1,9 @@
 package org.chess.movementsRules;
 
 import java.util.Set;
+
 import org.chess.dataTypes.*;
-import org.chess.chessBoard.*;
+import org.chess.organization.*;
 
 
 public class MoveCalculator{

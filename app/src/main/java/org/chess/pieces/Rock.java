@@ -1,10 +1,10 @@
-package org.chess.Pieces;
+package org.chess.pieces;
 
 import java.util.Set;
 
 import org.chess.dataTypes.*;
-import org.chess.chessBoardAndPlayer.*;
-import org.chess.movementsRules.*; 
+import org.chess.movementsRules.*;
+import org.chess.organization.*; 
 
 public class Rock extends Piece {
 

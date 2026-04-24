@@ -1,4 +1,4 @@
-package org.chess.chessBoardAndPlayer;
+package org.chess.organization;
 
 public class Match {
     

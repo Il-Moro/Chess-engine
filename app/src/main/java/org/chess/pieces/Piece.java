@@ -1,8 +1,8 @@
-package org.chess.Pieces;
+package org.chess.pieces;
 import java.util.Set;
 
 import org.chess.dataTypes.Position;
-import org.chess.chessBoard.ChessBoard;
+import org.chess.organization.ChessBoard;
 
 public abstract class Piece {
     protected Position position;

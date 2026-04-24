@@ -1,7 +1,7 @@
-package org.chess.chessBoard;
+package org.chess.organization;
 
-import org.chess.Pieces.*;
 import org.chess.dataTypes.*;
+import org.chess.pieces.*;
 
 public class ChessBoard {
     private Piece[][] chessboard;
