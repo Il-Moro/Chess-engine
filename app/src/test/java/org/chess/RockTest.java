@@ -69,6 +69,7 @@ public class RockTest {
         assertFalse(positionsForWhiteRock.contains(new Position(1, 6)), "problema: posizione da escludere");
     }
 
+    @Test
     void blockByOwnPiece(){
         ChessBoard board = new ChessBoard();
         
@@ -89,61 +90,40 @@ public class RockTest {
         assertFalse(positionsForWhiteRock.contains(new Position(1, 2)), "problema: posizione da escludere");
     }
 
+    @Test
     void surroundedByAdversarialPieces(){
         ChessBoard board = new ChessBoard();
         
         Rock whiteRock = new Rock(new Position(2,3),"white");
         board.setPiece(whiteRock);
         
-        Rock blackRock1 = new Rock(new Position(2,2),"black");
-        board.setPiece(blackRock1);
-        Rock blackRock2 = new Rock(new Position(3,2),"black");
-        board.setPiece(blackRock2);
-        Rock blackRock3 = new Rock(new Position(4,2),"black");
-        board.setPiece(blackRock3);
-        Rock blackRock4 = new Rock(new Position(2,3),"black");
-        board.setPiece(blackRock4);
-        Rock blackRock5 = new Rock(new Position(4,3),"black");
-        board.setPiece(blackRock5);
-        Rock blackRock6 = new Rock(new Position(2,4),"black");
-        board.setPiece(blackRock6);
-        Rock blackRock7 = new Rock(new Position(3,4),"black");
-        board.setPiece(blackRock7);
-        Rock blackRock8 = new Rock(new Position(4,4),"black");
-        board.setPiece(blackRock8);
-
+        board.setPiece(new Rock(new Position(3, 3), "black")); 
+        board.setPiece(new Rock(new Position(1, 3), "black")); 
+        board.setPiece(new Rock(new Position(2, 4), "black")); 
+        board.setPiece(new Rock(new Position(2, 2), "black")); 
+        
         Set<Position> positionsForWhiteRock = whiteRock.getLegalMoves(board);
 
         // numero di mosse
-        assertEquals(0, positionsForWhiteRock.size(), "Problema: numero di mosse bloccate da pezzo avversario");
+        assertEquals(4, positionsForWhiteRock.size(), "Problema: numero di mosse bloccate da pezzo avversario");
     }
 
+    @Test
     void surroundedByOwnPieces(){
         ChessBoard board = new ChessBoard();
-        
-        Rock whiteRock = new Rock(new Position(2,3),"white");
+    
+        // Torre bianca al centro
+        Rock whiteRock = new Rock(new Position(2, 3), "white");
         board.setPiece(whiteRock);
         
-        Rock blackRock1 = new Rock(new Position(2,2),"white");
-        board.setPiece(blackRock1);
-        Rock blackRock2 = new Rock(new Position(3,2),"white");
-        board.setPiece(blackRock2);
-        Rock blackRock3 = new Rock(new Position(4,2),"white");
-        board.setPiece(blackRock3);
-        Rock blackRock4 = new Rock(new Position(2,3),"white");
-        board.setPiece(blackRock4);
-        Rock blackRock5 = new Rock(new Position(4,3),"white");
-        board.setPiece(blackRock5);
-        Rock blackRock6 = new Rock(new Position(2,4),"white");
-        board.setPiece(blackRock6);
-        Rock blackRock7 = new Rock(new Position(3,4),"white");
-        board.setPiece(blackRock7);
-        Rock blackRock8 = new Rock(new Position(4,4),"white");
-        board.setPiece(blackRock8);
+        // Circondata da AMICI (per avere 0 mosse)
+        board.setPiece(new Rock(new Position(3, 3), "white")); 
+        board.setPiece(new Rock(new Position(1, 3), "white")); 
+        board.setPiece(new Rock(new Position(2, 4), "white")); 
+        board.setPiece(new Rock(new Position(2, 2), "white")); 
 
-        Set<Position> positionsForWhiteRock = whiteRock.getLegalMoves(board);
+    Set<Position> moves = whiteRock.getLegalMoves(board);
 
-        // numero di mosse
-        assertEquals(8, positionsForWhiteRock.size(), "Problema: numero di mosse bloccate da pezzo avversario");
+    assertEquals(0, moves.size(), "Problema: numero di mosse bloccate da pezzo avversario");
     }
 }
