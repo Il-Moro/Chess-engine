@@ -85,5 +85,39 @@ public class BishopTest {
         assertFalse(positionsForBishop1.contains(new Position(7, 6)), "problema: posizione da escludere");
     }
 
-    
+    @Test
+    void surroundedByAdversarialPiecesBishop(){
+        ChessBoard board = new ChessBoard();
+        
+        Bishop whiteBishop = new Bishop(new Position(4,3),"white");
+        board.setPiece(whiteBishop);
+        
+        board.setPiece(new Bishop(new Position(5, 2), "black")); 
+        board.setPiece(new Bishop(new Position(3, 2), "black")); 
+        board.setPiece(new Bishop(new Position(5, 4), "black")); 
+        board.setPiece(new Bishop(new Position(3, 4), "black")); 
+        
+        Set<Position> positionsForWhiteBishop = whiteBishop.getLegalMoves(board);
+
+        // numero di mosse
+        assertEquals(0, positionsForWhiteBishop.size(), "Problema: numero di mosse bloccate da pezzo avversario");
+    }
+
+    @Test
+    void surroundedByOwnPiecesBishop(){
+        ChessBoard board = new ChessBoard();
+        
+        Bishop bishop = new Bishop(new Position(4,3),"white");
+        board.setPiece(bishop);
+        
+        board.setPiece(new Bishop(new Position(5, 2), "white")); 
+        board.setPiece(new Bishop(new Position(3, 2), "white")); 
+        board.setPiece(new Bishop(new Position(5, 4), "white")); 
+        board.setPiece(new Bishop(new Position(3, 4), "white")); 
+        
+        Set<Position> positionsForBishop = bishop.getLegalMoves(board);
+
+        // numero di mosse
+        assertEquals(4, positionsForBishop.size(), "Problema: numero di mosse bloccate da pezzo avversario");
+    }
 }
