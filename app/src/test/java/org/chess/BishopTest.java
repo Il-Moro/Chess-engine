@@ -37,8 +37,8 @@ public class BishopTest {
         // estremi:
         assertTrue(positionCalculated1.contains(new Position(7, 7)), "Extreme diagonal 1");  
 
-        assertTrue(positionCalculated2.contains(new Position(0, 0)), "Extreme column 1");
-        assertTrue(positionCalculated2.contains(new Position(0, 7)), "Extreme row 1");
+        assertTrue(positionCalculated2.contains(new Position(0, 0)), "Extreme column");
+        assertTrue(positionCalculated2.contains(new Position(0, 6)), "Extreme row");
         assertTrue(positionCalculated2.contains(new Position(7, 7)), "Extreme column 1");
         assertTrue(positionCalculated2.contains(new Position(6, 0)), "Extreme row 1");        
     }
@@ -48,8 +48,8 @@ public class BishopTest {
         
         ChessBoard board = new ChessBoard();
         
-        Bishop blackBishop = new Bishop(new Position(3,2),"black");
-        Bishop whiteBishop = new Bishop(new Position(6,5),"white");
+        Bishop whiteBishop = new Bishop(new Position(3,2),"white");
+        Bishop blackBishop = new Bishop(new Position(6,5),"black");
 
         board.setPiece(blackBishop);
         board.setPiece(whiteBishop);
@@ -57,7 +57,7 @@ public class BishopTest {
         Set<Position> positionsForWhiteBishop = whiteBishop.getLegalMoves(board);
 
         // numero di mosse
-        assertEquals(11, positionsForWhiteBishop.size(), "Problema: numero di mosse bloccate da pezzo avversario");
+        assertEquals(10, positionsForWhiteBishop.size(), "Problema: numero di mosse bloccate da pezzo avversario");
 
         // posizioni escluse
         assertFalse(positionsForWhiteBishop.contains(whiteBishop.getPosition()), "Problemea: posizione da escludere");
@@ -77,7 +77,7 @@ public class BishopTest {
         Set<Position> positionsForBishop1 = bishop1.getLegalMoves(board);
 
         // numero di mosse
-        assertEquals(10, positionsForBishop1.size(), "Problema: numero di mosse bloccate da pezzo avversario");
+        assertEquals(9, positionsForBishop1.size(), "Problema: numero di mosse bloccate da pezzo avversario");
 
         // posizioni escluse
         assertFalse(positionsForBishop1.contains(bishop1.getPosition()), "Problemea: posizione da escludere");
@@ -100,7 +100,7 @@ public class BishopTest {
         Set<Position> positionsForWhiteBishop = whiteBishop.getLegalMoves(board);
 
         // numero di mosse
-        assertEquals(0, positionsForWhiteBishop.size(), "Problema: numero di mosse bloccate da pezzo avversario");
+        assertEquals(4, positionsForWhiteBishop.size(), "Problema: numero di mosse bloccate da pezzo avversario");
     }
 
     @Test
@@ -118,6 +118,6 @@ public class BishopTest {
         Set<Position> positionsForBishop = bishop.getLegalMoves(board);
 
         // numero di mosse
-        assertEquals(4, positionsForBishop.size(), "Problema: numero di mosse bloccate da pezzo avversario");
+        assertEquals(0, positionsForBishop.size(), "Problema: numero di mosse bloccate da pezzo avversario");
     }
 }
