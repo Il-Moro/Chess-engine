@@ -11,15 +11,16 @@ public class ChessBoard {
     }
 
     public Piece getPiece(Position position) {
-        return chessboard[position.row()][position.column()];
+        return chessboard[position.column()][position.row()];
     }
 
-    public void setPiece(Piece piece) {
-        this.chessboard[piece.getPosition().row()][piece.getPosition().column()] = piece;
+    public void setPiece(Piece piece, Position position) {
+        this.chessboard[position.column()][position.row()] = piece;
     }
 
     public boolean isNull(Position position) {
-        return chessboard[position.row()][position.column()] == null;
+        return chessboard[position.column()][position.row()] == null;
     }
+
 
 } 
