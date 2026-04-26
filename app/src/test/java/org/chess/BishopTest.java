@@ -43,5 +43,47 @@ public class BishopTest {
         assertTrue(positionCalculated2.contains(new Position(6, 0)), "Extreme row 1");        
     }
 
+    @Test
+    void blockByAdversaryPieceBishop() {
+        
+        ChessBoard board = new ChessBoard();
+        
+        Bishop blackBishop = new Bishop(new Position(3,2),"black");
+        Bishop whiteBishop = new Bishop(new Position(6,5),"white");
+
+        board.setPiece(blackBishop);
+        board.setPiece(whiteBishop);
+
+        Set<Position> positionsForWhiteBishop = whiteBishop.getLegalMoves(board);
+
+        // numero di mosse
+        assertEquals(11, positionsForWhiteBishop.size(), "Problema: numero di mosse bloccate da pezzo avversario");
+
+        // posizioni escluse
+        assertFalse(positionsForWhiteBishop.contains(whiteBishop.getPosition()), "Problemea: posizione da escludere");
+        assertFalse(positionsForWhiteBishop.contains(new Position(7, 6)), "problema: posizione da escludere");
+    }
+
+    @Test
+    void blockByOwnPieceBishop(){
+        ChessBoard board = new ChessBoard();
+        
+        Bishop bishop1 = new Bishop(new Position(3,2),"white");
+        Bishop bishop2 = new Bishop(new Position(6,5),"white");
+
+        board.setPiece(bishop1);
+        board.setPiece(bishop2);
+
+        Set<Position> positionsForBishop1 = bishop1.getLegalMoves(board);
+
+        // numero di mosse
+        assertEquals(10, positionsForBishop1.size(), "Problema: numero di mosse bloccate da pezzo avversario");
+
+        // posizioni escluse
+        assertFalse(positionsForBishop1.contains(bishop1.getPosition()), "Problemea: posizione da escludere");
+        assertFalse(positionsForBishop1.contains(new Position(6, 5)), "problema: posizione da escludere");
+        assertFalse(positionsForBishop1.contains(new Position(7, 6)), "problema: posizione da escludere");
+    }
+
     
 }
