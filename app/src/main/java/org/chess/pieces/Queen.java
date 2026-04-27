@@ -21,9 +21,9 @@ public class Queen extends Piece{
         int pieceColumn = this.getPosition().column();
         int pieceRow = this.getPosition().row();
 
-        int[][] directionsRockMovements = {{1, 1}, {-1, 1}, {-1, -1}, {1, -1}};
+        int[][] directionsBishopMovements = {{1, 1}, {-1, 1}, {-1, -1}, {1, -1}};
 
-        for (int[] d : directionsRockMovements) {
+        for (int[] d : directionsBishopMovements) {
 
             int row = pieceRow + d[0];
             int column = pieceColumn + d[1];
@@ -45,9 +45,9 @@ public class Queen extends Piece{
             }
         }
        
-        int[][] directionsBishopMovements = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+        int[][] directionsRockMovements = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
 
-        for (int[] d : directionsBishopMovements) {
+        for (int[] d : directionsRockMovements) {
 
             int row = pieceRow + d[0];
             int column = pieceColumn + d[1];

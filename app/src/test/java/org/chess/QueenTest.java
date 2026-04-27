@@ -37,6 +37,19 @@ public class QueenTest {
 
         ChessBoard board = new ChessBoard();
         Queen queen = new Queen(new Position(4,4), "white");
+        Rock rock = new Rock(new Position(5, 5), "black");
+        
+        board.setPiece(queen);
+        board.setPiece(rock);
+
+        Set<Position> positionsCalculated = queen.getLegalMoves(board);
+        assertEquals(25, positionsCalculated.size());
+    }
+
+    @Test 
+    void blockByOwnPieceQueen(){
+        ChessBoard board = new ChessBoard();
+        Queen queen = new Queen(new Position(4,4), "white");
         Rock rock = new Rock(new Position(5, 5), "white");
         
         board.setPiece(queen);
@@ -44,11 +57,6 @@ public class QueenTest {
 
         Set<Position> positionsCalculated = queen.getLegalMoves(board);
         assertEquals(24, positionsCalculated.size());
-    }
-
-    @Test 
-    void blockByOwnPieceQueen(){
-
     }
 
     @Test 
