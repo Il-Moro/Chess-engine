@@ -75,6 +75,15 @@ public class QueenTest {
 
     @Test 
     void surroundedByOwnPiecesQueen(){
+        ChessBoard board = new ChessBoard();
+        Queen queen = new Queen(new Position(7,7), "white");
 
+        board.setPiece(queen);
+        board.setPiece(new Rock(new Position(7,6),"white"));
+        board.setPiece(new Rock(new Position(6,6),"white"));
+        board.setPiece(new Rock(new Position(6,7),"white"));
+
+        Set<Position> positionsCalculated = queen.getLegalMoves(board);
+        assertEquals(0, positionsCalculated.size());
     }
 }
