@@ -51,6 +51,23 @@ public class KnightTest {
         assertTrue(positionCalculated.contains(new Position(1, 2)), "Posizione 2");
     }
     
+    @Test 
+    void blockByOwnPieceKnight(){
+        ChessBoard board = new ChessBoard();
+        
+        Knight whiteKnight1 = new Knight(new Position(0, 0), "white");
+        Knight whiteKnight2 = new Knight(new Position(1, 2), "white");
+
+        board.setPiece(whiteKnight1);
+        board.setPiece(whiteKnight2);
+
+        Set<Position> positionCalculatedForWhiteKnight1 = whiteKnight1.getLegalMoves(board);
+        
+        assertEquals(1, positionCalculatedForWhiteKnight1.size());
+        
+        assertTrue(positionCalculatedForWhiteKnight1.contains(new Position(2, 1)), "Posizione 1");
+        assertTrue(!positionCalculatedForWhiteKnight1.contains(new Position(1, 2)), "Posizione 2");
+    }
 
 
 }

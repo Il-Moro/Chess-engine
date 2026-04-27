@@ -13,7 +13,7 @@ public class Knight extends Piece{
     }
 
     @Override
-    public Set<Position> getLegalMoves(ChessBoard chessBoard) {
+    public Set<Position> getLegalMoves(ChessBoard board) {
         Set<Position> moves = new HashSet<Position>();
 
         int pieceColumn = this.getPosition().column();
@@ -27,9 +27,18 @@ public class Knight extends Piece{
             int col = pieceColumn + r[1];
 
             if(0 <= row && row < 8 && 0 <= col && col < 8){
-                moves.add(new Position(row, col));  
+            
+                Position newPosition = new Position(row, col);
+            
+                if(board.isNull(newPosition)){
+                    moves.add(new Position(row, col)); 
+                } else if(board.getPiece(newPosition).getColour() != this.colour){
+                    moves.add(new Position(row, col));
+                } else {
+                    break;
+                }
+                 
             }
-              
         }
         return moves;
     }
