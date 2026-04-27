@@ -61,7 +61,16 @@ public class QueenTest {
 
     @Test 
     void surroundedByAdversaryPiecesQueen(){
+        ChessBoard board = new ChessBoard();
+        Queen queen = new Queen(new Position(7,7), "white");
 
+        board.setPiece(queen);
+        board.setPiece(new Rock(new Position(7,6),"black"));
+        board.setPiece(new Rock(new Position(6,6),"black"));
+        board.setPiece(new Rock(new Position(6,7),"black"));
+
+        Set<Position> positionsCalculated = queen.getLegalMoves(board);
+        assertEquals(3, positionsCalculated.size());
     }
 
     @Test 
