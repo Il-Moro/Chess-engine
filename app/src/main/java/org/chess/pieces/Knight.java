@@ -22,7 +22,14 @@ public class Knight extends Piece{
         int[][] rules = {{2, -1}, {2, 1}, {1, 2}, {-1, 2}, {-2, 1}, {-2, -1}, {-1, -2}, {1, -2}};
         
         for(int r[] : rules){
-            moves.add(new Position(pieceRow + r[0], pieceColumn + r[1]));    
+            
+            int row = pieceRow + r[0];
+            int col = pieceColumn + r[1];
+
+            if(0 <= row && row < 8 && 0 <= col && col < 8){
+                moves.add(new Position(row, col));  
+            }
+              
         }
         return moves;
     }
