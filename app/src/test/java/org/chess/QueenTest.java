@@ -34,7 +34,16 @@ public class QueenTest {
 
     @Test
     void blockByAdversaryPieceQueen(){
+
+        ChessBoard board = new ChessBoard();
+        Queen queen = new Queen(new Position(4,4), "white");
+        Rock rock = new Rock(new Position(5, 5), "white");
         
+        board.setPiece(queen);
+        board.setPiece(rock);
+
+        Set<Position> positionsCalculated = queen.getLegalMoves(board);
+        assertEquals(24, positionsCalculated.size());
     }
 
     @Test 
