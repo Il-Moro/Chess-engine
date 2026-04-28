@@ -72,7 +72,12 @@ public class PawnWhiteTest {
     }
 
     void whiteEnPassant(){
+        ChessBoard board = new ChessBoard();
+        Pawn whitePawn = new Pawn(new Position(4, 4), "white)");
+        Pawn blackPawn = new Pawn(new Position(5,4), "black");
 
+        board.setPiece(whitePawn);
+        board.setPiece(blackPawn);
     }
 
     void whitePromotion(){
