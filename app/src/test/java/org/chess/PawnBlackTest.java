@@ -13,22 +13,16 @@ import org.chess.pieces.*;
 public class PawnBlackTest {
     @Test 
     void InitialPushOfBlackPawn(){
-        
-    }
+        ChessBoard board = new ChessBoard();
+        Pawn pawn = new Pawn(new Position(6,3), "black");
 
-    @Test 
-    void freePushOfBlackPawn(){
+        board.setPiece(pawn);
 
-    }
+        Set<Position> movesCalculated = pawn.getLegalMoves(board);
 
-    @Test 
-    void blackPawnBlocked(){
-
-    }
-
-    @Test 
-    void blackPawnCanCapture(){
-
+        assertEquals(2, movesCalculated.size());
+        assertTrue(movesCalculated.contains(new Position(5, 3)), "posizione 1");
+        assertTrue(movesCalculated.contains(new Position(4, 3)), "posizione 2");
     }
 
     void blackEnPassant(){

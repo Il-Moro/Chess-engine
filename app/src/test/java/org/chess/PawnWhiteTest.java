@@ -3,8 +3,6 @@ package org.chess;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.security.cert.PolicyQualifierInfo;
-import java.util.HashSet;
 import java.util.Set;
 
 import org.chess.dataTypes.*;
@@ -72,16 +70,9 @@ public class PawnWhiteTest {
     }
 
     void whiteEnPassant(){
-        ChessBoard board = new ChessBoard();
-        Pawn whitePawn = new Pawn(new Position(4, 4), "white)");
-        Pawn blackPawn = new Pawn(new Position(5,4), "black");
-
-        board.setPiece(whitePawn);
-        board.setPiece(blackPawn);
     }
 
     void whitePromotion(){
-
     }
     
 }
