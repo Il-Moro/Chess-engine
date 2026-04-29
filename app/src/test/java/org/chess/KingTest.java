@@ -9,7 +9,7 @@ import org.chess.dataTypes.*;
 import org.chess.organization.*;
 import org.chess.pieces.*; 
 
-public class KingTets {
+public class KingTest {
     @Test 
     void OpenBoardKing(){
         ChessBoard board = new ChessBoard();
@@ -33,9 +33,20 @@ public class KingTets {
 
     @Test 
     void surroundedByOwnPiecesKing(){
-        
+        ChessBoard board = new ChessBoard();
+        King king = new King(new Position(0, 0), "white");
+        Bishop bishop = new Bishop(new Position(1, 0), "white");
+        Rock rock = new Rock(new Position(1, 1), "white");
+        Queen queen = new Queen(new Position(0, 1), "white");
 
+        board.setPiece(king);
+        board.setPiece(bishop);
+        board.setPiece(rock);
+        board.setPiece(queen);
 
+        Set<Position> movesCalculated = king.getLegalMoves(board);
+
+        assertEquals(0, movesCalculated.size());
     }
 
     void surroudedByAdversaryPiecesKing(){

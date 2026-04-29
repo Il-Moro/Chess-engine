@@ -29,7 +29,9 @@ public class King extends Piece{
             Position targetPosition = new Position(row, col);
 
             if(0 <= row && row < 8 && 0 <= col && col < 8){
-                moves.add(targetPosition);
+                if(board.isNull(targetPosition)){
+                    moves.add(targetPosition);
+                }
             }
         }
 

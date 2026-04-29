@@ -23,7 +23,7 @@ public class ChessBoard {
     }
 
     public void movePiece(Position from, Position to){
-        Piece piece = this.chessboard[from.row()][from.column()];
+        // Piece piece = this.chessboard[from.row()][from.column()];
         try {
             
         } catch (Exception e) {

@@ -8,13 +8,13 @@ import org.chess.organization.*;
 
 public class Pawn extends Piece{
 
-    private boolean enPassant;
+    // private boolean enPassant;
 
     public Pawn(Position position, String colour){
         super(position, colour);
-        if((this.colour == "white" && position.row() == 1) || (this.colour == "black" && position.row() == 6)){
+        /* if((this.colour == "white" && position.row() == 1) || (this.colour == "black" && position.row() == 6)){
             enPassant = true;
-        }
+        } */
         this.value = 3;
     }
 
