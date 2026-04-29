@@ -15,6 +15,7 @@ public class Pawn extends Piece{
         if((this.colour == "white" && position.row() == 1) || (this.colour == "black" && position.row() == 6)){
             enPassant = true;
         }
+        this.value = 3;
     }
 
     @Override

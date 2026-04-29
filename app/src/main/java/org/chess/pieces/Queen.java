@@ -11,6 +11,7 @@ public class Queen extends Piece{
 
     public Queen(Position position, String colour){
         super(position, colour);
+        this.value = 9;
     }
     
     @Override

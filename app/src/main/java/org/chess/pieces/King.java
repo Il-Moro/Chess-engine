@@ -1,5 +1,6 @@
 package org.chess.pieces;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import org.chess.dataTypes.*;
@@ -7,27 +8,31 @@ import org.chess.organization.*;
 
 public class King extends Piece{
 
-    // private boolean firstMove;
-
-    public King(String colour){
+    public King(Position position, String colour){
     
-        super(colour);
-        
+        super(position, colour);
+
         this.value = Integer.MAX_VALUE;
-        // this.firstMove = true;
-        
-        if(colour == "White"){
-            this.position = new Position(4,0);
-            this.colour = "White";
-        } else if(colour == "Black") {
-            this.position = new Position(4,7);
-            this.colour = "Black";
-        }
     }
 
     @Override
-    public Set<Position> getLegalMoves(ChessBoard chessBoard) {
-    
-        return null;
+    public Set<Position> getLegalMoves(ChessBoard board) {
+        
+        Set<Position> moves = new HashSet<>();
+
+        int[][] directions = {{1,-1},{1,0},{1,1},{0,1},{-1,1},{-1,0,},{-1,-1},{0,-1}};
+
+        for(int[] d : directions){
+            int row = this.position.row() + d[0];
+            int col = this.position.column() + d[1];
+
+            Position targetPosition = new Position(row, col);
+
+            if(0 <= row && row < 8 && 0 <= col && col < 8){
+                moves.add(targetPosition);
+            }
+        }
+
+        return moves;        
     }
 }
