@@ -31,10 +31,11 @@ public class King extends Piece{
             if(0 <= row && row < 8 && 0 <= col && col < 8){
                 if(board.isNull(targetPosition)){
                     moves.add(targetPosition);
+                } else if(board.getPiece(targetPosition).getColour() != this.colour){
+                    moves.add(targetPosition);
                 }
             }
         }
-
         return moves;        
     }
 }
