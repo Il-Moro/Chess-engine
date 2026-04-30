@@ -11,7 +11,6 @@ public abstract class Piece {
     protected int value;
 
     //costruttori
-
     public Piece(Position position, String colour){
         this.position = position;
         this.colour = colour;
@@ -22,7 +21,6 @@ public abstract class Piece {
     }
     
     // getter
-    
     public Position getPosition(){
         return this.position;
     }
@@ -31,18 +29,16 @@ public abstract class Piece {
         return this.colour;
     }
 
-     public int getValue(){
+    public int getValue(){
         return this.value;
     }
     
-    // setter 
-
+    // setter
     public void setPosition(ChessBoard chessBoard, Position newPosition){
         this.position = newPosition;
     }    
 
     // altri metodi 
-    
     public abstract Set<Position> getLegalMoves(ChessBoard chessBoard);
     
 }

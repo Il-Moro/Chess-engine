@@ -10,6 +10,7 @@ public class Rock extends Piece {
 
     public Rock(Position position, String colour){
         super(position, colour);
+        this.value = 5;
     }
 
     @Override

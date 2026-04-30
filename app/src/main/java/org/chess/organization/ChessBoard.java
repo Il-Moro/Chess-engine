@@ -22,4 +22,13 @@ public class ChessBoard {
         return chessboard[position.row()][position.column()] == null;
     }
 
+    public void movePiece(Position from, Position to){
+        // Piece piece = this.chessboard[from.row()][from.column()];
+        try {
+            
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+    }
+
 } 

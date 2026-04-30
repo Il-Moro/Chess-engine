@@ -10,6 +10,7 @@ public class Bishop extends Piece {
     
     public Bishop(Position position, String colour) {
         super(position, colour);
+        this.value = 3;
     }
 
     @Override
