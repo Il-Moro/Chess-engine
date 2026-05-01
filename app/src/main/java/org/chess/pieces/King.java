@@ -16,24 +16,20 @@ public class King extends Piece{
     }
 
     @Override
-    public Set<Position> getLegalMoves(ChessBoard board) {
+    public Set<Position> getPotentialMoves(ChessBoard board) {
         
         Set<Position> moves = new HashSet<>();
 
         int[][] directions = {{1,-1},{1,0},{1,1},{0,1},{-1,1},{-1,0,},{-1,-1},{0,-1}};
 
         for(int[] d : directions){
-            int row = this.position.row() + d[0];
-            int col = this.position.column() + d[1];
+            int targetRow = this.position.row() + d[0];
+            int targetColumn = this.position.column() + d[1];
 
-            Position targetPosition = new Position(row, col);
+            Position targetPosition = new Position(targetRow, targetColumn);
 
-            if(0 <= row && row < 8 && 0 <= col && col < 8){
-                if(board.isNull(targetPosition)){
-                    moves.add(targetPosition);
-                } else if(board.getPiece(targetPosition).getColour() != this.colour){
-                    moves.add(targetPosition);
-                }
+            if(0 <= targetRow && targetRow < 8 && 0 <= targetColumn && targetColumn < 8){   
+                moves.add(targetPosition);
             }
         }
         return moves;        

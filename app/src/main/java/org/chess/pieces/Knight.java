@@ -14,31 +14,23 @@ public class Knight extends Piece{
     }
 
     @Override
-    public Set<Position> getLegalMoves(ChessBoard board) {
+    public Set<Position> getPotentialMoves(ChessBoard board) {
         Set<Position> moves = new HashSet<Position>();
 
         int pieceColumn = this.getPosition().column();
         int pieceRow = this.getPosition().row();
 
-        int[][] rules = {{2, -1}, {2, 1}, {1, 2}, {-1, 2}, {-2, 1}, {-2, -1}, {-1, -2}, {1, -2}};
+        int[][] directions = {{2, -1}, {2, 1}, {1, 2}, {-1, 2}, {-2, 1}, {-2, -1}, {-1, -2}, {1, -2}};
         
-        for(int r[] : rules){
+        for(int d[] : directions){
             
-            int row = pieceRow + r[0];
-            int col = pieceColumn + r[1];
+            int targetRow = pieceRow + d[0];
+            int targetColumn = pieceColumn + d[1];
 
-            if(0 <= row && row < 8 && 0 <= col && col < 8){
-            
-                Position newPosition = new Position(row, col);
-            
-                if(board.isNull(newPosition)){
-                    moves.add(new Position(row, col)); 
-                } else if(board.getPiece(newPosition).getColour() != this.colour){
-                    moves.add(new Position(row, col));
-                } else {
-                    break;
-                }
-                 
+            Position targetPosition = new Position(targetRow, targetColumn);
+
+            if(0 <= targetRow && targetRow < 8 && 0 <= targetColumn && targetColumn < 8){
+                moves.add(targetPosition); 
             }
         }
         return moves;

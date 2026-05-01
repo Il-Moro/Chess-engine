@@ -15,58 +15,32 @@ public class Queen extends Piece{
     }
     
     @Override
-    public Set<Position> getLegalMoves(ChessBoard board) {
+    public Set<Position> getPotentialMoves(ChessBoard board) {
 
         Set<Position> moves = new HashSet<Position>();
 
-        int pieceColumn = this.getPosition().column();
-        int pieceRow = this.getPosition().row();
+        int pieceColumn = this.position.column();
+        int pieceRow = this.position.row();
 
-        int[][] directionsBishopMovements = {{1, 1}, {-1, 1}, {-1, -1}, {1, -1}};
+        int[][] directionsBishop = {{1, 1}, {-1, 1}, {-1, -1}, {1, -1}, {1, 0}, {-1, 0}, {0, 1}, {0, -1}};
 
-        for (int[] d : directionsBishopMovements) {
+        for (int[] d : directionsBishop) {
 
-            int row = pieceRow + d[0];
-            int column = pieceColumn + d[1];
+            int targetRow = pieceRow + d[0];
+            int targetColumn = pieceColumn + d[1];
 
-            while (0 <= row && row < 8 && 0 <= column && column < 8) {
+            while (0 <= targetRow && targetRow < 8 && 0 <= targetColumn && targetColumn < 8) {
                 
-                Position squareOtherPiece = new Position(row, column);
+                Position targePosition = new Position(targetRow, targetColumn);
                 
-                if (board.isNull(squareOtherPiece)) {
-                    moves.add(squareOtherPiece);
+                if (board.isNull(targePosition)) {
+                    moves.add(targePosition);
                 } else {
-                    if (!board.getPiece(squareOtherPiece).getColour().equals(this.colour)) {
-                        moves.add(squareOtherPiece); 
-                    }
+                    moves.add(targePosition);
                     break;
                 }
-                row += d[0];
-                column += d[1];
-            }
-        }
-       
-        int[][] directionsRockMovements = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
-
-        for (int[] d : directionsRockMovements) {
-
-            int row = pieceRow + d[0];
-            int column = pieceColumn + d[1];
-
-            while (0 <= row && row < 8 && 0 <= column && column < 8) {
-                
-                Position squareOtherPiece = new Position(row, column);
-                
-                if (board.isNull(squareOtherPiece)) {
-                    moves.add(squareOtherPiece);
-                } else {
-                    if (!board.getPiece(squareOtherPiece).getColour().equals(this.colour)) {
-                        moves.add(squareOtherPiece); 
-                    }
-                    break;
-                }
-                row += d[0];
-                column += d[1];
+                targetRow += d[0];
+                targetColumn += d[1];
             }
         }
         return moves;
