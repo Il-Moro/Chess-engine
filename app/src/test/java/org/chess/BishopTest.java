@@ -10,6 +10,10 @@ import org.chess.organization.*;
 import org.chess.pieces.*;
 
 public class BishopTest {
+    /**
+     * Test che controllano che in generale controllano che il numero di mosse possibile in un determinato stato della scacchiera per un pezzo siano giusti:
+     * il numero deve comprendere anche le case con pezzi propri
+     */
     
     // colonne e righe
     @Test
@@ -77,11 +81,10 @@ public class BishopTest {
         Set<Position> positionsForBishop1 = bishop1.getLegalMoves(board);
 
         // numero di mosse
-        assertEquals(9, positionsForBishop1.size(), "Problema: numero di mosse bloccate da pezzo avversario");
+        assertEquals(10, positionsForBishop1.size(), "Problema: numero di mosse bloccate da pezzo avversario");
 
         // posizioni escluse
         assertFalse(positionsForBishop1.contains(bishop1.getPosition()), "Problemea: posizione da escludere");
-        assertFalse(positionsForBishop1.contains(new Position(6, 5)), "problema: posizione da escludere");
         assertFalse(positionsForBishop1.contains(new Position(7, 6)), "problema: posizione da escludere");
     }
 
@@ -118,6 +121,6 @@ public class BishopTest {
         Set<Position> positionsForBishop = bishop.getLegalMoves(board);
 
         // numero di mosse
-        assertEquals(0, positionsForBishop.size(), "Problema: numero di mosse bloccate da pezzo avversario");
+        assertEquals(4, positionsForBishop.size(), "Problema: numero di mosse bloccate da pezzo avversario");
     }
 }

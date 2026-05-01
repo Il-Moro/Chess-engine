@@ -15,10 +15,6 @@ public abstract class Piece {
         this.position = position;
         this.colour = colour;
     }
-
-    public Piece(String colour){
-        this.colour = colour;   
-    }
     
     // getter
     public Position getPosition(){
@@ -34,7 +30,7 @@ public abstract class Piece {
     }
     
     // setter
-    public void setPosition(ChessBoard chessBoard, Position newPosition){
+    public void setPosition(Position newPosition){
         this.position = newPosition;
     }    
 

@@ -46,18 +46,22 @@ public class KingTest {
 
         Set<Position> movesCalculated = king.getLegalMoves(board);
 
-        assertEquals(0, movesCalculated.size());
+        assertEquals(3, movesCalculated.size());
     }
 
     @Test
-    void canCaptureKing(){
+    void surroundedByAdversarialPiecesKing(){
         ChessBoard board = new ChessBoard();
-        King king = new King(new Position(0, 0), "white");
+        King king = new King(new Position(0, 0), "black");
         Bishop bishop = new Bishop(new Position(1, 0), "black");
-        
+        Rock rock = new Rock(new Position(1, 1), "black");
+        Queen queen = new Queen(new Position(0, 1), "black");
+
         board.setPiece(king);
         board.setPiece(bishop);
-        
+        board.setPiece(rock);
+        board.setPiece(queen);
+
         Set<Position> movesCalculated = king.getLegalMoves(board);
 
         assertEquals(3, movesCalculated.size());
