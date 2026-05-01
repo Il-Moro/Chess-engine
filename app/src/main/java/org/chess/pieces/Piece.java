@@ -35,6 +35,6 @@ public abstract class Piece {
     }    
 
     // altri metodi 
-    public abstract Set<Position> getLegalMoves(ChessBoard chessBoard);
+    public abstract Set<Position> getPotentialMoves(ChessBoard chessBoard);
     
 }

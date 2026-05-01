@@ -22,9 +22,9 @@ public class RockTest {
         Rock rock2 = new Rock(new Position(4,3), "white");
         Rock rock3 = new Rock(new Position(6,5), "white");
 
-        Set<Position> positionCalculated1 = rock1.getLegalMoves(board);
-        Set<Position> positionCalculated2 = rock2.getLegalMoves(board);
-        Set<Position> positionCalculated3 = rock3.getLegalMoves(board);
+        Set<Position> positionCalculated1 = rock1.getPotentialMoves(board);
+        Set<Position> positionCalculated2 = rock2.getPotentialMoves(board);
+        Set<Position> positionCalculated3 = rock3.getPotentialMoves(board);
         
         // controlli minimal:
         
@@ -59,7 +59,7 @@ public class RockTest {
         board.setPiece(whiteRock);
         board.setPiece(blackRock);
 
-        Set<Position> positionsForWhiteRock = whiteRock.getLegalMoves(board);
+        Set<Position> positionsForWhiteRock = whiteRock.getPotentialMoves(board);
 
         // numero di mosse
         assertEquals(13, positionsForWhiteRock.size(), "Problema: numero di mosse bloccate da pezzo avversario");
@@ -79,7 +79,7 @@ public class RockTest {
         board.setPiece(whiteRock);
         board.setPiece(whiteRock1);
 
-        Set<Position> positionsForWhiteRock = whiteRock.getLegalMoves(board);
+        Set<Position> positionsForWhiteRock = whiteRock.getPotentialMoves(board);
 
         // numero di mosse
         assertEquals(13, positionsForWhiteRock.size(), "Problema: numero di mosse bloccate da pezzo avversario");
@@ -101,7 +101,7 @@ public class RockTest {
         board.setPiece(new Rock(new Position(2, 4), "black")); 
         board.setPiece(new Rock(new Position(2, 2), "black")); 
         
-        Set<Position> positionsForWhiteRock = whiteRock.getLegalMoves(board);
+        Set<Position> positionsForWhiteRock = whiteRock.getPotentialMoves(board);
 
         // numero di mosse
         assertEquals(4, positionsForWhiteRock.size(), "Problema: numero di mosse bloccate da pezzo avversario");
@@ -121,7 +121,7 @@ public class RockTest {
         board.setPiece(new Rock(new Position(2, 4), "white")); 
         board.setPiece(new Rock(new Position(2, 2), "white")); 
 
-    Set<Position> moves = whiteRock.getLegalMoves(board);
+    Set<Position> moves = whiteRock.getPotentialMoves(board);
 
     assertEquals(4, moves.size(), "Problema: numero di mosse bloccate da pezzo avversario");
     }

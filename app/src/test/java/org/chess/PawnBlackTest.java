@@ -18,7 +18,7 @@ public class PawnBlackTest {
 
         board.setPiece(pawn);
 
-        Set<Position> movesCalculated = pawn.getLegalMoves(board);
+        Set<Position> movesCalculated = pawn.getPotentialMoves(board);
 
         assertEquals(4, movesCalculated.size());
         assertTrue(movesCalculated.contains(new Position(5, 3)), "posizione 1");
@@ -30,7 +30,7 @@ public class PawnBlackTest {
 
         board.setPiece(pawn);
 
-        Set<Position> movesCalculated = pawn.getLegalMoves(board);
+        Set<Position> movesCalculated = pawn.getPotentialMoves(board);
 
         assertEquals(3, movesCalculated.size());
     }    

@@ -19,7 +19,7 @@ public class QueenTest {
         
         board1.setPiece(queenCentre);
 
-        Set<Position> positionsCalculated1 = queenCentre.getLegalMoves(board1);
+        Set<Position> positionsCalculated1 = queenCentre.getPotentialMoves(board1);
         assertEquals(27, positionsCalculated1.size());
 
         //a lato
@@ -28,7 +28,7 @@ public class QueenTest {
         
         board2.setPiece(queenEdge);
 
-        Set<Position> positionsCalculated2 = queenEdge.getLegalMoves(board2);
+        Set<Position> positionsCalculated2 = queenEdge.getPotentialMoves(board2);
         assertEquals(21, positionsCalculated2.size());
     }
 
@@ -42,7 +42,7 @@ public class QueenTest {
         board.setPiece(queen);
         board.setPiece(rock);
 
-        Set<Position> positionsCalculated = queen.getLegalMoves(board);
+        Set<Position> positionsCalculated = queen.getPotentialMoves(board);
         assertEquals(25, positionsCalculated.size());
     }
 
@@ -55,7 +55,7 @@ public class QueenTest {
         board.setPiece(queen);
         board.setPiece(rock);
 
-        Set<Position> positionsCalculated = queen.getLegalMoves(board);
+        Set<Position> positionsCalculated = queen.getPotentialMoves(board);
         assertEquals(25, positionsCalculated.size());
     }
 
@@ -69,7 +69,7 @@ public class QueenTest {
         board.setPiece(new Rock(new Position(6,6),"black"));
         board.setPiece(new Rock(new Position(6,7),"black"));
 
-        Set<Position> positionsCalculated = queen.getLegalMoves(board);
+        Set<Position> positionsCalculated = queen.getPotentialMoves(board);
         assertEquals(3, positionsCalculated.size());
     }
 
@@ -83,7 +83,7 @@ public class QueenTest {
         board.setPiece(new Rock(new Position(6,6),"white"));
         board.setPiece(new Rock(new Position(6,7),"white"));
 
-        Set<Position> positionsCalculated = queen.getLegalMoves(board);
+        Set<Position> positionsCalculated = queen.getPotentialMoves(board);
         assertEquals(3, positionsCalculated.size());
     }
 }

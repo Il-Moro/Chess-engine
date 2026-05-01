@@ -25,8 +25,8 @@ public class BishopTest {
         Bishop bishop1 = new Bishop(new Position(0,0), "white");
         Bishop bishop2 = new Bishop(new Position(3,3), "white");
         
-        Set<Position> positionCalculated1 = bishop1.getLegalMoves(board);
-        Set<Position> positionCalculated2 = bishop2.getLegalMoves(board);
+        Set<Position> positionCalculated1 = bishop1.getPotentialMoves(board);
+        Set<Position> positionCalculated2 = bishop2.getPotentialMoves(board);
         
         // controlli minimal:
         
@@ -58,7 +58,7 @@ public class BishopTest {
         board.setPiece(blackBishop);
         board.setPiece(whiteBishop);
 
-        Set<Position> positionsForWhiteBishop = whiteBishop.getLegalMoves(board);
+        Set<Position> positionsForWhiteBishop = whiteBishop.getPotentialMoves(board);
 
         // numero di mosse
         assertEquals(10, positionsForWhiteBishop.size(), "Problema: numero di mosse bloccate da pezzo avversario");
@@ -78,7 +78,7 @@ public class BishopTest {
         board.setPiece(bishop1);
         board.setPiece(bishop2);
 
-        Set<Position> positionsForBishop1 = bishop1.getLegalMoves(board);
+        Set<Position> positionsForBishop1 = bishop1.getPotentialMoves(board);
 
         // numero di mosse
         assertEquals(10, positionsForBishop1.size(), "Problema: numero di mosse bloccate da pezzo avversario");
@@ -100,7 +100,7 @@ public class BishopTest {
         board.setPiece(new Bishop(new Position(5, 4), "black")); 
         board.setPiece(new Bishop(new Position(3, 4), "black")); 
         
-        Set<Position> positionsForWhiteBishop = whiteBishop.getLegalMoves(board);
+        Set<Position> positionsForWhiteBishop = whiteBishop.getPotentialMoves(board);
 
         // numero di mosse
         assertEquals(4, positionsForWhiteBishop.size(), "Problema: numero di mosse bloccate da pezzo avversario");
@@ -118,7 +118,7 @@ public class BishopTest {
         board.setPiece(new Bishop(new Position(5, 4), "white")); 
         board.setPiece(new Bishop(new Position(3, 4), "white")); 
         
-        Set<Position> positionsForBishop = bishop.getLegalMoves(board);
+        Set<Position> positionsForBishop = bishop.getPotentialMoves(board);
 
         // numero di mosse
         assertEquals(4, positionsForBishop.size(), "Problema: numero di mosse bloccate da pezzo avversario");

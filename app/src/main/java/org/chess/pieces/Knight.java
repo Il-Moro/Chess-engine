@@ -14,7 +14,7 @@ public class Knight extends Piece{
     }
 
     @Override
-    public Set<Position> getLegalMoves(ChessBoard board) {
+    public Set<Position> getPotentialMoves(ChessBoard board) {
         Set<Position> moves = new HashSet<Position>();
 
         int pieceColumn = this.getPosition().column();

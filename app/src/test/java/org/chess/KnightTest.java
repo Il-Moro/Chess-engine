@@ -19,7 +19,7 @@ public class KnightTest {
 
         board.setPiece(knight);
 
-        Set<Position> positionCalculated = knight.getLegalMoves(board);
+        Set<Position> positionCalculated = knight.getPotentialMoves(board);
         
         assertEquals(8, positionCalculated.size());
         
@@ -43,7 +43,7 @@ public class KnightTest {
 
         board.setPiece(knight);
 
-        Set<Position> positionCalculated = knight.getLegalMoves(board);
+        Set<Position> positionCalculated = knight.getPotentialMoves(board);
         
         assertEquals(2, positionCalculated.size());
         
@@ -61,7 +61,7 @@ public class KnightTest {
         board.setPiece(whiteKnight1);
         board.setPiece(whiteKnight2);
 
-        Set<Position> positionCalculatedForWhiteKnight1 = whiteKnight1.getLegalMoves(board);
+        Set<Position> positionCalculatedForWhiteKnight1 = whiteKnight1.getPotentialMoves(board);
         
         assertEquals(2, positionCalculatedForWhiteKnight1.size());
     }

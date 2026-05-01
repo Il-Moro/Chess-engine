@@ -17,7 +17,7 @@ public class KingTest {
 
         board.setPiece(king);
         
-        Set<Position> positionsCalculated = king.getLegalMoves(board);
+        Set<Position> positionsCalculated = king.getPotentialMoves(board);
 
         assertEquals(8, positionsCalculated.size());
         
@@ -44,7 +44,7 @@ public class KingTest {
         board.setPiece(rock);
         board.setPiece(queen);
 
-        Set<Position> movesCalculated = king.getLegalMoves(board);
+        Set<Position> movesCalculated = king.getPotentialMoves(board);
 
         assertEquals(3, movesCalculated.size());
     }
@@ -62,7 +62,7 @@ public class KingTest {
         board.setPiece(rock);
         board.setPiece(queen);
 
-        Set<Position> movesCalculated = king.getLegalMoves(board);
+        Set<Position> movesCalculated = king.getPotentialMoves(board);
 
         assertEquals(3, movesCalculated.size());
     }
