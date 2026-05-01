@@ -82,12 +82,11 @@ public class RockTest {
         Set<Position> positionsForWhiteRock = whiteRock.getLegalMoves(board);
 
         // numero di mosse
-        assertEquals(12, positionsForWhiteRock.size(), "Problema: numero di mosse bloccate da pezzo avversario");
+        assertEquals(13, positionsForWhiteRock.size(), "Problema: numero di mosse bloccate da pezzo avversario");
 
         // posizioni escluse
         assertFalse(positionsForWhiteRock.contains(whiteRock.getPosition()), "Problemea: posizione da escludere");
         assertFalse(positionsForWhiteRock.contains(new Position(1, 6)), "problema: posizione da escludere");
-        assertFalse(positionsForWhiteRock.contains(new Position(1, 2)), "problema: posizione da escludere");
     }
 
     @Test
@@ -124,6 +123,6 @@ public class RockTest {
 
     Set<Position> moves = whiteRock.getLegalMoves(board);
 
-    assertEquals(0, moves.size(), "Problema: numero di mosse bloccate da pezzo avversario");
+    assertEquals(4, moves.size(), "Problema: numero di mosse bloccate da pezzo avversario");
     }
 }

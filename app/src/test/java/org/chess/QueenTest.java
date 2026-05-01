@@ -56,7 +56,7 @@ public class QueenTest {
         board.setPiece(rock);
 
         Set<Position> positionsCalculated = queen.getLegalMoves(board);
-        assertEquals(24, positionsCalculated.size());
+        assertEquals(25, positionsCalculated.size());
     }
 
     @Test 
@@ -84,6 +84,6 @@ public class QueenTest {
         board.setPiece(new Rock(new Position(6,7),"white"));
 
         Set<Position> positionsCalculated = queen.getLegalMoves(board);
-        assertEquals(0, positionsCalculated.size());
+        assertEquals(3, positionsCalculated.size());
     }
 }

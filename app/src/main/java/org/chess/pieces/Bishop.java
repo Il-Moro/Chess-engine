@@ -35,12 +35,12 @@ public class Bishop extends Piece {
 
             while (0 <= targetRow && targetRow < 8 && 0 <= targetColumn && targetColumn < 8) {
                 
-                Position targetSquare = new Position(targetRow, targetColumn);
+                Position targetPosition = new Position(targetRow, targetColumn);
                 
-                if (board.isNull(targetSquare)) {
-                    moves.add(targetSquare);
+                if (board.isNull(targetPosition)) {
+                    moves.add(targetPosition);
                 } else{                    
-                    moves.add(targetSquare); 
+                    moves.add(targetPosition); 
                     break;
                 }
                 targetRow += d[0];

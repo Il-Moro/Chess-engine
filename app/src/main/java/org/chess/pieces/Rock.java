@@ -25,23 +25,21 @@ public class Rock extends Piece {
 
         for (int[] d : directions) {
 
-            int row = pieceRow + d[0];
-            int column = pieceColumn + d[1];
+            int targetRow = pieceRow + d[0];
+            int targetColumn = pieceColumn + d[1];
 
-            while (0 <= row && row < 8 && 0 <= column && column < 8) {
+            while (0 <= targetRow && targetRow < 8 && 0 <= targetColumn && targetColumn < 8) {
                 
-                Position squareOtherPiece = new Position(row, column);
+                Position targePosition = new Position(targetRow, targetColumn);
                 
-                if (board.isNull(squareOtherPiece)) {
-                    moves.add(squareOtherPiece);
+                if (board.isNull(targePosition)) {
+                    moves.add(targePosition);
                 } else {
-                    if (!board.getPiece(squareOtherPiece).getColour().equals(this.colour)) {
-                        moves.add(squareOtherPiece); 
-                    }
+                    moves.add(targePosition);
                     break;
                 }
-                row += d[0];
-                column += d[1];
+                targetRow += d[0];
+                targetColumn += d[1];
             }
         }
         return moves;
