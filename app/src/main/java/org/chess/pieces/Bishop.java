@@ -13,6 +13,7 @@ public class Bishop extends Piece {
         this.value = 3;
     }
 
+    
     @Override
     public Set<Position> getPotentialMoves(ChessBoard board) {
         Set<Position> moves = new HashSet<Position>();
