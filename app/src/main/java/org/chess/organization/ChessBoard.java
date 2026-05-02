@@ -11,16 +11,24 @@ public class ChessBoard {
     }
 
     public Piece getPiece(Position position) {
-        return chessboard[position.column()][position.row()];
+        return chessboard[position.row()][position.column()];
     }
 
-    public void setPiece(Piece piece, Position position) {
-        this.chessboard[position.column()][position.row()] = piece;
+    public void setPiece(Piece piece) {
+        this.chessboard[piece.getPosition().row()][piece.getPosition().column()] = piece;
     }
 
     public boolean isNull(Position position) {
-        return chessboard[position.column()][position.row()] == null;
+        return chessboard[position.row()][position.column()] == null;
     }
 
+    public void movePiece(Position from, Position to){
+        // Piece piece = this.chessboard[from.row()][from.column()];
+        try {
+            
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+    }
 
 } 
