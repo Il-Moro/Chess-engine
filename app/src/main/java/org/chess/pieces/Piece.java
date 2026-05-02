@@ -8,7 +8,18 @@ public abstract class Piece {
     protected Position position;
     protected String colour;
     protected int value;
+<<<<<<< HEAD
     
+=======
+
+    //costruttori
+    public Piece(Position position, String colour){
+        this.position = position;
+        this.colour = colour;
+    }
+    
+    // getter
+>>>>>>> origin/feature/PiecesAndMovements
     public Position getPosition(){
         return this.position;
     }
@@ -25,7 +36,23 @@ public abstract class Piece {
     public String getColour(){
         return this.colour;
     }
+<<<<<<< HEAD
     
 
     public abstract Set<Position> getLegalMoves(ChessBoard chessBoard, Position position);
+=======
+
+    public int getValue(){
+        return this.value;
+    }
+    
+    // setter
+    public void setPosition(Position newPosition){
+        this.position = newPosition;
+    }    
+
+    // altri metodi 
+    public abstract Set<Position> getPotentialMoves(ChessBoard chessBoard);
+    
+>>>>>>> origin/feature/PiecesAndMovements
 }
