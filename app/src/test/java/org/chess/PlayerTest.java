@@ -2,9 +2,6 @@ package org.chess;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
-
-import java.awt.Color;
-
 import org.chess.organization.Player;
 
 public class PlayerTest {
