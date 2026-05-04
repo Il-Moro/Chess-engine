@@ -1,5 +1,7 @@
 package org.chess.organization;
 import org.chess.dataTypes.Color;
+import org.chess.dataTypes.Position;
+import org.chess.pieces.Piece;
 
     public class Player {
 
@@ -25,5 +27,5 @@ import org.chess.dataTypes.Color;
         public Color getColor(){
             return color;
         }
-
+        
     }
