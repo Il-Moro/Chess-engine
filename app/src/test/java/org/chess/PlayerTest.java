@@ -10,10 +10,23 @@ public class PlayerTest {
 
     @Test
     void testPlayerCreation() {
-        Player player = new Player("Player 1", Color.WHITE);
-        assertNotNull(player);
-        assertEquals("Player 1", player.getName());
-        assertEquals(Color.WHITE, player.getColor());
+        
+        Player playerOne = new Player("Player 1", Color.WHITE);
+        assertNotNull(playerOne);
+        assertEquals("Player 1", playerOne.getName());
+        assertEquals(Color.WHITE, playerOne.getColor());
+
+
     }
+
+    @Test
+    void testPlayerCreationWithInvalidName() {
+
+        assertThrows(IllegalArgumentException.class, () -> new Player(null, Color.WHITE));
+        assertThrows(IllegalArgumentException.class, () -> new Player("", Color.WHITE));
+        assertThrows(IllegalArgumentException.class, () -> new Player("   ",Color.WHITE));
+    }
+
+    
 
 }
