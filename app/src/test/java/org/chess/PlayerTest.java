@@ -27,6 +27,12 @@ public class PlayerTest {
         assertThrows(IllegalArgumentException.class, () -> new Player("   ",Color.WHITE));
     }
 
-    
+    @Test
+    void testPlayerCreationWithInvalidColor() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            new Player("Player 1", null);
+        });
+    }
+
 
 }
