@@ -7,6 +7,13 @@ import org.chess.dataTypes.Color;
         private final Color color;
 
         public Player(String playerName,Color color){
+            if (playerName == null || playerName.trim().isEmpty()) {
+                throw new IllegalArgumentException("The name can' t be null or empty");
+            }
+
+            if (color == null) {
+                throw new IllegalArgumentException("the color can't be null");
+            }
             this.playerName=playerName;
             this.color=color;
         }
