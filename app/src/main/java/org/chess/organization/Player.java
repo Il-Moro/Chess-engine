@@ -2,8 +2,8 @@ package org.chess.organization;
 
     public class Player {
 
-        private String playerName;
-        private String color;
+        private final String playerName;
+        private final String color;
 
         public Player(String playerName,String color){
             this.playerName=playerName;
