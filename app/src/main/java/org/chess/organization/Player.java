@@ -1,11 +1,12 @@
 package org.chess.organization;
+import org.chess.dataTypes.Color;
 
     public class Player {
 
         private final String playerName;
-        private final String color;
+        private final Color color;
 
-        public Player(String playerName,String color){
+        public Player(String playerName,Color color){
             this.playerName=playerName;
             this.color=color;
         }
@@ -14,7 +15,7 @@ package org.chess.organization;
             return playerName;
         }
 
-        public String getColor(){
+        public Color getColor(){
             return color;
         }
 
