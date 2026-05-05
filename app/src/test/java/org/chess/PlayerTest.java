@@ -34,5 +34,16 @@ public class PlayerTest {
         });
     }
 
+    @Test
+    void testChosenPiece(){
+        //TODO
+    }
+
+
+    @Test
+    void testChosenMoves(){
+        // TODO
+    }
+
 
 }
