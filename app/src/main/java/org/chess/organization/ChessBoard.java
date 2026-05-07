@@ -8,14 +8,14 @@ import org.chess.pieces.*;
 public class ChessBoard {
 
     private Piece[][] chessboard;
-    private int[][] squareControlledByWhite;
-    private int[][] squareControlledByBlack;
+    private int[][] squaresControlledByWhite;
+    private int[][] squaresControlledByBlack;
 
     // costruttore
     public ChessBoard() {
         this.chessboard = new Piece[8][8];
-        this.squareControlledByBlack = new int[8][8];
-        this.squareControlledByWhite = new int[8][8];
+        this.squaresControlledByBlack = new int[8][8];
+        this.squaresControlledByWhite = new int[8][8];
         this.updateControl();
     }
 
@@ -32,11 +32,11 @@ public class ChessBoard {
     // getter
     public int[][] getSquareControlledBy(String colour){
         if(colour == "white"){
-            return this.squareControlledByWhite;
+            return this.squaresControlledByWhite;
         } else{
-            return this.squareControlledByBlack;
+            return this.squaresControlledByBlack;
         }
-    }
+    }    
 
     // altri
     public boolean isNull(Position position) {
@@ -55,8 +55,8 @@ public class ChessBoard {
         // azzero tabelle
         for(int i = 0; i < 8; i++){
             for(int j = 0; j < 8; j++){
-                squareControlledByBlack[i][j] = 0;
-                squareControlledByWhite[i][j] = 0;
+                squaresControlledByBlack[i][j] = 0;
+                squaresControlledByWhite[i][j] = 0;
             }
         }
 
@@ -74,11 +74,11 @@ public class ChessBoard {
 
         if(piece.getColour() == "white"){
             for(Position s : set){
-                this.squareControlledByWhite[s.row()][s.column()] += 1;
+                this.squaresControlledByWhite[s.row()][s.column()] += 1;
             }
         } else{
             for(Position s : set){
-                this.squareControlledByBlack[s.row()][s.column()] += 1;
+                this.squaresControlledByBlack[s.row()][s.column()] += 1;
             }
         }
     }
