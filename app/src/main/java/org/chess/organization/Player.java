@@ -1,6 +1,10 @@
 package org.chess.organization;
 import org.chess.pieces.Piece;
 
+import java.util.List;
+
+import org.chess.dataTypes.Position;
+
     public abstract class Player {
 
         public final String playerName;
@@ -20,6 +24,14 @@ import org.chess.pieces.Piece;
             return playerName;
         }
 
-        public abstract Piece[] getActivePieces(Piece[][] tiles);
-        public abstract Piece[] getEatenPieces(Piece[][] tiles);
+        public void moveSelectedPiece(Piece selectedPiece, Position to){//TODO: return bool not void
+            /*
+            if(board.movePiece(selectedPiece,to)){
+                turn=false;
+            }
+            */
+        }
+
+        public abstract List<Piece> getActivePieces(Piece[][] tiles);
+        public abstract List<Piece> getEatenPieces(Piece[][] tiles);
     }
