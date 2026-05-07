@@ -30,6 +30,10 @@ public class ChessBoard {
     }
 
     // getter
+    public Piece[][] getBoard(){
+        return this.chessboard;
+    }
+
     public int[][] getSquareControlledBy(String colour){
         if(colour == "white"){
             return this.squaresControlledByWhite;
