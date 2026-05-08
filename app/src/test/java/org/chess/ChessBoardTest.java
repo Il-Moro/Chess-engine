@@ -1,15 +1,11 @@
 package org.chess;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import org.chess.dataTypes.Position;
 import org.chess.organization.ChessBoard;
-import org.chess.pieces.King;
-import org.chess.pieces.Knight;
-import org.chess.pieces.Pawn;
-import org.chess.pieces.Piece;
-import org.chess.pieces.Queen;
-import org.chess.pieces.Rock;
+import org.chess.pieces.*;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -32,6 +28,7 @@ import org.junit.jupiter.api.Test;
  * d. test di integrità:
  *  1. validazione arrocco
  *  2. validazione enpassant *  
+ *  3. validazione cella non vuota
  */
 
 
@@ -99,9 +96,9 @@ public class ChessBoardTest {
     // b. Validazione mosse
 
     @Test // b.1 fuoco amico: se la mossa prevede di mangiare un pezzo proprio, impedirlo
-    void validationMoveCaptureOwnPieces(){
+    void validationMoveToOwnPieces(){
         ChessBoard board = settings();
-        
+        assertFalse(board.movePiece(new Position(2,2), new Position(0,0)), "Validazione mosse: non si possono mangiare pezzi dello stessso colore");
     }
 
 

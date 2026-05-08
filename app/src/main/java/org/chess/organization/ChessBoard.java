@@ -47,15 +47,27 @@ public class ChessBoard {
         return chessboard[position.row()][position.column()] == null;
     }
 
-    public void movePiece(Piece piece, Position to){
-        try {
 
-        } catch (Exception e) {
-            // TODO: handle exception
+    // movement of pieces
+    public boolean movePiece(Position from, Position to){
+        if(validationMove(from, to)){
+            physicalMovement(from,to);
+            return true;
+        } else {
+            return false;
         }
     }
 
-    void updateControl(){
+    private void physicalMovement(Position from, Position to){
+        Piece piece = this.getPiece(from);
+        this.chessboard[from.row()][from.column()] = null;
+
+        piece.setPosition(to);        
+        this.setPiece(piece); 
+    }
+
+    // Updating control maps
+    private void updateControl(){
         // azzero tabelle
         for(int i = 0; i < 8; i++){
             for(int j = 0; j < 8; j++){
@@ -73,7 +85,7 @@ public class ChessBoard {
         }        
     }
 
-    void fillControlMap(Piece piece){
+    private void fillControlMap(Piece piece){
         Set<Position> set = piece.getPotentialMoves(this);
 
         if(piece.getColour() == "white"){
@@ -87,6 +99,16 @@ public class ChessBoard {
         }
     }
 
+    // validating movements
+    private boolean validationMove(Position from, Position to){
+        // 1. mossa su pezzo proprio:
+        
+        if(!this.isNull(to)){
+            return this.getPiece(from).getColour() != this.getPiece(to).getColour();
+        } else{
+            return true;
+        }        
+    }
 }
 
 
