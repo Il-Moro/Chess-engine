@@ -51,6 +51,8 @@ public class ChessBoardTest {
         board.setPiece(new King(new Position(7,4), "black"));
         board.setPiece(new Rock(new Position(7,7), "black"));
         board.setPiece(new Knight(new Position(5,1), "black"));
+        
+        board.updateControl();
 
         return board;
     }
@@ -62,6 +64,7 @@ public class ChessBoardTest {
         ChessBoard board = new ChessBoard();
         Rock rock = new Rock(new Position(3,3), "white");
         board.setPiece(rock);
+        board.updateControl();
         int [][] squareControlled = board.getSquareControlledBy("white");
 
         int sumSquareControlledByRock = 0;
@@ -80,6 +83,7 @@ public class ChessBoardTest {
         Queen queen = new Queen(new Position(5,7), "white");
         board.setPiece(rock);
         board.setPiece(queen);
+        board.updateControl();
 
         int[][] squareControlled = board.getSquareControlledBy("white");
         
@@ -97,8 +101,11 @@ public class ChessBoardTest {
 
     @Test // b.1 fuoco amico: se la mossa prevede di mangiare un pezzo proprio, impedirlo
     void validationMoveToOwnPieces(){
-        ChessBoard board = settings();
-        assertFalse(board.movePiece(new Position(2,2), new Position(0,0)), "Validazione mosse: non si possono mangiare pezzi dello stessso colore");
+    }
+
+    @Test 
+    void pinnedKing(){
+        
     }
 
 

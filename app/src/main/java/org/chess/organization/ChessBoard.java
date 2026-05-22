@@ -26,7 +26,6 @@ public class ChessBoard {
 
     public void setPiece(Piece piece) {
         this.chessboard[piece.getPosition().row()][piece.getPosition().column()] = piece;
-        this.updateControl();
     }
 
     // getter
@@ -42,44 +41,50 @@ public class ChessBoard {
         }
     }    
 
-    // altri
     public boolean isNull(Position position) {
         return chessboard[position.row()][position.column()] == null;
     }
 
-
     // movement of pieces
-    public boolean movePiece(Position from, Position to){
-        if(validationMove(from, to)){
-            physicalMovement(from,to);
-            return true;
-        } else {
-            return false;
-        }
+    public void isMoveLegal(Position from, Position to){
+        // mossa su pezzo proprio sasa 
+        // casistiche re: moro
+        //      1. non può muoversi su case controllate da avversario
+        //      2. mossa obbligata del re: se il re è sotto scacco bisogna coprirlo o muoverlo
+        //      3. controllo sull'arrocco
+        // pedone: sasa 
+        //      1. non può spostarsi in avanti se è presente un'altro pezzo
+        //      2. enpassant: considerare traversa iniziale e se si affianca a un pedone opposto
+
+        // checkmate: insieme
     }
 
-    private void physicalMovement(Position from, Position to){
+    public void physicalMovement(Position from, Position to){
+
+        // arrocco
+        // promozione
+
         Piece piece = this.getPiece(from);
         this.chessboard[from.row()][from.column()] = null;
-
+        this.chessboard[to.row()][to.column()] = piece;
         piece.setPosition(to);        
-        this.setPiece(piece); 
+        this.updateControl();
     }
 
     // Updating control maps
-    private void updateControl(){
+    public void updateControl(){
         // azzero tabelle
         for(int i = 0; i < 8; i++){
             for(int j = 0; j < 8; j++){
-                squaresControlledByBlack[i][j] = 0;
-                squaresControlledByWhite[i][j] = 0;
+                this.squaresControlledByBlack[i][j] = 0;
+                this.squaresControlledByWhite[i][j] = 0;
             }
         }
 
         for(Piece[] positions : this.chessboard){
             for(Piece p : positions){
                 if(p != null){
-                    fillControlMap(p);
+                    this.fillControlMap(p);
                 }
             }
         }        
@@ -98,17 +103,4 @@ public class ChessBoard {
             }
         }
     }
-
-    // validating movements
-    private boolean validationMove(Position from, Position to){
-        // 1. mossa su pezzo proprio:
-        
-        if(!this.isNull(to)){
-            return this.getPiece(from).getColour() != this.getPiece(to).getColour();
-        } else{
-            return true;
-        }        
-    }
 }
-
-
