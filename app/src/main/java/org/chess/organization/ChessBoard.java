@@ -46,7 +46,13 @@ public class ChessBoard {
     }
 
     // movement of pieces
-    public void isMoveLegal(Position from, Position to){
+    public boolean isMoveLegal(Position from, Position to){
+        Piece piece = this.getPiece(from);
+        boolean legal=true;
+        // Se non c'è un pezzo nella posizione di partenza
+        if (piece == null) {
+            legal=false;
+        }
         // mossa su pezzo proprio sasa 
         // casistiche re: moro
         //      1. non può muoversi su case controllate da avversario
@@ -54,9 +60,12 @@ public class ChessBoard {
         //      3. controllo sull'arrocco
         // pedone: sasa 
         //      1. non può spostarsi in avanti se è presente un'altro pezzo
+        
         //      2. enpassant: considerare traversa iniziale e se si affianca a un pedone opposto
 
         // checkmate: insieme
+
+        return legal;
     }
 
     public void physicalMovement(Position from, Position to){
