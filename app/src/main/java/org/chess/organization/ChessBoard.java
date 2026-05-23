@@ -53,14 +53,17 @@ public class ChessBoard {
         if (piece == null) {
             legal=false;
         }
-        // mossa su pezzo proprio sasa 
+        // mossa su pezzo proprio sasa
+        else if (!piece.getPotentialMoves(this).contains(to)) {
+            legal = false;
+        }
         // casistiche re: moro
         //      1. non può muoversi su case controllate da avversario
         //      2. mossa obbligata del re: se il re è sotto scacco bisogna coprirlo o muoverlo
         //      3. controllo sull'arrocco
         // pedone: sasa 
         //      1. non può spostarsi in avanti se è presente un'altro pezzo
-        if(piece instanceof Pawn){
+        else if(piece instanceof Pawn){
             if(from.row()!=to.row() && from.column()==to.column() && !this.isNull(to))
                 legal=false;
         }

@@ -100,22 +100,28 @@ public class ChessBoardTest {
     // b. Validazione mosse
 
     @Test // b.1 fuoco amico: se la mossa prevede di mangiare un pezzo proprio, impedirlo
-    void validationMoveToOwnPieces(){
-
+    void cannotCaptureOwnPiece(){
+        ChessBoard board = new ChessBoard();
+        Bishop bishop = new Bishop(new Position(7,1), "white");
+        Pawn pawn = new Pawn(new Position(5,3), "white");
+        board.setPiece(pawn);
+        board.setPiece(bishop);
+        assertFalse(board.isMoveLegal(bishop.getPosition(),new Position(5,3)));
     }
 
     @Test
-    void pawnMoveVaidation(){
+    void pawnForwardMoveVaidation(){
         ChessBoard board = new ChessBoard();
         Pawn whitePawn = new Pawn(new Position(5,4), "white");
-        Pawn blackPawn = new Pawn(new Position(6,4), "black");
+        Pawn blackPawn = new Pawn(new Position(4,4), "black");
         board.setPiece(whitePawn);
         board.setPiece(blackPawn);
-        Position whitePosition=whitePawn.getPosition();
-        Position blackPosition=blackPawn.getPosition();
-        assertFalse(board.isMoveLegal(whitePosition,new Position(6,4)));
-        assertFalse(board.isMoveLegal(blackPosition,new Position(5,4)));
+        Position whitePawnPosition=whitePawn.getPosition();
+        Position blackPawnPosition=blackPawn.getPosition();
+        assertFalse(board.isMoveLegal(whitePawnPosition,new Position(4,4)));
+        assertFalse(board.isMoveLegal(blackPawnPosition,new Position(5,4)));
     }
+
 
     @Test 
     void pinnedKing(){
