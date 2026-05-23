@@ -137,6 +137,17 @@ public class ChessBoardTest {
         // Posso eseguire l' en passant
         assertTrue(board.isMoveLegal(blackPawn.getPosition(),new Position(5,4)));
         
+        board = new ChessBoard();
+        whitePawn = new Pawn(new Position(3,4), "white");
+        blackPawn = new Pawn(new Position(1,3), "black");
+        
+        board.setPiece(whitePawn);
+        board.setPiece(blackPawn);
+
+        assertTrue(board.isMoveLegal(blackPawn.getPosition(),new Position(3,3)));
+        board.physicalMovement(blackPawn.getPosition(), new Position(3,3));
+        assertTrue(board.isMoveLegal(whitePawn.getPosition(),new Position(2,3)));
+
         // EN PASSANT NON VALIDO
 
         board = new ChessBoard();
@@ -158,6 +169,29 @@ public class ChessBoardTest {
         board.physicalMovement(whiteRock.getPosition(), new Position(6,0));
 
         assertFalse(board.isMoveLegal(blackPawn.getPosition(),new Position(5,4)));
+
+        board = new ChessBoard();
+        whitePawn = new Pawn(new Position(5,4), "white");
+        blackPawn = new Pawn(new Position(4,3), "black");
+        
+        board.setPiece(whitePawn);
+        board.setPiece(blackPawn);
+
+        assertTrue(board.isMoveLegal(whitePawn.getPosition(),new Position(4,4)));
+        board.physicalMovement(whitePawn.getPosition(), new Position(4,4));
+        assertFalse(board.isMoveLegal(blackPawn.getPosition(),new Position(5,4)));
+
+
+        board = new ChessBoard();
+        whitePawn = new Pawn(new Position(3,4), "white");
+        blackPawn = new Pawn(new Position(2,3), "black");
+        
+        board.setPiece(whitePawn);
+        board.setPiece(blackPawn);
+
+        assertTrue(board.isMoveLegal(blackPawn.getPosition(),new Position(3,3)));
+        board.physicalMovement(blackPawn.getPosition(), new Position(3,3));
+        assertFalse(board.isMoveLegal(whitePawn.getPosition(),new Position(2,3)));
 
     }
 
