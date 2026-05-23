@@ -10,6 +10,8 @@ public class ChessBoard {
     private Piece[][] chessboard;
     private int[][] squaresControlledByWhite;
     private int[][] squaresControlledByBlack;
+    private Pawn lastPawnMoved = null;
+    private Position lastPawnFromPosition = null;
 
     // costruttore
     public ChessBoard() {
@@ -48,16 +50,24 @@ public class ChessBoard {
     // movement of pieces
     public boolean isMoveLegal(Position from, Position to){
         Piece piece = this.getPiece(from);
+        boolean rowDiff=false;
+        boolean colDiff=false;
+        if (lastPawnMoved != null) {
+            rowDiff=Math.abs(lastPawnFromPosition.row()-lastPawnMoved.getPosition().row()) != 2;
+            colDiff=Math.abs(lastPawnFromPosition.column()-lastPawnMoved.getPosition().column())!=0;   
+        }
         boolean legal=true;
         // Se non c'è un pezzo nella posizione di partenza
         if (piece == null) {
             legal=false;
         }
         // mossa su pezzo proprio sasa
-        else if (!piece.getPotentialMoves(this).contains(to)) {
-            legal = false;
-        }
-        else if (piece.getColour().equals(this.getPiece(to).getColour())) {
+        /*
+            else if (!piece.getPotentialMoves(this).contains(to)) {
+                legal = false;
+            }
+         */
+        else if(this.getPiece(to)!=null&& piece.getColour().equals(this.getPiece(to).getColour())){
             legal = false;
         }
         // casistiche re: moro
@@ -71,10 +81,30 @@ public class ChessBoard {
                 legal=false;
             //      2. enpassant: considerare traversa iniziale e se si affianca a un pedone opposto
             
+            if(from.row()!=to.row() && from.column()!=to.column() && this.isNull(to)){
+                if(lastPawnMoved != null){
+                    if(to.column() == lastPawnMoved.getPosition().column() && from.row() == lastPawnMoved.getPosition().row()){
+                        if(colDiff || rowDiff)
+                            legal = false;
+                    }
+                }
+                else
+                    legal=false;
+            }
         }
 
         // checkmate: insieme
 
+        if(legal){
+            if(piece instanceof Pawn){
+                lastPawnMoved = (Pawn) piece;
+                lastPawnFromPosition = from;
+            }
+            else{
+                lastPawnMoved = null;
+                lastPawnFromPosition = null;
+            }
+        }
         return legal;
     }
 

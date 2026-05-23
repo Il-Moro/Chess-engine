@@ -127,36 +127,36 @@ public class ChessBoardTest {
     void enPassant(){
         ChessBoard board = new ChessBoard();
         Pawn whitePawn = new Pawn(new Position(6,4), "white");
-        Rock whiteRock = new Rock(new Position(7,0),"white");
         Pawn blackPawn = new Pawn(new Position(4,3), "black");
-        Rock blackRock = new Rock(new Position(0,0) , "black");
         board.setPiece(whitePawn);
         board.setPiece(blackPawn);
         // EN PASSANT VALIDO
         // Sposto il bianco di 2
         assertTrue(board.isMoveLegal(whitePawn.getPosition(),new Position(4,4)));
-        whitePawn.setPosition(new Position(4,4));
-        board.setPiece(whitePawn);
+        board.physicalMovement(whitePawn.getPosition(),new Position(4,4));
         // Posso eseguire l' en passant
         assertTrue(board.isMoveLegal(blackPawn.getPosition(),new Position(5,4)));
-
-        // Reset conditions
-        whitePawn.setPosition(new Position(6,4));
-        board.setPiece(whitePawn);
-
-        // EN PASSANT NON VALIDO
-        assertTrue(board.isMoveLegal(whitePawn.getPosition(),new Position(4,4)));
-        whitePawn.setPosition(new Position(4,4));
-        board.setPiece(whitePawn);
         
-        assertTrue(board.isMoveLegal(blackRock.getPosition(),new Position(2,1)));
-        blackRock.setPosition(new Position(1,0));
+        // EN PASSANT NON VALIDO
+
+        board = new ChessBoard();
+        whitePawn = new Pawn(new Position(6,4), "white");
+        blackPawn = new Pawn(new Position(4,3), "black");
+        Rock whiteRock = new Rock(new Position(7,0),"white");
+        Rock blackRock = new Rock(new Position(0,0) , "black");
+
+        board.setPiece(whitePawn);
+        board.setPiece(blackPawn);
+        board.setPiece(whiteRock);
         board.setPiece(blackRock);
 
-
+        assertTrue(board.isMoveLegal(whitePawn.getPosition(),new Position(4,4)));
+        board.physicalMovement(whitePawn.getPosition(), new Position(4,4));
+        assertTrue(board.isMoveLegal(blackRock.getPosition(),new Position(1,0)));
+        board.physicalMovement(blackRock.getPosition(), new Position(1,0));
         assertTrue(board.isMoveLegal(whiteRock.getPosition(),new Position(6,0)));
-        whiteRock.setPosition(new Position(6,0));
-        board.setPiece(whiteRock);
+        board.physicalMovement(whiteRock.getPosition(), new Position(6,0));
+
         assertFalse(board.isMoveLegal(blackPawn.getPosition(),new Position(5,4)));
 
     }
