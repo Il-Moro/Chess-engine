@@ -107,14 +107,14 @@ public class ChessBoardTest {
     @Test
     void pawnMoveVaidation(){
         ChessBoard board = new ChessBoard();
-        Pawn whitePawn = new Pawn(new Position(3,3), "white");
-        Pawn blackPawn = new Pawn(new Position(3,4), "black");
+        Pawn whitePawn = new Pawn(new Position(5,4), "white");
+        Pawn blackPawn = new Pawn(new Position(6,4), "black");
         board.setPiece(whitePawn);
         board.setPiece(blackPawn);
         Position whitePosition=whitePawn.getPosition();
         Position blackPosition=blackPawn.getPosition();
-        assertFalse(board.isMoveLegal(whitePosition,new Position(3,4)));
-        assertFalse(board.isMoveLegal(blackPosition,new Position(3,3)));
+        assertFalse(board.isMoveLegal(whitePosition,new Position(6,4)));
+        assertFalse(board.isMoveLegal(blackPosition,new Position(5,4)));
     }
 
     @Test 

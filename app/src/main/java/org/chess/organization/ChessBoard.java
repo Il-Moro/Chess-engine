@@ -60,7 +60,10 @@ public class ChessBoard {
         //      3. controllo sull'arrocco
         // pedone: sasa 
         //      1. non può spostarsi in avanti se è presente un'altro pezzo
-        
+        if(piece instanceof Pawn){
+            if(from.row()!=to.row() && from.column()==to.column() && !this.isNull(to))
+                legal=false;
+        }
         //      2. enpassant: considerare traversa iniziale e se si affianca a un pedone opposto
 
         // checkmate: insieme
