@@ -2,6 +2,7 @@ package org.chess;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.chess.dataTypes.Position;
 import org.chess.organization.ChessBoard;
@@ -110,7 +111,7 @@ public class ChessBoardTest {
     }
 
     @Test
-    void pawnForwardMoveVaidation(){
+    void pawnForwardMoveValidation(){
         ChessBoard board = new ChessBoard();
         Pawn whitePawn = new Pawn(new Position(5,4), "white");
         Pawn blackPawn = new Pawn(new Position(4,4), "black");
@@ -122,6 +123,43 @@ public class ChessBoardTest {
         assertFalse(board.isMoveLegal(blackPawnPosition,new Position(5,4)));
     }
 
+    @Test
+    void enPassant(){
+        ChessBoard board = new ChessBoard();
+        Pawn whitePawn = new Pawn(new Position(6,4), "white");
+        Rock whiteRock = new Rock(new Position(7,0),"white");
+        Pawn blackPawn = new Pawn(new Position(4,3), "black");
+        Rock blackRock = new Rock(new Position(0,0) , "black");
+        board.setPiece(whitePawn);
+        board.setPiece(blackPawn);
+        // EN PASSANT VALIDO
+        // Sposto il bianco di 2
+        assertTrue(board.isMoveLegal(whitePawn.getPosition(),new Position(4,4)));
+        whitePawn.setPosition(new Position(4,4));
+        board.setPiece(whitePawn);
+        // Posso eseguire l' en passant
+        assertTrue(board.isMoveLegal(blackPawn.getPosition(),new Position(5,4)));
+
+        // Reset conditions
+        whitePawn.setPosition(new Position(6,4));
+        board.setPiece(whitePawn);
+
+        // EN PASSANT NON VALIDO
+        assertTrue(board.isMoveLegal(whitePawn.getPosition(),new Position(4,4)));
+        whitePawn.setPosition(new Position(4,4));
+        board.setPiece(whitePawn);
+        
+        assertTrue(board.isMoveLegal(blackRock.getPosition(),new Position(2,1)));
+        blackRock.setPosition(new Position(1,0));
+        board.setPiece(blackRock);
+
+
+        assertTrue(board.isMoveLegal(whiteRock.getPosition(),new Position(6,0)));
+        whiteRock.setPosition(new Position(6,0));
+        board.setPiece(whiteRock);
+        assertFalse(board.isMoveLegal(blackPawn.getPosition(),new Position(5,4)));
+
+    }
 
     @Test 
     void pinnedKing(){

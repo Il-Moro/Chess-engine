@@ -65,12 +65,13 @@ public class ChessBoard {
         //      2. mossa obbligata del re: se il re è sotto scacco bisogna coprirlo o muoverlo
         //      3. controllo sull'arrocco
         // pedone: sasa 
-        //      1. non può spostarsi in avanti se è presente un'altro pezzo
         else if(piece instanceof Pawn){
+            //      1. non può spostarsi in avanti se è presente un'altro pezzo
             if(from.row()!=to.row() && from.column()==to.column() && !this.isNull(to))
                 legal=false;
+            //      2. enpassant: considerare traversa iniziale e se si affianca a un pedone opposto
+            
         }
-        //      2. enpassant: considerare traversa iniziale e se si affianca a un pedone opposto
 
         // checkmate: insieme
 
