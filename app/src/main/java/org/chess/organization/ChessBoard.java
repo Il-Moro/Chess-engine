@@ -57,6 +57,9 @@ public class ChessBoard {
         else if (!piece.getPotentialMoves(this).contains(to)) {
             legal = false;
         }
+        else if (piece.getColour().equals(this.getPiece(to).getColour())) {
+            legal = false;
+        }
         // casistiche re: moro
         //      1. non può muoversi su case controllate da avversario
         //      2. mossa obbligata del re: se il re è sotto scacco bisogna coprirlo o muoverlo
