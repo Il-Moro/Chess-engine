@@ -1,9 +1,11 @@
 package org.chess.dataTypes;
 
 public enum Pin {
-    PINNED, // indica un pezzo pin
-    CHECK_PATH, // case tra re e attaccante
-    KING_ATTACKER, // pezzo che attacca il re
-    UNDER_CHECK, // sulla casa del re, indica se è in scacco
-    DOUBLE_UNDER_CHECK
+    PINNED_ORTHOGONAL,  // Inchiodato su Riga o Colonna (Torre/Regina)
+    PINNED_DIAGONAL,    // Inchiodato su Diagonale (Alfiere/Regina)
+    CHECK_PATH,         // Casella vuota nella linea di scacco
+    KING_ATTACKER,      // Il pezzo che sta dando scacco
+    UNDER_CHECK_LINE,   // Re sotto scacco da pezzo lineare (Rook/Bishop/Queen)
+    UNDER_CHECK_KNIGHT, // Re sotto scacco da Cavallo
+    DOUBLE_CHECK        // Re sotto scacco multiplo
 }

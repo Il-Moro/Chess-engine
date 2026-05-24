@@ -10,7 +10,7 @@ public class ChessBoard {
     private Piece[][] chessboard;
     private int[][] squaresControlledByWhite;
     private int[][] squaresControlledByBlack;
-    private Pin[][] kingPin;
+    private Pin[][] kingPin; // matrice che controlla a partire dal re: Pieces in pin, Pieces attacker, marca il re se è sotto scacco da un pezzo lineare oppure da un cavallo o se è in doppio scacco
     private King whiteKing;
     private King blackKing;
     private Pawn lastPawnMoved = null;
@@ -70,7 +70,6 @@ public class ChessBoard {
         }
         
         boolean legal=true;
-        
 
         // GESTIONE CASI GENERICI
         // Se non c'è un pezzo nella posizione di partenza
@@ -78,9 +77,8 @@ public class ChessBoard {
             return false;
         }
 
-        // esguo controllo sul primo filtro di getPotentialMoves
+        // eseguo controllo sul primo filtro di getPotentialMoves
         Set<Position> potentialMoves = piece.getPotentialMoves(this);
-
         if(!potentialMoves.contains(to)){
             return false;
         }
@@ -98,12 +96,14 @@ public class ChessBoard {
         // GESTIONE CASI PARTICOLARI
 
         // casistiche re: moro
-        // pezzo in pin
+        // //      2. Pin o mossa obbligata del re: se il re è sotto scacco bisogna coprirlo -> controllare in kinPin o muoverlo; se c'è un doppio scacco -> mossa obbligata SOLO sul re, tutti gli altri pezzi sono esclusi -> controllo su DOUBLE_UNDER_CHECK in kingPin (NOTA, aggiungere sezione per inserire DOUBLE_UNDER_CHECK su pinKing)
+
         // idea 1: devo verificare se il re dopo aver eseguito la mossa è sotto scacco
-        // idea 2: memorizzo posizione dei re e una matrice di controllo, con RayCasting verifico se ci sono pezzi pinnati
-        if(this.kingPin[piece.getPosition().row()][piece.getPosition().column()] == Pin.PINNED){
+        // idea 2: memorizzo posizione dei re e una matrice di controllo, con RayCasting verifico se ci sono pezzi pinnati        
+        if(this.kingPin[piece.getPosition().row()][piece.getPosition().column()] == Pin.PINNED_DIAGONAL){
             return false;
-        }
+        } // occhio, da aggiornare PINNED+direzione, verificare se la mossa va a finire in una casa contrassegnata come CHECK_PATH lunga la direzione segnata
+
 
         if(piece instanceof King){
             //      1. non può muoversi su case controllate da avversario
@@ -114,7 +114,6 @@ public class ChessBoard {
             ){
                 return false;
             }
-            //      2. mossa obbligata del re: se il re è sotto scacco bisogna coprirlo -> controllare in kinPin o muoverlo; se c'è un doppio scacco -> mossa obbligata SOLO sul re, tutti gli altri pezzi sono esclusi -> controllo su DOUBLE_UNDER_CHECK in kingPin (NOTA, aggiungere sezione per inserire DOUBLE_UNDER_CHECK su pinKing)
             
             //      3. controllo sull'arrocco
             // NOTA: aggiungere condizione di verifica sul re che non abbia mai mosso, controllare se il re è sotto scacco (sempre su kingPin), sontrolllare su matrici di controllo le case tra re e torre, controllare la torre se non è mai stata mossa
@@ -177,70 +176,99 @@ public class ChessBoard {
         
     }
 
-    // NOTA aggiungere righe per:
-    // 1. verificare scacco di cavallo
-    // 2. aggiungere opzione di DOUBLE_UNDER_CHECK sulla casa del re in kingPin se ci sono due pezzi che attaccano il re
-
+    
     public void updateKingPin(String colour) {
-        // Tutte le direzioni per X-ray a partire dalla posizione del re
-        int[][] directions = {{1, 1}, {-1, 1}, {-1, -1}, {1, -1}, {1, 0}, {-1, 0}, {0, 1}, {0, -1}};
-        
+        // Reset preventivo della matrice prima di calcolare i nuovi pin/check
+        for (int r = 0; r < 8; r++) {
+            for (int c = 0; c < 8; c++) {
+                kingPin[r][c] = null;
+            }
+        }
+
+        int[][] linearDirections = {{1, 1}, {-1, 1}, {-1, -1}, {1, -1}, {1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+        int[][] knightDirections = {{2, -1}, {2, 1}, {1, 2}, {-1, 2}, {-2, 1}, {-2, -1}, {-1, -2}, {1, -2}};
+
         int kingRow = colour.equals("white") ? whiteKing.getPosition().row() : blackKing.getPosition().row();
         int kingColumn = colour.equals("white") ? whiteKing.getPosition().column() : blackKing.getPosition().column();
-        
-        // Itero su tutte le direzioni
+
+        int checks = 0;
+
+        // Accumuliamo i risultati restituiti dai metodi
+        checks += calculateLinearDirections(colour, linearDirections, kingRow, kingColumn, checks);
+        calculateKnightDirections(colour, knightDirections, kingRow, kingColumn, checks);        
+    }
+
+    private int calculateLinearDirections(String colour, int[][] directions, int kingRow, int kingColumn, int checks) {
+
         for (int[] d : directions) {           
             int targetRow = kingRow + d[0];
             int targetColumn = kingColumn + d[1];
-            
-            Piece ownPiece = null; // Il pezzo scudo (se esiste)
-            boolean doubleShield = false; // Se ci sono due pezzi propri, il pin salta
+            Piece ownPiece = null; 
             
             while (0 <= targetRow && targetRow < 8 && 0 <= targetColumn && targetColumn < 8) {
                 Piece targetPiece = chessboard[targetRow][targetColumn];
                 
                 if (targetPiece != null) {
-                    // CASO 1: Incontriamo un pezzo AMICO
                     if (targetPiece.getColour().equals(colour)) {
                         if (ownPiece == null) {
-                            ownPiece = targetPiece; // Primo pezzo amico trovato (potenziale pinnato)
+                            ownPiece = targetPiece; 
                         } else {
-                            doubleShield = true; // Secondo pezzo amico: il re è protetto da due pezzi, interrompiamo il raggio
-                            break;
+                            break; // Secondo pezzo amico, linea bloccata
                         }
                     } 
-                    // CASO 2: Incontriamo un pezzo AVVERSARIO
                     else {
                         boolean isDiagonal = (d[0] * d[1] != 0);
-                        boolean validAttacker = false;
                         
-                        // Controlliamo se il pezzo avversario minaccia questa linea
-                        if (isDiagonal && (targetPiece instanceof Bishop || targetPiece instanceof Queen)) {
-                            validAttacker = true;
-                        } else if (!isDiagonal && (targetPiece instanceof Rock || targetPiece instanceof Queen)) {
-                        }
-                        
-                        if (validAttacker) {
-                            if (ownPiece != null) {
-                                // C'è un nostro pezzo in mezzo: lui è PINNED
-                                kingPin[ownPiece.getPosition().row()][ownPiece.getPosition().column()] = Pin.PINNED;
-                            } else {
-                                // SCACCO DIRETTO 
-                                kingPin[kingRow][kingColumn] = Pin.UNDER_CHECK;
-                                kingPin[targetRow][targetColumn] = Pin.KING_ATTACKER;
-                                
-                                // Qui puoi riempire la linea tra il Re e l'attaccante con CHECK_PATH
-                                markCheckPath(kingRow, kingColumn, targetRow, targetColumn, d);
+                        if (ownPiece != null) {
+                            // gestione pin
+                            if (isDiagonal && (targetPiece instanceof Bishop || targetPiece instanceof Queen)) {
+                                kingPin[ownPiece.getPosition().row()][ownPiece.getPosition().column()] = Pin.PINNED_DIAGONAL;
+                            } else if (!isDiagonal && (targetPiece instanceof Rock || targetPiece instanceof Queen)) { // Nota: corretto Rock in Rook se necessario
+                                kingPin[ownPiece.getPosition().row()][ownPiece.getPosition().column()] = Pin.PINNED_ORTHOGONAL;
                             }
-                        }
-                        // In ogni caso, appena becchi un pezzo avversario il raggio si ferma
+                        } else {
+                            // scacco diretto
+                            checks += 1;
+                            if (checks == 1) {
+                                kingPin[kingRow][kingColumn] = Pin.UNDER_CHECK_LINE;
+                            } else {
+                                kingPin[kingRow][kingColumn] = Pin.DOUBLE_CHECK;
+                            }
+
+                            kingPin[targetRow][targetColumn] = Pin.KING_ATTACKER;
+                            markCheckPath(kingRow, kingColumn, targetRow, targetColumn, d);
+                        }               
                         break; 
                     }
                 }
-                
-                // FONDAMENTALE: Avanza nella direzione, altrimenti loop infinito!
                 targetRow += d[0];
                 targetColumn += d[1];
+            }
+        }
+        return checks; // Restituisce quanti NUOVI scacchi ha trovato questo metodo
+    }
+
+    private void calculateKnightDirections(String colour, int[][] directions, int kingRow, int kingColumn, int checks) {
+
+        for (int[] d : directions) {           
+            int targetRow = kingRow + d[0];
+            int targetColumn = kingColumn + d[1];
+            
+            if (0 <= targetRow && targetRow < 8 && 0 <= targetColumn && targetColumn < 8) {
+                Piece targetPiece = chessboard[targetRow][targetColumn];
+
+                if (targetPiece != null) {
+                    if (!targetPiece.getColour().equals(colour) && targetPiece instanceof Knight) {
+                        checks += 1;
+                        
+                        if (checks == 1) {
+                            kingPin[kingRow][kingColumn] = Pin.UNDER_CHECK_KNIGHT;
+                        } else {
+                            kingPin[kingRow][kingColumn] = Pin.DOUBLE_CHECK;
+                        }
+                        kingPin[targetRow][targetColumn] = Pin.KING_ATTACKER;
+                    }
+                }
             }
         }
     }

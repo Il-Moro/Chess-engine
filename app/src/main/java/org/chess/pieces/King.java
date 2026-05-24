@@ -8,11 +8,16 @@ import org.chess.organization.*;
 
 public class King extends Piece{
 
-    public King(Position position, String colour){
-    
-        super(position, colour);
+    boolean hasMoved;
 
+    public King(Position position, String colour){
+        super(position, colour);
         this.value = Integer.MAX_VALUE;
+    }
+
+    public King(Position position, String colour, boolean hasMoved){
+        super(position, colour);
+        this.hasMoved = hasMoved;
     }
 
     @Override
@@ -33,5 +38,9 @@ public class King extends Piece{
             }
         }
         return moves;        
+    }
+
+    public void setHasMovedTrue(){
+        this.hasMoved = true;
     }
 }

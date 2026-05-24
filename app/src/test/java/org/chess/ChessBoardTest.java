@@ -43,7 +43,7 @@ public class ChessBoardTest {
         board.setPiece(new Queen(new Position(2,2), "white"));
         board.setPiece(new King(new Position(0,4), "white"));
         board.setPiece(new Rock(new Position(0,7), "white"));
-        board.setPiece(new Knight(new Position(2,6), "white"));
+        board.setPiece(new Bishop(new Position(2,6), "white"));
 
         // posizione nero
         board.setPiece(new Rock(new Position(7,0), "black"));
@@ -208,7 +208,9 @@ public class ChessBoardTest {
     void pinnedKing(){
         ChessBoard board = settings();
         board.updateKingPin("white");
-        assertFalse(board.isMoveLegal(new Position(2, 6), new Position(3,4)));
+        assertFalse(board.isMoveLegal(new Position(3, 5), new Position(3,4)), "diagonale non consentita");
+        assertTrue(board.isMoveLegal(new Position(3, 5), new Position(1,4)), "diagonale consentita");
     }
     
+
 }
