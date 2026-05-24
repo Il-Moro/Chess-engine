@@ -52,6 +52,7 @@ public class ChessBoardTest {
         board.setPiece(new King(new Position(7,4), "black"));
         board.setPiece(new Rock(new Position(7,7), "black"));
         board.setPiece(new Knight(new Position(5,1), "black"));
+        board.setPiece(new Bishop(new Position(3,7), "black"));
         
         board.updateControl();
 
@@ -203,5 +204,11 @@ public class ChessBoardTest {
         assertFalse(board.isMoveLegal(new Position(0,4), new Position(3,4)), "mossa fuori da getPotentialMoves()");
     }
 
+    @Test 
+    void pinnedKing(){
+        ChessBoard board = settings();
+        board.updateKingPin("white");
+        assertFalse(board.isMoveLegal(new Position(2, 6), new Position(3,4)));
+    }
     
 }
