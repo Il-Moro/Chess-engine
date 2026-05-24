@@ -52,28 +52,56 @@ public class ChessBoard {
         Piece piece = this.getPiece(from);
         boolean rowDiff=false;
         boolean colDiff=false;
+        
         if (lastPawnMoved != null) {
             rowDiff=Math.abs(lastPawnFromPosition.row()-lastPawnMoved.getPosition().row()) != 2;
             colDiff=Math.abs(lastPawnFromPosition.column()-lastPawnMoved.getPosition().column())!=0;   
         }
+        
         boolean legal=true;
+        
+
+        // GESTIONE CASI GENERICI
         // Se non c'è un pezzo nella posizione di partenza
         if (piece == null) {
-            legal=false;
+            return false;
         }
+
+        // esguo controllo sul primo filtro di getPotentialMoves
+        Set<Position> potentialMoves = piece.getPotentialMoves(this);
+
+        if(!potentialMoves.contains(to)){
+            return false;
+        }
+        
         // mossa su pezzo proprio sasa
         /*
             else if (!piece.getPotentialMoves(this).contains(to)) {
                 legal = false;
             }
          */
-        else if(this.getPiece(to)!=null&& piece.getColour().equals(this.getPiece(to).getColour())){
-            legal = false;
+        if(this.getPiece(to)!=null&& piece.getColour().equals(this.getPiece(to).getColour())){
+            return false;
         }
+
+        // GESTIONE CASI PARTICOLARI
+
         // casistiche re: moro
-        //      1. non può muoversi su case controllate da avversario
-        //      2. mossa obbligata del re: se il re è sotto scacco bisogna coprirlo o muoverlo
         //      3. controllo sull'arrocco
+        if(piece instanceof King){
+            //      1. non può muoversi su case controllate da avversario
+            //      controllo che Position to sia a 0 in squaresControlledBy<adversary>
+            if(
+                (piece.getColour().equals("white") && squaresControlledByBlack[to.row()][to.column()] != 0) ||
+                (piece.getColour().equals("black") && squaresControlledByWhite[to.row()][to.column()] != 0)
+            ){
+                return false;
+            }
+
+            //      2. mossa obbligata del re: se il re è sotto scacco bisogna coprirlo o muoverlo
+        }
+
+
         // pedone: sasa 
         else if(piece instanceof Pawn){
             //      1. non può spostarsi in avanti se è presente un'altro pezzo

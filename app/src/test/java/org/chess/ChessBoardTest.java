@@ -126,20 +126,20 @@ public class ChessBoardTest {
     @Test
     void enPassant(){
         ChessBoard board = new ChessBoard();
-        Pawn whitePawn = new Pawn(new Position(6,4), "white");
-        Pawn blackPawn = new Pawn(new Position(4,3), "black");
+        Pawn whitePawn = new Pawn(new Position(6,4), "black");
+        Pawn blackPawn = new Pawn(new Position(4,3), "white");
         board.setPiece(whitePawn);
         board.setPiece(blackPawn);
         // EN PASSANT VALIDO
         // Sposto il bianco di 2
-        assertTrue(board.isMoveLegal(whitePawn.getPosition(),new Position(4,4)));
+        assertTrue(board.isMoveLegal(whitePawn.getPosition(), new Position(4,4)));
         board.physicalMovement(whitePawn.getPosition(),new Position(4,4));
         // Posso eseguire l' en passant
         assertTrue(board.isMoveLegal(blackPawn.getPosition(),new Position(5,4)));
         
         board = new ChessBoard();
-        whitePawn = new Pawn(new Position(3,4), "white");
-        blackPawn = new Pawn(new Position(1,3), "black");
+        whitePawn = new Pawn(new Position(3,4), "black");
+        blackPawn = new Pawn(new Position(1,3), "white");
         
         board.setPiece(whitePawn);
         board.setPiece(blackPawn);
@@ -151,10 +151,10 @@ public class ChessBoardTest {
         // EN PASSANT NON VALIDO
 
         board = new ChessBoard();
-        whitePawn = new Pawn(new Position(6,4), "white");
-        blackPawn = new Pawn(new Position(4,3), "black");
-        Rock whiteRock = new Rock(new Position(7,0),"white");
-        Rock blackRock = new Rock(new Position(0,0) , "black");
+        whitePawn = new Pawn(new Position(6,4), "black");
+        blackPawn = new Pawn(new Position(4,3), "white");
+        Rock whiteRock = new Rock(new Position(7,0),"black");
+        Rock blackRock = new Rock(new Position(0,0) , "white");
 
         board.setPiece(whitePawn);
         board.setPiece(blackPawn);
@@ -171,8 +171,8 @@ public class ChessBoardTest {
         assertFalse(board.isMoveLegal(blackPawn.getPosition(),new Position(5,4)));
 
         board = new ChessBoard();
-        whitePawn = new Pawn(new Position(5,4), "white");
-        blackPawn = new Pawn(new Position(4,3), "black");
+        whitePawn = new Pawn(new Position(5,4), "black");
+        blackPawn = new Pawn(new Position(4,3), "white");
         
         board.setPiece(whitePawn);
         board.setPiece(blackPawn);
@@ -183,8 +183,8 @@ public class ChessBoardTest {
 
 
         board = new ChessBoard();
-        whitePawn = new Pawn(new Position(3,4), "white");
-        blackPawn = new Pawn(new Position(2,3), "black");
+        whitePawn = new Pawn(new Position(3,4), "black");
+        blackPawn = new Pawn(new Position(2,3), "white");
         
         board.setPiece(whitePawn);
         board.setPiece(blackPawn);
@@ -196,9 +196,12 @@ public class ChessBoardTest {
     }
 
     @Test 
-    void pinnedKing(){
-        
+    void kingToSquareControlledByAdversary(){
+        ChessBoard board = settings();
+
+        assertFalse(board.isMoveLegal(new Position(0,4), new Position(0,5)), "Il re non può spostarsi su case controllate da avversari");
+        assertFalse(board.isMoveLegal(new Position(0,4), new Position(3,4)), "mossa fuori da getPotentialMoves()");
     }
 
-
+    
 }
