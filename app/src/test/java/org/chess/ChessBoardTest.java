@@ -46,7 +46,7 @@ public class ChessBoardTest {
         board.setPiece(new Rock(new Position(0,0), "white"));
         board.setPiece(new Pawn(new Position(1,0), "white"));
         board.setPiece(new Queen(new Position(2,2), "white"));
-        board.setPiece(new King(new Position(0,4), "white"));
+        board.setPiece(new King(new Position(0,4), "white", false));
         board.setPiece(new Rock(new Position(0,7), "white"));
         board.setPiece(new Bishop(new Position(2,6), "white"));
 
@@ -54,10 +54,22 @@ public class ChessBoardTest {
         board.setPiece(new Rock(new Position(7,0), "black"));
         board.setPiece(new Pawn(new Position(6,4), "black"));
         board.setPiece(new Queen(new Position(2,7), "black"));
-        board.setPiece(new King(new Position(7,4), "black"));
+        board.setPiece(new King(new Position(7,4), "black", false));
         board.setPiece(new Rock(new Position(7,7), "black"));
         board.setPiece(new Knight(new Position(5,1), "black"));
         board.setPiece(new Bishop(new Position(3,7), "black"));
+        
+        board.updateControl();
+
+        return board;
+    }
+
+    ChessBoard setOnlyKing(){
+        ChessBoard board = new ChessBoard();
+        // posizione bianco
+        board.setPiece(new King(new Position(0,4), "white", false));
+        // posizione nero
+        board.setPiece(new King(new Position(7,4), "black", false));
         
         board.updateControl();
 
@@ -220,10 +232,116 @@ public class ChessBoardTest {
     }
 
     @Test 
-    void pinnedKing(){
-        ChessBoard board = settings();
+    void pinnedBishopDiagonal(){
+        ChessBoard board = setOnlyKing();
+        // Alfiere bianco in (2,6), inchiodato dall'Alfiere nero in (3,7) sulla diagonale del Re (0,4)
+        board.setPiece(new Bishop(new Position(2, 6), "white"));
+        board.setPiece(new Bishop(new Position(3, 7), "black"));
+        
+        board.updateControl();
         board.updateKingPin("white");
+
+        // Mossa ILLEGALE: uscire dalla diagonale andando in (4,4)
         assertFalse(board.isMoveLegal(new Position(2, 6), new Position(4,4)), "diagonale non consentita");
+        // Mossa LEGALE: scorrere sulla diagonale di pin verso il Re in (1,5)
         assertTrue(board.isMoveLegal(new Position(2, 6), new Position(1,5)), "diagonale consentita");
+    }
+
+    @Test 
+    void pinnedGenericDiagonal(){
+        ChessBoard board = setOnlyKing();
+        // Mettiamo un Pedone bianco in (1,5) inchiodato lungo la stessa diagonale da una Regina nera in (4,8)
+        board.setPiece(new Pawn(new Position(1, 5), "white"));
+        board.setPiece(new Queen(new Position(3, 7), "black"));
+        
+        board.updateControl();
+        board.updateKingPin("white");
+
+        // Un pedone pinnato in diagonale non può MAI muoversi in avanti (riga 2, colonna 5), perché uscirebbe dalla linea
+        assertFalse(board.isMoveLegal(new Position(1, 5), new Position(2, 5)), "Il pedone non può avanzare se il pin è diagonale");
+    }
+
+    @Test
+    void pinnedRookOrtogonal(){
+        ChessBoard board = setOnlyKing();
+        // Torre bianca in (2,4) sulla stessa colonna del Re (0,4), inchiodata da una Torre nera in (5,4)
+        board.setPiece(new Rock(new Position(2, 4), "white"));
+        board.setPiece(new Rock(new Position(5, 4), "black"));
+        
+        board.updateControl();
+        board.updateKingPin("white");
+
+        // Mossa ILLEGALE: muoversi lateralmente sulla riga in (2,5) rompe il pin
+        assertFalse(board.isMoveLegal(new Position(2, 4), new Position(2, 5)), "Spostamento laterale non consentito per pin ortogonale");
+        // Mossa LEGALE: scorrere sulla colonna di pin avvicinandosi al Re in (1,4)
+        assertTrue(board.isMoveLegal(new Position(2, 4), new Position(1, 4)), "Spostamento lungo la colonna di pin consentito");
+    }
+
+    @Test
+    void pinnedGenericOrtogonal(){
+        ChessBoard board = setOnlyKing();
+        // Regina bianca in (0,5) sulla stessa riga del Re (0,4), inchiodata da una Torre nera in (0,7)
+        board.setPiece(new Queen(new Position(0, 5), "white"));
+        board.setPiece(new Rock(new Position(0, 7), "black"));
+        
+        board.updateControl();
+        board.updateKingPin("white");
+
+        // Mossa ILLEGALE: muoversi in diagonale fuori dalla riga in (1,6)
+        assertFalse(board.isMoveLegal(new Position(0, 5), new Position(1, 6)), "La regina non può uscire dalla riga di pin");
+        // Mossa LEGALE: scorrere sulla riga verso l'attaccante per mangiarlo in (0,7)
+        assertTrue(board.isMoveLegal(new Position(0, 5), new Position(0, 7)), "La regina può mangiare il pezzo che la inchioda");
+    }
+
+    @Test
+    void pinnedKingUnderCheck(){
+        ChessBoard board = setOnlyKing();
+        // Il Re è sotto scacco lineare da una Torre nera in (4,4)
+        board.setPiece(new Rock(new Position(4, 4), "black"));
+        // C'è un Alfiere bianco libero in (2,2) che può intercettare lo scacco in (2,4)
+        board.setPiece(new Bishop(new Position(2, 2), "white"));
+        
+        board.updateControl();
+        board.updateKingPin("white");
+
+        // Mossa ILLEGALE: l'alfiere si muove in una casa a caso (3,3) ignorando lo scacco al Re
+        assertFalse(board.isMoveLegal(new Position(2, 2), new Position(3, 3)), "Mossa non consentita, il Re rimane sotto scacco");
+        // Mossa LEGALE: l'alfiere si mette in mezzo in (2,4) per coprire il Re (CHECK_PATH)
+        assertTrue(board.isMoveLegal(new Position(2, 2), new Position(4, 4)), "Mossa consentita, intercetta la linea di scacco");
+    }
+
+    @Test
+    void kingCheckByKnight(){
+        ChessBoard board = setOnlyKing();
+        // Il Re è sotto scacco da un Cavallo nero in (2,5)
+        board.setPiece(new Knight(new Position(2, 5), "black"));
+        // C'è una Regina bianca in (2,2) che può mangiare il cavallo
+        board.setPiece(new Queen(new Position(2, 2), "white"));
+        
+        board.updateControl();
+        board.updateKingPin("white");
+
+        // Mossa ILLEGALE: la regina prova a mettersi in mezzo in (1,4). Contro un cavallo non serve a nulla parare la linea
+        assertFalse(board.isMoveLegal(new Position(2, 2), new Position(1, 4)), "Non si può intercettare la traiettoria di un cavallo");
+        // Mossa LEGALE: la regina si sposta in (2,5) e cattura direttamente il cavallo (KING_ATTACKER)
+        assertTrue(board.isMoveLegal(new Position(2, 2), new Position(2, 5)), "È legale catturare il cavallo che dà scacco");
+    }
+
+    @Test
+    void doubleCheck(){
+        ChessBoard board = setOnlyKing();
+        // Re sotto DOPPIO scacco simultaneo: Torre nera in (4,4) e Cavallo nero in (2,5)
+        board.setPiece(new Rock(new Position(4, 4), "black"));
+        board.setPiece(new Knight(new Position(2, 5), "black"));
+        // C'è una Regina bianca in (2,2) che teoricamente potrebbe mangiare il cavallo
+        board.setPiece(new Queen(new Position(2, 2), "white"));
+        
+        board.updateControl();
+        board.updateKingPin("white");
+
+        // Mossa ILLEGALE: in doppio scacco, qualsiasi mossa di pezzi che non siano il Re deve essere bloccata (ritorna false)
+        assertFalse(board.isMoveLegal(new Position(2, 2), new Position(2, 5)), "Sotto doppio scacco le mosse degli altri pezzi sono vietate");
+        // Mossa LEGALE: il Re si sposta di un passo in una casa non controllata (0,3)
+        assertTrue(board.isMoveLegal(new Position(0, 4), new Position(0, 3)), "Sotto doppio scacco solo il Re può muoversi");
     }
 }

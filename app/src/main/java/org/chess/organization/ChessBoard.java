@@ -129,6 +129,7 @@ public class ChessBoard {
             }
         } else{ // il re non è sotto scacco: controllo se il pezzo è in pin e la casa di arrivo se si trova lungo la direzione di Pin
             if(kingPin[piece.getPosition().row()][piece.getPosition().column()] == Pin.PINNED){
+                // calcolo del determinante
                 int deltaRowKing = piecePosition.row() - myKingPosition.row();
                 int deltaColKing = piecePosition.column() - myKingPosition.column();
                 int deltaRowTo = to.row() - myKingPosition.row();
@@ -162,7 +163,6 @@ public class ChessBoard {
             ){
                 return false;
             }
-            
             //      3. controllo sull'arrocco
             // NOTA: aggiungere condizione di verifica sul re che non abbia mai mosso, controllare se il re è sotto scacco (sempre su kingPin), sontrolllare su matrici di controllo le case tra re e torre, controllare la torre se non è mai stata mossa
         }
@@ -274,21 +274,21 @@ public class ChessBoard {
                                 (!isDiagonal && (targetPiece instanceof Rock || targetPiece instanceof Queen))
                             ) {
                                 kingPin[ownPiece.getPosition().row()][ownPiece.getPosition().column()] = Pin.PINNED;
+                            } 
                         } else if(
                             (isDiagonal && (targetPiece instanceof Bishop || targetPiece instanceof Queen)) || 
                             (!isDiagonal && (targetPiece instanceof Rock || targetPiece instanceof Queen))
-                        ){
+                            ){
                             checks += 1;
                             if (checks == 1) {
                                 kingPin[kingRow][kingColumn] = Pin.UNDER_CHECK_LINE;
-                            } else {
+                            } else if(checks == 2){
                                 kingPin[kingRow][kingColumn] = Pin.DOUBLE_CHECK;
                             }
 
                             kingPin[targetRow][targetColumn] = Pin.KING_ATTACKER;
                             markCheckPath(kingRow, kingColumn, targetRow, targetColumn, d);
-                            }
-                        }               
+                        }              
                         break; 
                     }
                 }

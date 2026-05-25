@@ -43,4 +43,7 @@ public class King extends Piece{
     public void setHasMovedTrue(){
         this.hasMoved = true;
     }
+    public boolean getHasMoved(){
+        return this.hasMoved;
+    }
 }
