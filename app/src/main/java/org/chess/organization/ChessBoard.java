@@ -43,6 +43,10 @@ public class ChessBoard {
         }
     }
 
+    public void setNull(Position position){
+        this.chessboard[position.row()][position.column()] = null;
+    }
+
     // getter
     public Piece[][] getBoard(){
         return this.chessboard;
@@ -108,6 +112,12 @@ public class ChessBoard {
         King myKing = (pieceColour.equals("white")) ? this.whiteKing:this.blackKing;
         Position myKingPosition = myKing.getPosition();
 
+        if(pieceColour.equals("white") && this.blackKing != null){
+            this.updateKingPin("black");    
+        } else if(this.whiteKing != null){
+            this.updateKingPin("white");
+        } 
+
         // //      2. Pin o mossa obbligata del re: se il re è sotto scacco bisogna coprirlo -> controllare in kinPin o muoverlo; se c'è un doppio scacco -> mossa obbligata SOLO sul re, tutti gli altri pezzi sono esclusi -> controllo su DOUBLE_UNDER_CHECK in kingPin
 
         // idea: devo verificare se il re dopo aver eseguito la mossa è sotto scacco
@@ -154,7 +164,7 @@ public class ChessBoard {
             }
         }
 
-        if(piece instanceof King){
+        if(piece instanceof King k){
             //      1. non può muoversi su case controllate da avversario
             //      controllo che Position to sia a 0 in squaresControlledBy<adversary>
             if(
@@ -164,9 +174,47 @@ public class ChessBoard {
                 return false;
             }
             //      3. controllo sull'arrocco
-            // NOTA: aggiungere condizione di verifica sul re che non abbia mai mosso, controllare se il re è sotto scacco (sempre su kingPin), sontrolllare su matrici di controllo le case tra re e torre, controllare la torre se non è mai stata mossa
-        }
+            int direction = to.column() - piecePosition.column(); // Destra (+) o Sinistra (-)
+            
+            if (Math.abs(direction) == 2) { 
+                int row = piecePosition.row();
+                Piece rock;
+                
+                // Trova la torre corretta in base alla direzione
+                if (direction > 0) { // Verso Destra -> Arrocco Corto
+                    rock = this.chessboard[row][7];
+                } else { // Verso Sinistra -> Arrocco Lungo
+                    rock = this.chessboard[row][0];
+                }
 
+                // Validazione base dei pezzi coinvolti e dello scacco attuale
+                if (rock == null || !(rock instanceof Rock) || ((Rock) rock).getHasMoved() || 
+                    k.getHasMoved() || kingPin[row][piecePosition.column()] != null) {
+                    return false;
+                }
+
+                // Recuperiamo la matrice di controllo dell'avversario
+                int[][] adversaryControl = k.getColour().equals("white") ? squaresControlledByBlack : squaresControlledByWhite;
+
+                // ARROCCO CORTO (Verso destra)
+                if (direction > 0) {
+                    // Le case di passaggio (colonne 5 e 6) devono essere VUOTE e NON CONTROLLATE
+                    if (this.chessboard[row][5] != null || this.chessboard[row][6] != null ||
+                        adversaryControl[row][5] != 0 || adversaryControl[row][6] != 0) {
+                        return false;
+                    }
+                } 
+                // ARROCCO LUNGO (Verso sinistra)
+                else {
+                    // Le case di passaggio (colonne 1, 2, 3) devono essere VUOTE
+                    // NOTA: da regolamento FIDE, colonna 1 (b1/b8) può essere controllata, ma deve essere fisicamente vuota!
+                    if (this.chessboard[row][1] != null || this.chessboard[row][2] != null || this.chessboard[row][3] != null ||
+                        adversaryControl[row][2] != 0 || adversaryControl[row][3] != 0) {
+                        return false;
+                    }
+                }
+            }
+        }
 
         // pedone: sasa 
         else if(piece instanceof Pawn){
@@ -213,14 +261,15 @@ public class ChessBoard {
         this.chessboard[to.row()][to.column()] = piece;
         piece.setPosition(to);        
         this.updateControl();
-
-        // aggiunte righe di update per kingPin
-        if(piece.getColour().equals("white") && this.blackKing != null){
-            this.updateKingPin("black");    
-        } else if(this.whiteKing != null){
-            this.updateKingPin("white");
-        }        
+        
+        if (piece instanceof King k){
+            k.setHasMovedTrue();
+        } else if(piece instanceof Rock r){
+            r.setHasMovedTrue();
+        }
     }
+
+    
 
     
     public void updateKingPin(String colour) {
