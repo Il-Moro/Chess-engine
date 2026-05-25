@@ -29,7 +29,7 @@ public class Pawn extends Piece{
             
             int targetRow, targetColumn;
             
-            if(this.colour == "white"){
+            if(this.colour.equals("white")){
                 targetRow = pieceRow + d[0];
                 targetColumn = pieceColumn + d[1];
             } else {
@@ -45,7 +45,7 @@ public class Pawn extends Piece{
                 
                 if(d[0]*d[1] == 0){    
                     if(pieceRow == 1 || pieceRow == 6){
-                        if(this.colour == "white"){
+                        if(this.colour.equals("white")){
                             moves.add(new Position(targetRow + 1, targetColumn));
                         } else {
                             moves.add(new Position(targetRow - 1, targetColumn));

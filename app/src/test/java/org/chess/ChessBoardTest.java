@@ -6,7 +6,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.chess.dataTypes.Position;
 import org.chess.organization.ChessBoard;
-import org.chess.pieces.*;
+import org.chess.pieces.Bishop;
+import org.chess.pieces.King;
+import org.chess.pieces.Knight;
+import org.chess.pieces.Pawn;
+import org.chess.pieces.Queen;
+import org.chess.pieces.Rock;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -127,16 +132,19 @@ public class ChessBoardTest {
     @Test
     void enPassant(){
         ChessBoard board = new ChessBoard();
-        Pawn whitePawn = new Pawn(new Position(6,4), "black");
-        Pawn blackPawn = new Pawn(new Position(4,3), "white");
+        Pawn blackPawn = new Pawn(new Position(6,4), "black");
+        Pawn whitePawn = new Pawn(new Position(4,3), "white");
+        
+        board.setPiece(new King(new Position(7,4), "black"));
+        board.setPiece(new King(new Position(0,4), "white"));
         board.setPiece(whitePawn);
         board.setPiece(blackPawn);
         // EN PASSANT VALIDO
         // Sposto il bianco di 2
-        assertTrue(board.isMoveLegal(whitePawn.getPosition(), new Position(4,4)));
-        board.physicalMovement(whitePawn.getPosition(),new Position(4,4));
+        assertTrue(board.isMoveLegal(blackPawn.getPosition(), new Position(4,4)));
+        board.physicalMovement(blackPawn.getPosition(),new Position(4,4));
         // Posso eseguire l' en passant
-        assertTrue(board.isMoveLegal(blackPawn.getPosition(),new Position(5,4)));
+        assertTrue(board.isMoveLegal(whitePawn.getPosition(),new Position(5,4)));
         
         board = new ChessBoard();
         whitePawn = new Pawn(new Position(3,4), "black");
@@ -144,6 +152,8 @@ public class ChessBoardTest {
         
         board.setPiece(whitePawn);
         board.setPiece(blackPawn);
+        board.setPiece(new King(new Position(7,4), "black"));
+        board.setPiece(new King(new Position(0,4), "white"));
 
         assertTrue(board.isMoveLegal(blackPawn.getPosition(),new Position(3,3)));
         board.physicalMovement(blackPawn.getPosition(), new Position(3,3));
@@ -154,8 +164,10 @@ public class ChessBoardTest {
         board = new ChessBoard();
         whitePawn = new Pawn(new Position(6,4), "black");
         blackPawn = new Pawn(new Position(4,3), "white");
-        Rock whiteRock = new Rock(new Position(7,0),"black");
+        Rock whiteRock = new Rock(new Position(7,0),"white");
         Rock blackRock = new Rock(new Position(0,0) , "white");
+        board.setPiece(new King(new Position(7,4), "black"));
+        board.setPiece(new King(new Position(0,4), "white"));
 
         board.setPiece(whitePawn);
         board.setPiece(blackPawn);
@@ -175,6 +187,8 @@ public class ChessBoardTest {
         whitePawn = new Pawn(new Position(5,4), "black");
         blackPawn = new Pawn(new Position(4,3), "white");
         
+        board.setPiece(new King(new Position(7,4), "white"));
+        board.setPiece(new King(new Position(0,4), "black"));
         board.setPiece(whitePawn);
         board.setPiece(blackPawn);
 
@@ -184,6 +198,8 @@ public class ChessBoardTest {
 
 
         board = new ChessBoard();
+        board.setPiece(new King(new Position(7,4), "black"));
+        board.setPiece(new King(new Position(0,4), "white"));
         whitePawn = new Pawn(new Position(3,4), "black");
         blackPawn = new Pawn(new Position(2,3), "white");
         
@@ -193,7 +209,6 @@ public class ChessBoardTest {
         assertTrue(board.isMoveLegal(blackPawn.getPosition(),new Position(3,3)));
         board.physicalMovement(blackPawn.getPosition(), new Position(3,3));
         assertFalse(board.isMoveLegal(whitePawn.getPosition(),new Position(2,3)));
-
     }
 
     @Test 
@@ -208,9 +223,7 @@ public class ChessBoardTest {
     void pinnedKing(){
         ChessBoard board = settings();
         board.updateKingPin("white");
-        assertFalse(board.isMoveLegal(new Position(3, 5), new Position(3,4)), "diagonale non consentita");
-        //assertTrue(board.isMoveLegal(new Position(3, 5), new Position(1,4)), "diagonale consentita");
+        assertFalse(board.isMoveLegal(new Position(2, 6), new Position(4,4)), "diagonale non consentita");
+        assertTrue(board.isMoveLegal(new Position(2, 6), new Position(1,5)), "diagonale consentita");
     }
-    
-
 }
