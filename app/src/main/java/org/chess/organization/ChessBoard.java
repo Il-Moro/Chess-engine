@@ -112,12 +112,6 @@ public class ChessBoard {
         King myKing = (pieceColour.equals("white")) ? this.whiteKing:this.blackKing;
         Position myKingPosition = myKing.getPosition();
 
-        if(pieceColour.equals("white") && this.blackKing != null){
-            this.updateKingPin("black");    
-        } else if(this.whiteKing != null){
-            this.updateKingPin("white");
-        } 
-
         // //      2. Pin o mossa obbligata del re: se il re è sotto scacco bisogna coprirlo -> controllare in kinPin o muoverlo; se c'è un doppio scacco -> mossa obbligata SOLO sul re, tutti gli altri pezzi sono esclusi -> controllo su DOUBLE_UNDER_CHECK in kingPin
 
         // idea: devo verificare se il re dopo aver eseguito la mossa è sotto scacco
@@ -267,10 +261,13 @@ public class ChessBoard {
         } else if(piece instanceof Rock r){
             r.setHasMovedTrue();
         }
+
+        if(piece.getColour().equals("white") && this.blackKing != null){
+            this.updateKingPin("black");    
+        } else if(this.whiteKing != null){
+            this.updateKingPin("white");
+        } 
     }
-
-    
-
     
     public void updateKingPin(String colour) {
         if((blackKing == null && colour.equals("black")) || (whiteKing == null && colour.equals("white"))){
