@@ -2,8 +2,11 @@ package org.chess;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import org.chess.dataTypes.Colour;
 import org.chess.dataTypes.End;
 import org.chess.dataTypes.Position;
 import org.chess.organization.ChessBoard;
@@ -44,21 +47,21 @@ public class ChessBoardTest {
     ChessBoard settings(){
         ChessBoard board = new ChessBoard();
         // posizione bianco
-        board.setPiece(new Rock(new Position(0,0), "white"));
-        board.setPiece(new Pawn(new Position(1,0), "white"));
-        board.setPiece(new Queen(new Position(2,2), "white"));
-        board.setPiece(new King(new Position(0,4), "white", false));
-        board.setPiece(new Rock(new Position(0,7), "white"));
-        board.setPiece(new Bishop(new Position(2,6), "white"));
+        board.setPiece(new Rock(new Position(0,0), Colour.WHITE));
+        board.setPiece(new Pawn(new Position(1,0), Colour.WHITE));
+        board.setPiece(new Queen(new Position(2,2), Colour.WHITE));
+        board.setPiece(new King(new Position(0,4), Colour.WHITE, false));
+        board.setPiece(new Rock(new Position(0,7), Colour.WHITE));
+        board.setPiece(new Bishop(new Position(2,6), Colour.WHITE));
 
         // posizione nero
-        board.setPiece(new Rock(new Position(7,0), "black"));
-        board.setPiece(new Pawn(new Position(6,4), "black"));
-        board.setPiece(new Queen(new Position(2,7), "black"));
-        board.setPiece(new King(new Position(7,4), "black", false));
-        board.setPiece(new Rock(new Position(7,7), "black"));
-        board.setPiece(new Knight(new Position(5,1), "black"));
-        board.setPiece(new Bishop(new Position(3,7), "black"));
+        board.setPiece(new Rock(new Position(7,0), Colour.BLACK));
+        board.setPiece(new Pawn(new Position(6,4), Colour.BLACK));
+        board.setPiece(new Queen(new Position(2,7), Colour.BLACK));
+        board.setPiece(new King(new Position(7,4), Colour.BLACK, false));
+        board.setPiece(new Rock(new Position(7,7), Colour.BLACK));
+        board.setPiece(new Knight(new Position(5,1), Colour.BLACK));
+        board.setPiece(new Bishop(new Position(3,7), Colour.BLACK));
         
         board.updateControl();
 
@@ -68,9 +71,9 @@ public class ChessBoardTest {
     ChessBoard setOnlyKing(){
         ChessBoard board = new ChessBoard();
         // posizione bianco
-        board.setPiece(new King(new Position(0,4), "white", false));
+        board.setPiece(new King(new Position(0,4), Colour.WHITE, false));
         // posizione nero
-        board.setPiece(new King(new Position(7,4), "black", false));
+        board.setPiece(new King(new Position(7,4), Colour.BLACK, false));
         
         board.updateControl();
 
@@ -82,10 +85,10 @@ public class ChessBoardTest {
     @Test // a.1. copertura totale: dato un pezzo libero nella scacchiera, per ogni casa che controlla, la matrice di controllo deve essere settata a 1 nelle celle corrispondenti 
     void controlMapOpenBoard(){
         ChessBoard board = new ChessBoard();
-        Rock rock = new Rock(new Position(3,3), "white");
+        Rock rock = new Rock(new Position(3,3), Colour.WHITE);
         board.setPiece(rock);
         board.updateControl();
-        int [][] squareControlled = board.getSquareControlledBy("white");
+        int [][] squareControlled = board.getSquareControlledBy(Colour.WHITE);
 
         int sumSquareControlledByRock = 0;
         
@@ -99,13 +102,13 @@ public class ChessBoardTest {
     @Test // a.2. covrapposizione di forze: dati due pezzi nella scacchiera, per ogni casa che controlla, la matrice di controllo deve essere settata a come la somma dei due pezzi nelle celle corrispondenti 
     void controlMapTwoPieces(){
         ChessBoard board = new ChessBoard();
-        Rock rock = new Rock(new Position(3,3), "white");
-        Queen queen = new Queen(new Position(5,7), "white");
+        Rock rock = new Rock(new Position(3,3), Colour.WHITE);
+        Queen queen = new Queen(new Position(5,7), Colour.WHITE);
         board.setPiece(rock);
         board.setPiece(queen);
         board.updateControl();
 
-        int[][] squareControlled = board.getSquareControlledBy("white");
+        int[][] squareControlled = board.getSquareControlledBy(Colour.WHITE);
         
         assertEquals(2, squareControlled[5][3], "matrice di controllo: control map two pieces");
     }
@@ -113,7 +116,7 @@ public class ChessBoardTest {
     @Test // a.3. bloccco da pezzi propri: se un pezzo controlla un altro pezzo dello stesso colore, la matrice di controllo deve essere a 1 nelle posizione del pezzo controllato
     void controlMapOwnPiececs(){
         ChessBoard board = settings();
-        int[][] squareControlled = board.getSquareControlledBy("white");
+        int[][] squareControlled = board.getSquareControlledBy(Colour.WHITE);
         assertEquals(1, squareControlled[1][0], "matrice di controllo: control map own pieces");
     }
 
@@ -122,8 +125,8 @@ public class ChessBoardTest {
     @Test // b.1 fuoco amico: se la mossa prevede di mangiare un pezzo proprio, impedirlo
     void cannotCaptureOwnPiece(){
         ChessBoard board = new ChessBoard();
-        Bishop bishop = new Bishop(new Position(7,1), "white");
-        Pawn pawn = new Pawn(new Position(5,3), "white");
+        Bishop bishop = new Bishop(new Position(7,1), Colour.WHITE);
+        Pawn pawn = new Pawn(new Position(5,3), Colour.WHITE);
         board.setPiece(pawn);
         board.setPiece(bishop);
         assertFalse(board.isMoveLegal(bishop.getPosition(),new Position(5,3)));
@@ -132,8 +135,8 @@ public class ChessBoardTest {
     @Test
     void pawnForwardMoveValidation(){
         ChessBoard board = new ChessBoard();
-        Pawn whitePawn = new Pawn(new Position(5,4), "white");
-        Pawn blackPawn = new Pawn(new Position(4,4), "black");
+        Pawn whitePawn = new Pawn(new Position(5,4), Colour.WHITE);
+        Pawn blackPawn = new Pawn(new Position(4,4), Colour.BLACK);
         board.setPiece(whitePawn);
         board.setPiece(blackPawn);
         Position whitePawnPosition=whitePawn.getPosition();
@@ -145,28 +148,28 @@ public class ChessBoardTest {
     @Test
     void enPassant(){
         ChessBoard board = new ChessBoard();
-        Pawn blackPawn = new Pawn(new Position(6,4), "black");
-        Pawn whitePawn = new Pawn(new Position(4,3), "white");
+        Pawn blackPawn = new Pawn(new Position(6,4), Colour.BLACK);
+        Pawn whitePawn = new Pawn(new Position(4,3), Colour.WHITE);
         
-        board.setPiece(new King(new Position(7,4), "black"));
-        board.setPiece(new King(new Position(0,4), "white"));
+        board.setPiece(new King(new Position(7,4), Colour.BLACK));
+        board.setPiece(new King(new Position(0,4), Colour.WHITE));
         board.setPiece(whitePawn);
         board.setPiece(blackPawn);
         // EN PASSANT VALIDO
         // Sposto il bianco di 2
         assertTrue(board.isMoveLegal(blackPawn.getPosition(), new Position(4,4)));
-        board.physicalMovement(blackPawn.getPosition(),new Position(4,4));
+        board.physicalMovement(blackPawn.getPosition(), new Position(4,4));
         // Posso eseguire l' en passant
         assertTrue(board.isMoveLegal(whitePawn.getPosition(),new Position(5,4)));
         
         board = new ChessBoard();
-        whitePawn = new Pawn(new Position(3,4), "black");
-        blackPawn = new Pawn(new Position(1,3), "white");
+        whitePawn = new Pawn(new Position(3,4), Colour.BLACK);
+        blackPawn = new Pawn(new Position(1,3), Colour.WHITE);
         
         board.setPiece(whitePawn);
         board.setPiece(blackPawn);
-        board.setPiece(new King(new Position(7,4), "black"));
-        board.setPiece(new King(new Position(0,4), "white"));
+        board.setPiece(new King(new Position(7,4), Colour.BLACK));
+        board.setPiece(new King(new Position(0,4), Colour.WHITE));
 
         assertTrue(board.isMoveLegal(blackPawn.getPosition(),new Position(3,3)));
         board.physicalMovement(blackPawn.getPosition(), new Position(3,3));
@@ -175,12 +178,12 @@ public class ChessBoardTest {
         // EN PASSANT NON VALIDO
 
         board = new ChessBoard();
-        whitePawn = new Pawn(new Position(6,4), "black");
-        blackPawn = new Pawn(new Position(4,3), "white");
-        Rock whiteRock = new Rock(new Position(7,0),"white");
-        Rock blackRock = new Rock(new Position(0,0) , "white");
-        board.setPiece(new King(new Position(7,4), "black"));
-        board.setPiece(new King(new Position(0,4), "white"));
+        whitePawn = new Pawn(new Position(6,4), Colour.BLACK);
+        blackPawn = new Pawn(new Position(4,3), Colour.WHITE);
+        Rock whiteRock = new Rock(new Position(7,0),Colour.WHITE);
+        Rock blackRock = new Rock(new Position(0,0) , Colour.WHITE);
+        board.setPiece(new King(new Position(7,4), Colour.BLACK));
+        board.setPiece(new King(new Position(0,4), Colour.WHITE));
 
         board.setPiece(whitePawn);
         board.setPiece(blackPawn);
@@ -197,11 +200,11 @@ public class ChessBoardTest {
         assertFalse(board.isMoveLegal(blackPawn.getPosition(),new Position(5,4)));
 
         board = new ChessBoard();
-        whitePawn = new Pawn(new Position(5,4), "black");
-        blackPawn = new Pawn(new Position(4,3), "white");
+        whitePawn = new Pawn(new Position(5,4), Colour.BLACK);
+        blackPawn = new Pawn(new Position(4,3), Colour.WHITE);
         
-        board.setPiece(new King(new Position(7,4), "white"));
-        board.setPiece(new King(new Position(0,4), "black"));
+        board.setPiece(new King(new Position(7,4), Colour.WHITE));
+        board.setPiece(new King(new Position(0,4), Colour.BLACK));
         board.setPiece(whitePawn);
         board.setPiece(blackPawn);
 
@@ -211,10 +214,10 @@ public class ChessBoardTest {
 
 
         board = new ChessBoard();
-        board.setPiece(new King(new Position(7,4), "black"));
-        board.setPiece(new King(new Position(0,4), "white"));
-        whitePawn = new Pawn(new Position(3,4), "black");
-        blackPawn = new Pawn(new Position(2,3), "white");
+        board.setPiece(new King(new Position(7,4), Colour.BLACK));
+        board.setPiece(new King(new Position(0,4), Colour.WHITE));
+        whitePawn = new Pawn(new Position(3,4), Colour.BLACK);
+        blackPawn = new Pawn(new Position(2,3), Colour.WHITE);
         
         board.setPiece(whitePawn);
         board.setPiece(blackPawn);
@@ -236,8 +239,8 @@ public class ChessBoardTest {
     void pinnedBishopDiagonal(){
         ChessBoard board = setOnlyKing();
         // Alfiere bianco in (2,6), inchiodato dall'Alfiere nero in (3,7) sulla diagonale del Re (0,4)
-        board.setPiece(new Bishop(new Position(2, 6), "white"));
-        board.setPiece(new Bishop(new Position(3, 7), "black"));
+        board.setPiece(new Bishop(new Position(2, 6), Colour.WHITE));
+        board.setPiece(new Bishop(new Position(3, 7), Colour.BLACK));
         
         board.updateControl();
         board.updateKingPin();
@@ -252,8 +255,8 @@ public class ChessBoardTest {
     void pinnedGenericDiagonal(){
         ChessBoard board = setOnlyKing();
         // Mettiamo un Pedone bianco in (1,5) inchiodato lungo la stessa diagonale da una Regina nera in (4,8)
-        board.setPiece(new Pawn(new Position(1, 5), "white"));
-        board.setPiece(new Queen(new Position(3, 7), "black"));
+        board.setPiece(new Pawn(new Position(1, 5), Colour.WHITE));
+        board.setPiece(new Queen(new Position(3, 7), Colour.BLACK));
         
         board.updateControl();
         board.updateKingPin();
@@ -266,8 +269,8 @@ public class ChessBoardTest {
     void pinnedRookOrtogonal(){
         ChessBoard board = setOnlyKing();
         // Torre bianca in (2,4) sulla stessa colonna del Re (0,4), inchiodata da una Torre nera in (5,4)
-        board.setPiece(new Rock(new Position(2, 4), "white"));
-        board.setPiece(new Rock(new Position(5, 4), "black"));
+        board.setPiece(new Rock(new Position(2, 4), Colour.WHITE));
+        board.setPiece(new Rock(new Position(5, 4), Colour.BLACK));
         
         board.updateControl();
         board.updateKingPin();
@@ -282,8 +285,8 @@ public class ChessBoardTest {
     void pinnedGenericOrtogonal(){
         ChessBoard board = setOnlyKing();
         // Regina bianca in (0,5) sulla stessa riga del Re (0,4), inchiodata da una Torre nera in (0,7)
-        board.setPiece(new Queen(new Position(0, 5), "white"));
-        board.setPiece(new Rock(new Position(0, 7), "black"));
+        board.setPiece(new Queen(new Position(0, 5), Colour.WHITE));
+        board.setPiece(new Rock(new Position(0, 7), Colour.BLACK));
         
         board.updateControl();
         board.updateKingPin();
@@ -298,9 +301,9 @@ public class ChessBoardTest {
     void pinnedKingUnderCheck(){
         ChessBoard board = setOnlyKing();
         // Il Re è sotto scacco lineare da una Torre nera in (4,4)
-        board.setPiece(new Rock(new Position(4, 4), "black"));
+        board.setPiece(new Rock(new Position(4, 4), Colour.BLACK));
         // C'è un Alfiere bianco libero in (2,2) che può intercettare lo scacco in (2,4)
-        board.setPiece(new Bishop(new Position(2, 2), "white"));
+        board.setPiece(new Bishop(new Position(2, 2), Colour.WHITE));
         
         board.updateControl();
         board.updateKingPin();
@@ -315,9 +318,9 @@ public class ChessBoardTest {
     void kingCheckByKnight(){
         ChessBoard board = setOnlyKing();
         // Il Re è sotto scacco da un Cavallo nero in (2,5)
-        board.setPiece(new Knight(new Position(2, 5), "black"));
+        board.setPiece(new Knight(new Position(2, 5), Colour.BLACK));
         // C'è una Regina bianca in (2,2) che può mangiare il cavallo
-        board.setPiece(new Queen(new Position(2, 2), "white"));
+        board.setPiece(new Queen(new Position(2, 2), Colour.WHITE));
         
         board.updateControl();
         board.updateKingPin();
@@ -332,10 +335,10 @@ public class ChessBoardTest {
     void doubleCheck(){
         ChessBoard board = setOnlyKing();
         // Re sotto DOPPIO scacco simultaneo: Torre nera in (4,4) e Cavallo nero in (2,5)
-        board.setPiece(new Rock(new Position(4, 4), "black"));
-        board.setPiece(new Knight(new Position(2, 5), "black"));
+        board.setPiece(new Rock(new Position(4, 4), Colour.BLACK));
+        board.setPiece(new Knight(new Position(2, 5), Colour.BLACK));
         // C'è una Regina bianca in (2,2) che teoricamente potrebbe mangiare il cavallo
-        board.setPiece(new Queen(new Position(2, 2), "white"));
+        board.setPiece(new Queen(new Position(2, 2), Colour.WHITE));
         
         board.updateControl();
         board.updateKingPin();
@@ -353,7 +356,7 @@ public class ChessBoardTest {
         // Spostiamo l'Alfiere nero in (3,1) per dare scacco diretto al Re bianco in (0,4)
         // Nota: rimuoviamo quello vecchio in (3,7) per pulizia
         board.setNull(new Position(3,7));
-        board.setPiece(new Bishop(new Position(3, 1), "black"));
+        board.setPiece(new Bishop(new Position(3, 1), Colour.BLACK));
         
         board.updateControl();
         board.updateKingPin(); // Questo imposterà UNDER_CHECK_LINE su (0,4)
@@ -394,9 +397,9 @@ public class ChessBoardTest {
         ChessBoard board = new ChessBoard();
         
         // Prendiamo il Re bianco e simuliamo che si sia GIÀ mosso in precedenza
-        board.setPiece(new King(new Position(0,4), "white", true));  
-        board.setPiece(new King(new Position(0, 4), "black"));      
-        board.setPiece(new Rock(new Position(0, 7), "white", false));
+        board.setPiece(new King(new Position(0,4), Colour.WHITE, true));  
+        board.setPiece(new King(new Position(0, 4), Colour.BLACK));      
+        board.setPiece(new Rock(new Position(0, 7), Colour.WHITE, false));
         
         board.updateControl();
         board.updateKingPin();
@@ -410,11 +413,11 @@ public class ChessBoardTest {
         ChessBoard board = new ChessBoard();
 
         // Il Re bianco non ha mai mosso (flag a false)
-        board.setPiece(new King(new Position(0, 4), "white",false));
-        board.setPiece(new King(new Position(0, 4), "black"));
+        board.setPiece(new King(new Position(0, 4), Colour.WHITE,false));
+        board.setPiece(new King(new Position(0, 4), Colour.BLACK));
         
         // La Torre nell'angolo (0,7) si è GIÀ mossa in precedenza (flag a true)
-        Rock rookMoved = new Rock(new Position(0, 7), "white", true);
+        Rock rookMoved = new Rock(new Position(0, 7), Colour.WHITE, true);
         board.setPiece(rookMoved);
         
         board.updateControl();
@@ -427,10 +430,10 @@ public class ChessBoardTest {
     @Test
     void castleFailedBecausePieceInBetween() {
         ChessBoard board = setOnlyKing();
-        board.setPiece(new Rock(new Position(0, 7), "white"));
+        board.setPiece(new Rock(new Position(0, 7), Colour.WHITE));
         
         // Piazziamo un Cavallo bianco in (0,6) che blocca la strada
-        board.setPiece(new Knight(new Position(0, 6), "white"));
+        board.setPiece(new Knight(new Position(0, 6), Colour.WHITE));
         
         board.updateControl();
         board.updateKingPin();
@@ -442,7 +445,7 @@ public class ChessBoardTest {
     void castleFailedBecauseRookIsMissing() {
         ChessBoard board = setOnlyKing();
         
-        board.setPiece(new Queen(new Position(0, 7), "white"));
+        board.setPiece(new Queen(new Position(0, 7), Colour.WHITE));
         
         board.updateControl();
         board.updateKingPin();
@@ -454,10 +457,10 @@ public class ChessBoardTest {
     @Test
     void castleRookUnderAttackIsLegal() {
         ChessBoard board = setOnlyKing();
-        board.setPiece(new Rock(new Position(0, 7), "white"));
+        board.setPiece(new Rock(new Position(0, 7), Colour.WHITE));
         
         // Caso da regolamento ufficiale FIDE: la TORRE è sotto attacco, ma il Re no.
-        board.setPiece(new Bishop(new Position(3, 4), "black"));
+        board.setPiece(new Bishop(new Position(3, 4), Colour.BLACK));
         
         board.updateControl();
         board.updateKingPin();
@@ -470,26 +473,150 @@ public class ChessBoardTest {
     @Test 
     void chechMate(){
         ChessBoard board = new ChessBoard();
-        board.setPiece(new King(new Position(0,0), "white", true));
-        board.setPiece(new King(new Position(7,0), "black", true));
-        board.setPiece(new Rock(new Position(0,7), "black", true));
-        board.setPiece(new Queen(new Position(1,7), "black"));
+        board.setPiece(new King(new Position(0,0), Colour.WHITE, true));
+        board.setPiece(new King(new Position(7,0), Colour.BLACK, true));
+        board.setPiece(new Rock(new Position(0,7), Colour.BLACK, true));
+        board.setPiece(new Queen(new Position(1,7), Colour.BLACK));
         board.updateControl();
         board.updateKingPin();
 
-        assertEquals(End.CHECKMATE, board.isCheckmateOrStalemate("white"));
+        assertEquals(End.CHECKMATE, board.isCheckmateOrStalemate(Colour.WHITE));
     }
 
     @Test 
     void staleMate(){
         ChessBoard board = new ChessBoard();
-        board.setPiece(new King(new Position(0,0), "white", true));
-        board.setPiece(new King(new Position(7,0), "black", true));
-        board.setPiece(new Rock(new Position(7,1), "black", true));
-        board.setPiece(new Queen(new Position(1,7), "black"));
+        board.setPiece(new King(new Position(0,0), Colour.WHITE, true));
+        board.setPiece(new King(new Position(7,0), Colour.BLACK, true));
+        board.setPiece(new Rock(new Position(7,1), Colour.BLACK, true));
+        board.setPiece(new Queen(new Position(1,7), Colour.BLACK));
         board.updateControl();
         board.updateKingPin();
 
-        assertEquals(End.STALEMATE, board.isCheckmateOrStalemate("white"));
+        assertEquals(End.STALEMATE, board.isCheckmateOrStalemate(Colour.WHITE));
     }
+
+    @Test
+    void whiteCastles() {
+        ChessBoard board = new ChessBoard(true); // Configurazione iniziale standard
+
+        // arrocco corto
+        // libero le case f1 (0,5) e g1 (0,6) togliendo Alfiere e Cavallo
+        board.setNull(new Position(0, 5));
+        board.setNull(new Position(0, 6));
+        board.updateControl();
+        board.updateKingPin();
+
+        // verifico che la mossa si possa eseguire e la eseguo
+        assertTrue(board.isMoveLegal(new Position(0,4), new Position(0,6)), "arrocco non eseguibile");
+        board.physicalMovement(new Position(0, 4), new Position(0, 6));
+
+        // Verifiche: il Re è in g1, la Torre è in f1, le vecchie case sono vuote
+        assertTrue(board.getPiece(new Position(0, 6)) instanceof King);
+        assertTrue(board.getPiece(new Position(0, 5)) instanceof Rock);
+        assertNull(board.getPiece(new Position(0, 4)));
+        assertNull(board.getPiece(new Position(0, 7)));
+
+
+        // arrocco lungo
+        // Reset della scacchiera per testare il lungo separatamente
+        board = new ChessBoard(true);
+        // libero b1 (0,1), c1 (0,2), d1 (0,3)
+        board.setNull(new Position(0, 1));
+        board.setNull(new Position(0, 2));
+        board.setNull(new Position(0, 3));
+        board.updateControl();
+        board.updateKingPin();
+
+        // verifico che la mossa possa essere eseguita e poi la eseguo
+        assertTrue(board.isMoveLegal(new Position(0,4), new Position(0,2)), "arrocco non eseguibile");
+        board.physicalMovement(new Position(0, 4), new Position(0, 2));
+
+        // Verifiche: il Re è in c1, la Torre è in d1, le vecchie case sono vuote
+        assertTrue(board.getPiece(new Position(0, 2)) instanceof King);
+        assertTrue(board.getPiece(new Position(0, 3)) instanceof Rock);
+        assertNull(board.getPiece(new Position(0, 4)));
+        assertNull(board.getPiece(new Position(0, 0)));
+    }
+
+    @Test
+    void blackCastles() {
+        ChessBoard board = new ChessBoard(true);
+
+        // arrocco corto
+        // libero f8 (7,5) e g8 (7,6)
+        board.setNull(new Position(7, 5));
+        board.setNull(new Position(7, 6));
+        board.updateControl();
+        board.updateKingPin();
+
+        // Il Re nero si sposta da e8(7,4) a g8(7,6)
+        assertTrue(board.isMoveLegal(new Position(7,4), new Position(7, 6)));
+        board.physicalMovement(new Position(7, 4), new Position(7, 6));
+
+        assertTrue(board.getPiece(new Position(7, 6)) instanceof King);
+        assertTrue(board.getPiece(new Position(7, 5)) instanceof Rock);
+        assertNull(board.getPiece(new Position(7, 4)));
+        assertNull(board.getPiece(new Position(7, 7)));
+
+
+        // arrocco lungo
+
+        // Reset della scacchiera per testare il lungo separatamente
+        board = new ChessBoard(true);
+
+        // Liberiamo b8 (7,1), c8 (7,2), d8 (7,3)
+        board.setNull(new Position(7, 1));
+        board.setNull(new Position(7, 2));
+        board.setNull(new Position(7, 3));
+        board.updateControl();
+        board.updateKingPin();
+
+        // Il Re nero si sposta da e8(7,4) a c8(7,2)
+        assertTrue(board.isMoveLegal(new Position(7, 4), new Position(7, 2)));
+        board.physicalMovement(new Position(7, 4), new Position(7, 2));
+
+        assertTrue(board.getPiece(new Position(7, 2)) instanceof King);
+        assertTrue(board.getPiece(new Position(7, 3)) instanceof Rock);
+        assertNull(board.getPiece(new Position(7, 4)));
+        assertNull(board.getPiece(new Position(7, 0)));
+    }
+
+    /*
+    @Test
+    void promotions() {
+        ChessBoard board = setOnlyKing(); // Solo i Re presenti sulla scacchiera
+
+        // promozione bianco
+        // Piazziamo un pedone bianco in settima traversa (6, 4)
+        Pawn whitePawn = new Pawn(new Position(6, 4), Colour.WHITE);
+        board.setPiece(whitePawn);
+        board.updateControl();
+        board.updateKingPin();
+
+        // Spingiamo il pedone in ottava traversa (7, 4) -> Scatta la promozione
+        board.physicalMovement(new Position(6, 4), new Position(7, 4));
+
+        // Verifiche: il pedone in (6,4) non c'è più, e in (7,4) c'è il pezzo promosso (es. Queen)
+        assertNull(board.getPiece(new Position(6, 4)));
+        assertNotNull(board.getPiece(new Position(7, 4)));
+        assertFalse(board.getPiece(new Position(7, 4)) instanceof Pawn, "Il pezzo non deve più essere un pedone");
+
+
+        // promozione nero
+        // Piazziamo un pedone nero in seconda traversa (1, 3)
+        Pawn blackPawn = new Pawn(new Position(1, 3), Colour.BLACK);
+        board.setPiece(blackPawn);
+        board.updateControl();
+        board.updateKingPin();
+
+        // Spingiamo il pedone in prima traversa (0, 3) -> Scatta la promozione
+        board.physicalMovement(new Position(1, 3), new Position(0, 3));
+
+        // Verifiche
+        assertNull(board.getPiece(new Position(1, 3)));
+        assertNotNull(board.getPiece(new Position(0, 3)));
+        assertFalse(board.getPiece(new Position(0, 3)) instanceof Pawn, "Il pedone nero deve essere stato promosso");
+    }
+    */
 }

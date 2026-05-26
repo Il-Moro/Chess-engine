@@ -9,7 +9,7 @@ import org.chess.organization.*;
 
 public class Queen extends Piece{
 
-    public Queen(Position position, String colour){
+    public Queen(Position position, Colour colour){
         super(position, colour);
         this.value = 9;
     }

@@ -13,7 +13,7 @@ public class KingTest {
     @Test 
     void OpenBoardKing(){
         ChessBoard board = new ChessBoard();
-        King king = new King(new Position(3,4), "white");
+        King king = new King(new Position(3,4), Colour.WHITE);
 
         board.setPiece(king);
         
@@ -34,10 +34,10 @@ public class KingTest {
     @Test 
     void surroundedByOwnPiecesKing(){
         ChessBoard board = new ChessBoard();
-        King king = new King(new Position(0, 0), "white");
-        Bishop bishop = new Bishop(new Position(1, 0), "white");
-        Rock rock = new Rock(new Position(1, 1), "white");
-        Queen queen = new Queen(new Position(0, 1), "white");
+        King king = new King(new Position(0, 0), Colour.WHITE);
+        Bishop bishop = new Bishop(new Position(1, 0), Colour.WHITE);
+        Rock rock = new Rock(new Position(1, 1), Colour.WHITE);
+        Queen queen = new Queen(new Position(0, 1), Colour.WHITE);
 
         board.setPiece(king);
         board.setPiece(bishop);
@@ -52,10 +52,10 @@ public class KingTest {
     @Test
     void surroundedByAdversarialPiecesKing(){
         ChessBoard board = new ChessBoard();
-        King king = new King(new Position(0, 0), "black");
-        Bishop bishop = new Bishop(new Position(1, 0), "black");
-        Rock rock = new Rock(new Position(1, 1), "black");
-        Queen queen = new Queen(new Position(0, 1), "black");
+        King king = new King(new Position(0, 0), Colour.BLACK);
+        Bishop bishop = new Bishop(new Position(1, 0), Colour.BLACK);
+        Rock rock = new Rock(new Position(1, 1), Colour.BLACK);
+        Queen queen = new Queen(new Position(0, 1), Colour.BLACK);
 
         board.setPiece(king);
         board.setPiece(bishop);

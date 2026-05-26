@@ -22,8 +22,8 @@ public class BishopTest {
         ChessBoard board = new ChessBoard();
         
         // posizioni da calcolare
-        Bishop bishop1 = new Bishop(new Position(0,0), "white");
-        Bishop bishop2 = new Bishop(new Position(3,3), "white");
+        Bishop bishop1 = new Bishop(new Position(0,0), Colour.WHITE);
+        Bishop bishop2 = new Bishop(new Position(3,3), Colour.WHITE);
         
         Set<Position> positionCalculated1 = bishop1.getPotentialMoves(board);
         Set<Position> positionCalculated2 = bishop2.getPotentialMoves(board);
@@ -52,8 +52,8 @@ public class BishopTest {
         
         ChessBoard board = new ChessBoard();
         
-        Bishop whiteBishop = new Bishop(new Position(3,2),"white");
-        Bishop blackBishop = new Bishop(new Position(6,5),"black");
+        Bishop whiteBishop = new Bishop(new Position(3,2), Colour.WHITE);
+        Bishop blackBishop = new Bishop(new Position(6,5), Colour.BLACK);
 
         board.setPiece(blackBishop);
         board.setPiece(whiteBishop);
@@ -72,8 +72,8 @@ public class BishopTest {
     void blockByOwnPieceBishop(){
         ChessBoard board = new ChessBoard();
         
-        Bishop bishop1 = new Bishop(new Position(3,2),"white");
-        Bishop bishop2 = new Bishop(new Position(6,5),"white");
+        Bishop bishop1 = new Bishop(new Position(3,2), Colour.WHITE);
+        Bishop bishop2 = new Bishop(new Position(6,5), Colour.WHITE);
 
         board.setPiece(bishop1);
         board.setPiece(bishop2);
@@ -92,13 +92,13 @@ public class BishopTest {
     void surroundedByAdversarialPiecesBishop(){
         ChessBoard board = new ChessBoard();
         
-        Bishop whiteBishop = new Bishop(new Position(4,3),"white");
+        Bishop whiteBishop = new Bishop(new Position(4,3), Colour.WHITE);
         board.setPiece(whiteBishop);
         
-        board.setPiece(new Bishop(new Position(5, 2), "black")); 
-        board.setPiece(new Bishop(new Position(3, 2), "black")); 
-        board.setPiece(new Bishop(new Position(5, 4), "black")); 
-        board.setPiece(new Bishop(new Position(3, 4), "black")); 
+        board.setPiece(new Bishop(new Position(5, 2), Colour.BLACK)); 
+        board.setPiece(new Bishop(new Position(3, 2), Colour.BLACK)); 
+        board.setPiece(new Bishop(new Position(5, 4), Colour.BLACK)); 
+        board.setPiece(new Bishop(new Position(3, 4), Colour.BLACK)); 
         
         Set<Position> positionsForWhiteBishop = whiteBishop.getPotentialMoves(board);
 
@@ -110,13 +110,13 @@ public class BishopTest {
     void surroundedByOwnPiecesBishop(){
         ChessBoard board = new ChessBoard();
         
-        Bishop bishop = new Bishop(new Position(4,3),"white");
+        Bishop bishop = new Bishop(new Position(4,3),Colour.WHITE);
         board.setPiece(bishop);
         
-        board.setPiece(new Bishop(new Position(5, 2), "white")); 
-        board.setPiece(new Bishop(new Position(3, 2), "white")); 
-        board.setPiece(new Bishop(new Position(5, 4), "white")); 
-        board.setPiece(new Bishop(new Position(3, 4), "white")); 
+        board.setPiece(new Bishop(new Position(5, 2), Colour.WHITE)); 
+        board.setPiece(new Bishop(new Position(3, 2), Colour.WHITE)); 
+        board.setPiece(new Bishop(new Position(5, 4), Colour.WHITE)); 
+        board.setPiece(new Bishop(new Position(3, 4), Colour.WHITE)); 
         
         Set<Position> positionsForBishop = bishop.getPotentialMoves(board);
 

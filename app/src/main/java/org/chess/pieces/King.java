@@ -10,12 +10,12 @@ public class King extends Piece{
 
     private boolean hasMoved = true;
 
-    public King(Position position, String colour){
+    public King(Position position, Colour colour){
         super(position, colour);
         this.value = Integer.MAX_VALUE;
     }
 
-    public King(Position position, String colour, boolean hasMoved){
+    public King(Position position, Colour colour, boolean hasMoved){
         super(position, colour);
         this.hasMoved = hasMoved;
     }

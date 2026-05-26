@@ -15,7 +15,7 @@ public class KnightTest {
     void openBoardKnightAtCenter(){
         
         ChessBoard board = new ChessBoard();
-        Knight knight = new Knight(new Position(3, 3), "white");
+        Knight knight = new Knight(new Position(3, 3), Colour.WHITE);
 
         board.setPiece(knight);
 
@@ -39,7 +39,7 @@ public class KnightTest {
     @Test 
     void openBoardKnightAtEdge(){
         ChessBoard board = new ChessBoard();
-        Knight knight = new Knight(new Position(0, 0), "white");
+        Knight knight = new Knight(new Position(0, 0), Colour.WHITE);
 
         board.setPiece(knight);
 
@@ -55,8 +55,8 @@ public class KnightTest {
     void blockByOwnPieceKnight(){
         ChessBoard board = new ChessBoard();
         
-        Knight whiteKnight1 = new Knight(new Position(0, 0), "white");
-        Knight whiteKnight2 = new Knight(new Position(1, 2), "white");
+        Knight whiteKnight1 = new Knight(new Position(0, 0), Colour.WHITE);
+        Knight whiteKnight2 = new Knight(new Position(1, 2), Colour.WHITE);
 
         board.setPiece(whiteKnight1);
         board.setPiece(whiteKnight2);
