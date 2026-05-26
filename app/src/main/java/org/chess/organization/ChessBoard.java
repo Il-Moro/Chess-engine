@@ -10,7 +10,8 @@ public class ChessBoard {
     private Piece[][] chessboard;
     private int[][] squaresControlledByWhite;
     private int[][] squaresControlledByBlack;
-    private Pin[][] kingPin; // matrice che controlla a partire dal re: Pieces in pin, Pieces attacker, marca il re se è sotto scacco da un pezzo lineare oppure da un cavallo o se è in doppio scacco
+    private Pin[][] whiteKingPin; // matrice che controlla a partire dal re: Pieces in pin, Pieces attacker, marca il re se è sotto scacco da un pezzo lineare oppure da un cavallo o se è in doppio scacco
+    private Pin[][] blackKingPin;
     private King whiteKing;
     private King blackKing;
     private Pawn lastPawnMoved = null;
@@ -21,7 +22,8 @@ public class ChessBoard {
         this.chessboard = new Piece[8][8];
         this.squaresControlledByBlack = new int[8][8];
         this.squaresControlledByWhite = new int[8][8];
-        this.kingPin = new Pin[8][8];
+        this.whiteKingPin = new Pin[8][8];
+        this.blackKingPin = new Pin[8][8];
         // per evitare errori se in Chessboard non sono stati inseriti re
         this.whiteKing = null;
         this.blackKing = null;
@@ -64,8 +66,8 @@ public class ChessBoard {
         return chessboard[position.row()][position.column()] == null;
     }
 
-    public Pin[][] getKingPin(){
-        return this.kingPin;
+    public Pin[][] getKingPin(String colour){
+        return (colour.equals("white")) ? whiteKingPin : blackKingPin ;
     }
 
     // movement of pieces
@@ -111,6 +113,7 @@ public class ChessBoard {
         // casistiche re: moro
         King myKing = (pieceColour.equals("white")) ? this.whiteKing:this.blackKing;
         Position myKingPosition = myKing.getPosition();
+        Pin[][] kingPin = (myKing.getColour().equals("white")) ? whiteKingPin : blackKingPin;
 
         // //      2. Pin o mossa obbligata del re: se il re è sotto scacco bisogna coprirlo -> controllare in kinPin o muoverlo; se c'è un doppio scacco -> mossa obbligata SOLO sul re, tutti gli altri pezzi sono esclusi -> controllo su DOUBLE_UNDER_CHECK in kingPin
 
@@ -255,22 +258,24 @@ public class ChessBoard {
         this.chessboard[to.row()][to.column()] = piece;
         piece.setPosition(to);        
         this.updateControl();
-        
+        if (this.whiteKing != null && this.blackKing != null){
+            updateKingPin();
+        } 
+
         if (piece instanceof King k){
             k.setHasMovedTrue();
         } else if(piece instanceof Rock r){
             r.setHasMovedTrue();
         }
-
-        if(piece.getColour().equals("white") && this.blackKing != null){
-            this.updateKingPin("black");    
-        } else if(this.whiteKing != null){
-            this.updateKingPin("white");
-        } 
     }
-    
-    public void updateKingPin(String colour) {
-        if((blackKing == null && colour.equals("black")) || (whiteKing == null && colour.equals("white"))){
+
+    public void updateKingPin(){
+        generateKingPinData(blackKingPin, blackKing);
+        generateKingPinData(whiteKingPin, whiteKing);
+    }
+
+    private void generateKingPinData(Pin[][] kingPin, King king) {
+        if (king == null){
             return;
         }
         // Reset preventivo della matrice prima di calcolare i nuovi pin/check
@@ -283,16 +288,16 @@ public class ChessBoard {
         int[][] linearDirections = {{1, 1}, {-1, 1}, {-1, -1}, {1, -1}, {1, 0}, {-1, 0}, {0, 1}, {0, -1}};
         int[][] knightDirections = {{2, -1}, {2, 1}, {1, 2}, {-1, 2}, {-2, 1}, {-2, -1}, {-1, -2}, {1, -2}};
 
-        int kingRow = colour.equals("white") ? whiteKing.getPosition().row() : blackKing.getPosition().row();
-        int kingColumn = colour.equals("white") ? whiteKing.getPosition().column() : blackKing.getPosition().column();
+        int kingRow = king.getPosition().row();
+        int kingColumn = king.getPosition().column();
 
         int checks = 0;
 
-        checks += calculateLinearDirections(colour, linearDirections, kingRow, kingColumn, checks);
-        calculateKnightDirections(colour, knightDirections, kingRow, kingColumn, checks);        
+        checks += calculateLinearDirections(king.getColour(), linearDirections, kingRow, kingColumn, checks, kingPin);
+        calculateKnightDirections(king.getColour(), knightDirections, kingRow, kingColumn, checks, kingPin);        
     }
 
-    private int calculateLinearDirections(String colour, int[][] directions, int kingRow, int kingColumn, int checks) {
+    private int calculateLinearDirections(String colour, int[][] directions, int kingRow, int kingColumn, int checks, Pin[][] kingPin) {
 
         for (int[] d : directions) {           
             int targetRow = kingRow + d[0];
@@ -333,7 +338,7 @@ public class ChessBoard {
                             }
 
                             kingPin[targetRow][targetColumn] = Pin.KING_ATTACKER;
-                            markCheckPath(kingRow, kingColumn, targetRow, targetColumn, d);
+                            markCheckPath(kingRow, kingColumn, targetRow, targetColumn, d, kingPin);
                         }              
                         break; 
                     }
@@ -345,7 +350,7 @@ public class ChessBoard {
         return checks;
     }
 
-    private void calculateKnightDirections(String colour, int[][] directions, int kingRow, int kingColumn, int checks) {
+    private void calculateKnightDirections(String colour, int[][] directions, int kingRow, int kingColumn, int checks, Pin[][] kingPin) {
 
         for (int[] d : directions) {           
             int targetRow = kingRow + d[0];
@@ -370,7 +375,7 @@ public class ChessBoard {
         }
     }
 
-    private void markCheckPath(int startRow, int startCol, int endRow, int endCol, int[] d) {
+    private void markCheckPath(int startRow, int startCol, int endRow, int endCol, int[] d, Pin[][] kingPin) {
         int r = startRow + d[0];
         int c = startCol + d[1];
         while (r != endRow || c != endCol) {

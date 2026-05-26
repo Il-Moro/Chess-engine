@@ -239,7 +239,7 @@ public class ChessBoardTest {
         board.setPiece(new Bishop(new Position(3, 7), "black"));
         
         board.updateControl();
-        board.updateKingPin("white");
+        board.updateKingPin();
 
         // Mossa ILLEGALE: uscire dalla diagonale andando in (4,4)
         assertFalse(board.isMoveLegal(new Position(2, 6), new Position(4,4)), "diagonale non consentita");
@@ -255,7 +255,7 @@ public class ChessBoardTest {
         board.setPiece(new Queen(new Position(3, 7), "black"));
         
         board.updateControl();
-        board.updateKingPin("white");
+        board.updateKingPin();
 
         // Un pedone pinnato in diagonale non può MAI muoversi in avanti (riga 2, colonna 5), perché uscirebbe dalla linea
         assertFalse(board.isMoveLegal(new Position(1, 5), new Position(2, 5)), "Il pedone non può avanzare se il pin è diagonale");
@@ -269,7 +269,7 @@ public class ChessBoardTest {
         board.setPiece(new Rock(new Position(5, 4), "black"));
         
         board.updateControl();
-        board.updateKingPin("white");
+        board.updateKingPin();
 
         // Mossa ILLEGALE: muoversi lateralmente sulla riga in (2,5) rompe il pin
         assertFalse(board.isMoveLegal(new Position(2, 4), new Position(2, 5)), "Spostamento laterale non consentito per pin ortogonale");
@@ -285,7 +285,7 @@ public class ChessBoardTest {
         board.setPiece(new Rock(new Position(0, 7), "black"));
         
         board.updateControl();
-        board.updateKingPin("white");
+        board.updateKingPin();
 
         // Mossa ILLEGALE: muoversi in diagonale fuori dalla riga in (1,6)
         assertFalse(board.isMoveLegal(new Position(0, 5), new Position(1, 6)), "La regina non può uscire dalla riga di pin");
@@ -302,7 +302,7 @@ public class ChessBoardTest {
         board.setPiece(new Bishop(new Position(2, 2), "white"));
         
         board.updateControl();
-        board.updateKingPin("white");
+        board.updateKingPin();
 
         // Mossa ILLEGALE: l'alfiere si muove in una casa a caso (3,3) ignorando lo scacco al Re
         assertFalse(board.isMoveLegal(new Position(2, 2), new Position(3, 3)), "Mossa non consentita, il Re rimane sotto scacco");
@@ -319,7 +319,7 @@ public class ChessBoardTest {
         board.setPiece(new Queen(new Position(2, 2), "white"));
         
         board.updateControl();
-        board.updateKingPin("white");
+        board.updateKingPin();
 
         // Mossa ILLEGALE: la regina prova a mettersi in mezzo in (1,4). Contro un cavallo non serve a nulla parare la linea
         assertFalse(board.isMoveLegal(new Position(2, 2), new Position(1, 4)), "Non si può intercettare la traiettoria di un cavallo");
@@ -337,7 +337,7 @@ public class ChessBoardTest {
         board.setPiece(new Queen(new Position(2, 2), "white"));
         
         board.updateControl();
-        board.updateKingPin("white");
+        board.updateKingPin();
 
         // Mossa ILLEGALE: in doppio scacco, qualsiasi mossa di pezzi che non siano il Re deve essere bloccata (ritorna false)
         assertFalse(board.isMoveLegal(new Position(2, 2), new Position(2, 5)), "Sotto doppio scacco le mosse degli altri pezzi sono vietate");
@@ -355,7 +355,7 @@ public class ChessBoardTest {
         board.setPiece(new Bishop(new Position(3, 1), "black"));
         
         board.updateControl();
-        board.updateKingPin("white"); // Questo imposterà UNDER_CHECK_LINE su (0,4)
+        board.updateKingPin(); // Questo imposterà UNDER_CHECK_LINE su (0,4)
 
         // Il Re è sotto scacco -> L'arrocco corto deve essere cancellato
         assertFalse(board.isMoveLegal(new Position(0, 4), new Position(0, 6)), "Arrocco corto bianco non consentito: il Re è sotto scacco");
@@ -364,7 +364,7 @@ public class ChessBoardTest {
     @Test
     void longCastleWhite(){
         ChessBoard board = settings();
-        board.updateKingPin("white");
+        board.updateKingPin();
 
         // Il lungo del bianco rimane CONSENTITO (nessuno scacco, case vuote e sicure)
         assertTrue(board.isMoveLegal(new Position(0, 4), new Position(0, 2)), "Arrocco lungo bianco consentito");
@@ -373,7 +373,7 @@ public class ChessBoardTest {
     @Test
     void shortCastleBlack(){
         ChessBoard board = settings();
-        board.updateKingPin("black");
+        board.updateKingPin();
 
         // Lo short del nero rimane CONSENTITO
         assertTrue(board.isMoveLegal(new Position(7, 4), new Position(7, 6)), "Arrocco corto nero consentito");
@@ -382,7 +382,7 @@ public class ChessBoardTest {
     @Test
     void longCastleBlack(){
         ChessBoard board = settings();
-        board.updateKingPin("black");
+        board.updateKingPin();
 
         // Il lungo del nero rimane NON CONSENTITO perché la Regina bianca in (2,2) 
         // controlla la casa di arrivo (7,2) sulla colonna 2
@@ -393,11 +393,12 @@ public class ChessBoardTest {
         ChessBoard board = new ChessBoard();
         
         // Prendiamo il Re bianco e simuliamo che si sia GIÀ mosso in precedenza
-        board.setPiece(new King(new Position(0,4), "white", true));        
+        board.setPiece(new King(new Position(0,4), "white", true));  
+        board.setPiece(new King(new Position(0, 4), "black"));      
         board.setPiece(new Rock(new Position(0, 7), "white", false));
         
         board.updateControl();
-        board.updateKingPin("white");
+        board.updateKingPin();
 
         // Il Re ha mosso -> Arrocco nullo
         assertFalse(board.isMoveLegal(new Position(0, 4), new Position(0, 6)), "Arrocco illegale: il Re si è già mosso precedentemente nella partita");
@@ -409,13 +410,14 @@ public class ChessBoardTest {
 
         // Il Re bianco non ha mai mosso (flag a false)
         board.setPiece(new King(new Position(0, 4), "white",false));
+        board.setPiece(new King(new Position(0, 4), "black"));
         
         // La Torre nell'angolo (0,7) si è GIÀ mossa in precedenza (flag a true)
         Rock rookMoved = new Rock(new Position(0, 7), "white", true);
         board.setPiece(rookMoved);
         
         board.updateControl();
-        board.updateKingPin("white");
+        board.updateKingPin();
 
         // La torre ha mosso -> Arrocco corto nullo
         assertFalse(board.isMoveLegal(new Position(0, 4), new Position(0, 6)), "Arrocco illegale: la Torre dell'arrocco corto ha già mosso");
@@ -430,7 +432,7 @@ public class ChessBoardTest {
         board.setPiece(new Knight(new Position(0, 6), "white"));
         
         board.updateControl();
-        board.updateKingPin("white");
+        board.updateKingPin();
 
         assertFalse(board.isMoveLegal(new Position(0, 4), new Position(0, 6)), "Arrocco illegale: c'è un pezzo (Cavallo) di intralcio tra il Re e la Torre");
     }
@@ -442,7 +444,7 @@ public class ChessBoardTest {
         board.setPiece(new Queen(new Position(0, 7), "white"));
         
         board.updateControl();
-        board.updateKingPin("white");
+        board.updateKingPin();
 
         // Non c'è la torre nell'angolo -> l'arrocco non esiste geometricamente
         assertFalse(board.isMoveLegal(new Position(0, 4), new Position(0, 6)), "Arrocco illegale: non si può arroccare con una Regina al posto della Torre");
@@ -457,7 +459,7 @@ public class ChessBoardTest {
         board.setPiece(new Bishop(new Position(3, 4), "black"));
         
         board.updateControl();
-        board.updateKingPin("white");
+        board.updateKingPin();
 
         // Regola FIDE: Se la Torre è sotto attacco (o la casa b1/b8 nell'arrocco lungo), l'arrocco è comunque legale
         // L'importante è che non siano sotto attacco il Re, la casa di passaggio del Re, e la casa di arrivo del Re.
