@@ -233,8 +233,6 @@ public class ChessBoard {
             }
         }
 
-        // checkmate: insieme
-
         if(legal){
             if(piece instanceof Pawn){
                 lastPawnMoved = (Pawn) piece;
@@ -267,6 +265,44 @@ public class ChessBoard {
         } else if(piece instanceof Rock r){
             r.setHasMovedTrue();
         }
+    }
+
+    public End isCheckmateOrStalemate(String colour) {
+        int kingRow = colour.equals("white") ? whiteKing.getPosition().row() : blackKing.getPosition().row();
+        int kingCol = colour.equals("white") ? whiteKing.getPosition().column() : blackKing.getPosition().column();
+        Pin [][] kingPin = (colour.equals("white")) ? whiteKingPin : blackKingPin;
+        
+        boolean anyLegalMoves = hasAnyLegalMoves(colour);
+
+        // 1. Per essere matto, il Re DEVE essere sotto scacco
+        if (kingPin[kingRow][kingCol] == null && !anyLegalMoves) {
+            return End.STALEMATE; 
+        } else if(kingPin[kingRow][kingCol] != null && !anyLegalMoves){
+            return End.CHECKMATE;
+        } else {
+            return End.IN_PROGRESS;
+        }
+    }
+
+    // scansiona se esistono mosse legali
+    private boolean hasAnyLegalMoves(String colour) {
+        for (int r = 0; r < 8; r++) {
+            for (int c = 0; c < 8; c++) {
+                Piece p = chessboard[r][c];
+                
+                // Trova i pezzi del giocatore di turno
+                if (p != null && p.getColour().equals(colour)) {
+                    // Cicla su ogni mossa geometricamente possibile per quel pezzo
+                    for (Position to : p.getPotentialMoves(this)) {
+                        // Se 'isMoveLegal' dà l'ok anche solo a UNA mossa in tutta la scacchiera
+                        if (this.isMoveLegal(p.getPosition(), to)) {
+                            return true; // esiste una mossa
+                        }
+                    }
+                }
+            }
+        }
+        return false; // non ci sono mosse legali
     }
 
     public void updateKingPin(){

@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import org.chess.dataTypes.End;
 import org.chess.dataTypes.Position;
 import org.chess.organization.ChessBoard;
 import org.chess.pieces.Bishop;
@@ -464,5 +465,31 @@ public class ChessBoardTest {
         // Regola FIDE: Se la Torre è sotto attacco (o la casa b1/b8 nell'arrocco lungo), l'arrocco è comunque legale
         // L'importante è che non siano sotto attacco il Re, la casa di passaggio del Re, e la casa di arrivo del Re.
         assertTrue(board.isMoveLegal(new Position(0, 4), new Position(0, 6)), "Arrocco legale: la Torre sotto attacco non impedisce l'arrocco");
+    }
+
+    @Test 
+    void chechMate(){
+        ChessBoard board = new ChessBoard();
+        board.setPiece(new King(new Position(0,0), "white", true));
+        board.setPiece(new King(new Position(7,0), "black", true));
+        board.setPiece(new Rock(new Position(0,7), "black", true));
+        board.setPiece(new Queen(new Position(1,7), "black"));
+        board.updateControl();
+        board.updateKingPin();
+
+        assertEquals(End.CHECKMATE, board.isCheckmateOrStalemate("white"));
+    }
+
+    @Test 
+    void staleMate(){
+        ChessBoard board = new ChessBoard();
+        board.setPiece(new King(new Position(0,0), "white", true));
+        board.setPiece(new King(new Position(7,0), "black", true));
+        board.setPiece(new Rock(new Position(7,1), "black", true));
+        board.setPiece(new Queen(new Position(1,7), "black"));
+        board.updateControl();
+        board.updateKingPin();
+
+        assertEquals(End.STALEMATE, board.isCheckmateOrStalemate("white"));
     }
 }
