@@ -8,11 +8,16 @@ import org.chess.organization.*;
 
 public class King extends Piece{
 
-    public King(Position position, String colour){
-    
-        super(position, colour);
+    private boolean hasMoved = true;
 
+    public King(Position position, Colour colour){
+        super(position, colour);
         this.value = Integer.MAX_VALUE;
+    }
+
+    public King(Position position, Colour colour, boolean hasMoved){
+        super(position, colour);
+        this.hasMoved = hasMoved;
     }
 
     @Override
@@ -32,6 +37,22 @@ public class King extends Piece{
                 moves.add(targetPosition);
             }
         }
+        // mosse per l'arrocco
+        // Controlliamo se il Re è nella sua colonna di partenza (4) e in una riga di partenza valida (0 o 7)
+        if (!hasMoved && this.position.column() == 4 && (this.position.row() == 0 || this.position.row() == 7)) {
+            int row = this.position.row();
+            
+            // Arrocco Corto (colonna 6) e Arrocco Lungo (colonna 2)
+            moves.add(new Position(row, 6));
+            moves.add(new Position(row, 2));
+        }
         return moves;        
+    }
+
+    public void setHasMovedTrue(){
+        this.hasMoved = true;
+    }
+    public boolean getHasMoved(){
+        return this.hasMoved;
     }
 }

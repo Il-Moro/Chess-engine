@@ -8,10 +8,19 @@ import org.chess.organization.*;
 
 public class Rock extends Piece {
 
-    public Rock(Position position, String colour){
+    private boolean hasMoved;
+
+    public Rock(Position position, Colour colour){
         super(position, colour);
         this.value = 5;
     }
+
+    public Rock(Position position, Colour colour, boolean hasMoved){
+        super(position, colour);
+        this.value = 5;
+        this.hasMoved = hasMoved;
+    }
+
 
     @Override
     public Set<Position> getPotentialMoves(ChessBoard board) {
@@ -43,5 +52,12 @@ public class Rock extends Piece {
             }
         }
         return moves;
+    }
+
+    public void setHasMovedTrue(){
+        this.hasMoved = true;
+    }
+    public boolean getHasMoved(){
+        return this.hasMoved;
     }
 }

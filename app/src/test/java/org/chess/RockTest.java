@@ -18,9 +18,9 @@ public class RockTest {
         ChessBoard board = new ChessBoard();
         
         // posizioni da calcolare
-        Rock rock1 = new Rock(new Position(0,0), "white");
-        Rock rock2 = new Rock(new Position(4,3), "white");
-        Rock rock3 = new Rock(new Position(6,5), "white");
+        Rock rock1 = new Rock(new Position(0,0), Colour.WHITE);
+        Rock rock2 = new Rock(new Position(4,3), Colour.WHITE);
+        Rock rock3 = new Rock(new Position(6,5), Colour.WHITE);
 
         Set<Position> positionCalculated1 = rock1.getPotentialMoves(board);
         Set<Position> positionCalculated2 = rock2.getPotentialMoves(board);
@@ -53,8 +53,8 @@ public class RockTest {
         
         ChessBoard board = new ChessBoard();
         
-        Rock blackRock = new Rock(new Position(1,2),"black");
-        Rock whiteRock = new Rock(new Position(6,2),"white");
+        Rock blackRock = new Rock(new Position(1,2),Colour.BLACK);
+        Rock whiteRock = new Rock(new Position(6,2),Colour.WHITE);
 
         board.setPiece(whiteRock);
         board.setPiece(blackRock);
@@ -73,8 +73,8 @@ public class RockTest {
     void blockByOwnPiece(){
         ChessBoard board = new ChessBoard();
         
-        Rock whiteRock1 = new Rock(new Position(1,2),"white");
-        Rock whiteRock = new Rock(new Position(6,2),"white");
+        Rock whiteRock1 = new Rock(new Position(1,2),Colour.WHITE);
+        Rock whiteRock = new Rock(new Position(6,2),Colour.WHITE);
 
         board.setPiece(whiteRock);
         board.setPiece(whiteRock1);
@@ -93,13 +93,13 @@ public class RockTest {
     void surroundedByAdversarialPieces(){
         ChessBoard board = new ChessBoard();
         
-        Rock whiteRock = new Rock(new Position(2,3),"white");
+        Rock whiteRock = new Rock(new Position(2,3),Colour.WHITE);
         board.setPiece(whiteRock);
         
-        board.setPiece(new Rock(new Position(3, 3), "black")); 
-        board.setPiece(new Rock(new Position(1, 3), "black")); 
-        board.setPiece(new Rock(new Position(2, 4), "black")); 
-        board.setPiece(new Rock(new Position(2, 2), "black")); 
+        board.setPiece(new Rock(new Position(3, 3), Colour.BLACK)); 
+        board.setPiece(new Rock(new Position(1, 3), Colour.BLACK)); 
+        board.setPiece(new Rock(new Position(2, 4), Colour.BLACK)); 
+        board.setPiece(new Rock(new Position(2, 2), Colour.BLACK)); 
         
         Set<Position> positionsForWhiteRock = whiteRock.getPotentialMoves(board);
 
@@ -112,14 +112,14 @@ public class RockTest {
         ChessBoard board = new ChessBoard();
     
         // Torre bianca al centro
-        Rock whiteRock = new Rock(new Position(2, 3), "white");
+        Rock whiteRock = new Rock(new Position(2, 3), Colour.WHITE);
         board.setPiece(whiteRock);
         
         // Circondata da AMICI (per avere 0 mosse)
-        board.setPiece(new Rock(new Position(3, 3), "white")); 
-        board.setPiece(new Rock(new Position(1, 3), "white")); 
-        board.setPiece(new Rock(new Position(2, 4), "white")); 
-        board.setPiece(new Rock(new Position(2, 2), "white")); 
+        board.setPiece(new Rock(new Position(3, 3), Colour.WHITE)); 
+        board.setPiece(new Rock(new Position(1, 3), Colour.WHITE)); 
+        board.setPiece(new Rock(new Position(2, 4), Colour.WHITE)); 
+        board.setPiece(new Rock(new Position(2, 2), Colour.WHITE)); 
 
     Set<Position> moves = whiteRock.getPotentialMoves(board);
 

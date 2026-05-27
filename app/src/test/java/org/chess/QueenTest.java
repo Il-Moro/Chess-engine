@@ -15,7 +15,7 @@ public class QueenTest {
         
         // centrale
         ChessBoard board1 = new ChessBoard();
-        Queen queenCentre = new Queen(new Position(4,4), "white");
+        Queen queenCentre = new Queen(new Position(4,4), Colour.WHITE);
         
         board1.setPiece(queenCentre);
 
@@ -24,7 +24,7 @@ public class QueenTest {
 
         //a lato
         ChessBoard board2 = new ChessBoard();
-        Queen queenEdge = new Queen(new Position(0,0), "white");
+        Queen queenEdge = new Queen(new Position(0,0), Colour.WHITE);
         
         board2.setPiece(queenEdge);
 
@@ -36,8 +36,8 @@ public class QueenTest {
     void blockByAdversaryPieceQueen(){
 
         ChessBoard board = new ChessBoard();
-        Queen queen = new Queen(new Position(4,4), "white");
-        Rock rock = new Rock(new Position(5, 5), "black");
+        Queen queen = new Queen(new Position(4,4), Colour.WHITE);
+        Rock rock = new Rock(new Position(5, 5), Colour.BLACK);
         
         board.setPiece(queen);
         board.setPiece(rock);
@@ -49,8 +49,8 @@ public class QueenTest {
     @Test 
     void blockByOwnPieceQueen(){
         ChessBoard board = new ChessBoard();
-        Queen queen = new Queen(new Position(4,4), "white");
-        Rock rock = new Rock(new Position(5, 5), "white");
+        Queen queen = new Queen(new Position(4,4), Colour.WHITE);
+        Rock rock = new Rock(new Position(5, 5), Colour.WHITE);
         
         board.setPiece(queen);
         board.setPiece(rock);
@@ -62,12 +62,12 @@ public class QueenTest {
     @Test 
     void surroundedByAdversaryPiecesQueen(){
         ChessBoard board = new ChessBoard();
-        Queen queen = new Queen(new Position(7,7), "white");
+        Queen queen = new Queen(new Position(7,7), Colour.WHITE);
 
         board.setPiece(queen);
-        board.setPiece(new Rock(new Position(7,6),"black"));
-        board.setPiece(new Rock(new Position(6,6),"black"));
-        board.setPiece(new Rock(new Position(6,7),"black"));
+        board.setPiece(new Rock(new Position(7,6), Colour.BLACK));
+        board.setPiece(new Rock(new Position(6,6), Colour.BLACK));
+        board.setPiece(new Rock(new Position(6,7), Colour.BLACK));
 
         Set<Position> positionsCalculated = queen.getPotentialMoves(board);
         assertEquals(3, positionsCalculated.size());
@@ -76,12 +76,12 @@ public class QueenTest {
     @Test 
     void surroundedByOwnPiecesQueen(){
         ChessBoard board = new ChessBoard();
-        Queen queen = new Queen(new Position(7,7), "white");
+        Queen queen = new Queen(new Position(7,7), Colour.WHITE);
 
         board.setPiece(queen);
-        board.setPiece(new Rock(new Position(7,6),"white"));
-        board.setPiece(new Rock(new Position(6,6),"white"));
-        board.setPiece(new Rock(new Position(6,7),"white"));
+        board.setPiece(new Rock(new Position(7,6),Colour.WHITE));
+        board.setPiece(new Rock(new Position(6,6),Colour.WHITE));
+        board.setPiece(new Rock(new Position(6,7),Colour.WHITE));
 
         Set<Position> positionsCalculated = queen.getPotentialMoves(board);
         assertEquals(3, positionsCalculated.size());

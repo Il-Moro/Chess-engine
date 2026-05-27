@@ -9,7 +9,7 @@ import org.chess.organization.*;
 
 public class Queen extends Piece{
 
-    public Queen(Position position, String colour){
+    public Queen(Position position, Colour colour){
         super(position, colour);
         this.value = 9;
     }
@@ -22,9 +22,9 @@ public class Queen extends Piece{
         int pieceColumn = this.position.column();
         int pieceRow = this.position.row();
 
-        int[][] directionsBishop = {{1, 1}, {-1, 1}, {-1, -1}, {1, -1}, {1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+        int[][] directions = {{1, 1}, {-1, 1}, {-1, -1}, {1, -1}, {1, 0}, {-1, 0}, {0, 1}, {0, -1}};
 
-        for (int[] d : directionsBishop) {
+        for (int[] d : directions) {
 
             int targetRow = pieceRow + d[0];
             int targetColumn = pieceColumn + d[1];
