@@ -8,7 +8,7 @@ import org.chess.organization.*;
 
 public class Knight extends Piece{
 
-    public Knight(Position position, String colour){
+    public Knight(Position position, Colour colour){
         super(position, colour);
         this.value = 3;
     }

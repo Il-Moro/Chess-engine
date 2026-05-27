@@ -10,7 +10,7 @@ public class Pawn extends Piece{
 
     // private boolean enPassant;
 
-    public Pawn(Position position, String colour){
+    public Pawn(Position position, Colour colour){
         super(position, colour);
         this.value = 3;
     }
@@ -29,7 +29,7 @@ public class Pawn extends Piece{
             
             int targetRow, targetColumn;
             
-            if(this.colour == "white"){
+            if(this.colour.equals(Colour.WHITE)){
                 targetRow = pieceRow + d[0];
                 targetColumn = pieceColumn + d[1];
             } else {
@@ -43,13 +43,11 @@ public class Pawn extends Piece{
                 
                 moves.add(targetPosition);
                 
-                if(d[0]*d[1] == 0){    
-                    if(pieceRow == 1 || pieceRow == 6){
-                        if(this.colour == "white"){
-                            moves.add(new Position(targetRow + 1, targetColumn));
-                        } else {
-                            moves.add(new Position(targetRow - 1, targetColumn));
-                        }   
+                if(d[0] * d[1] == 0){ 
+                    if(this.colour.equals(Colour.WHITE) && pieceRow == 1){
+                        moves.add(new Position(targetRow + 1, targetColumn));
+                    } else if(this.colour.equals(Colour.BLACK) && pieceRow == 6){
+                        moves.add(new Position(targetRow - 1, targetColumn));
                     }
                 }
             }

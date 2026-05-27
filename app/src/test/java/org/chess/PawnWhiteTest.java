@@ -14,7 +14,7 @@ public class PawnWhiteTest {
     @Test 
     void InitialPushOfWhitePawn(){
         ChessBoard board = new ChessBoard();
-        Pawn pawn = new Pawn(new Position(1,4), "white");
+        Pawn pawn = new Pawn(new Position(1,4), Colour.WHITE);
 
         board.setPiece(pawn);
 
@@ -28,7 +28,7 @@ public class PawnWhiteTest {
     @Test 
     void OtherCasesPawn(){
         ChessBoard board = new ChessBoard();
-        Pawn pawn = new Pawn(new Position(3, 4), "white");
+        Pawn pawn = new Pawn(new Position(3, 4), Colour.WHITE);
 
         board.setPiece(pawn);
         
