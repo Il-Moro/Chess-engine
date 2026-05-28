@@ -1,37 +1,37 @@
 package org.chess.organization;
+
 import org.chess.pieces.Piece;
 
-import java.util.List;
-
+import org.chess.dataTypes.Colour;
+import org.chess.dataTypes.Move;
 import org.chess.dataTypes.Position;
 
-public abstract class Player {
+public class Player {
 
-    public final String playerName;
-    public ChessBoard board;
-    public Piece[][] tiles;
-    public boolean turn=false;
+    private ChessBoard board;
+    private Colour colour;
+    private Piece agentPiece;
+    private Position toAgentPiece;
 
-    public Player(String playerName,String color){
-        if (playerName == null || playerName.trim().isEmpty()) {
-            throw new IllegalArgumentException("The name can' t be null or empty");
-        }
-        this.playerName=playerName;
-        this.tiles=board.getBoard();
+    
+
+    public Player(Colour colour){
+        this.colour=colour;
     }
 
-    public String getName(){
-        return playerName;
+    public Move submitHumanMove(Piece selectedPiece, Position to){
+        return new Move(selectedPiece,to);
     }
 
-    public void moveSelectedPiece(Piece selectedPiece, Position to){//TODO: return bool not void
-        /*
-        if(board.movePiece(selectedPiece,to)){
-            turn=false;
-        }
-        */
+    public Move agentMove(){
+        
+        // TODO: Implement agent ai algorithm
+        return new Move(agentPiece,toAgentPiece);
     }
 
-    public abstract List<Piece> getActivePieces(Piece[][] tiles);
-    public abstract List<Piece> getEatenPieces(Piece[][] tiles);
+    public void setChessBoard (ChessBoard board){
+        this.board=board;
+    }
+
+
 }
