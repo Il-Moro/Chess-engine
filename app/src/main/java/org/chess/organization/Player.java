@@ -12,25 +12,26 @@ public class Player {
     private Colour colour;
     private Piece agentPiece;
     private Position toAgentPiece;
-
+    private Piece[][] agentState;
     
 
-    public Player(Colour colour){
+    public Player(Colour colour, ChessBoard board){
         this.colour=colour;
+        this.board=board;
+        this.agentState=board.getBoard();
     }
 
     public Move submitHumanMove(Piece selectedPiece, Position to){
-        return new Move(selectedPiece,to);
+        Move chosenMove=null;
+        if(board.isMoveLegal(selectedPiece.getPosition(), to))
+            chosenMove= new Move(selectedPiece,to);
+        return chosenMove;
     }
 
     public Move agentMove(){
         
         // TODO: Implement agent ai algorithm
         return new Move(agentPiece,toAgentPiece);
-    }
-
-    public void setChessBoard (ChessBoard board){
-        this.board=board;
     }
 
 
