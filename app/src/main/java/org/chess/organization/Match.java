@@ -25,9 +25,6 @@ public class Match {
         this.currentPlayerTurn = white;          
         this.state = End.IN_PROGRESS;
         this.moveHistory = new ArrayList<>();
-
-        whitePlayer.setChessBoard(board);
-        blackPlayer.setChessBoard(board);
     }
 
     // TODO: public update move list
