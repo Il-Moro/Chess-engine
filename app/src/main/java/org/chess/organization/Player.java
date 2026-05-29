@@ -12,13 +12,11 @@ public class Player {
     private Colour colour;
     private Piece agentPiece;
     private Position toAgentPiece;
-    private Piece[][] agentState;
     
 
     public Player(Colour colour, ChessBoard board){
         this.colour=colour;
         this.board=board;
-        this.agentState=board.getBoard();
     }
 
     public Move submitHumanMove(Piece selectedPiece, Position to){
@@ -35,4 +33,7 @@ public class Player {
     }
 
 
+    public Colour getColour(){
+        return this.colour;
+    }
 }
