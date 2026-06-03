@@ -57,6 +57,9 @@ public class Rock extends Piece {
     public void setHasMovedTrue(){
         this.hasMoved = true;
     }
+    public void setHasMovedFalse(){
+        this.hasMoved = false;
+    }
     public boolean getHasMoved(){
         return this.hasMoved;
     }

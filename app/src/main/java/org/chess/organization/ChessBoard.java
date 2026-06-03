@@ -384,8 +384,40 @@ public class ChessBoard {
         }
     }
 
-    public boolean undoMove(){
+    public boolean undoMove(UndoInfo undo){
+        switch (undo.special()) {
+            case SHORT_CASTELING:
+                King k= (King) undo.movedPiece();
+                k.setPosition(undo.from());
+                k.setHasMovedFalse(); 
+                this.setPiece(k);
+                this.setNull(undo.to());
+
+                // spostamento della torre affianco al re
+                Rock rock = (Rock) this.getPiece(new Position(undo.from().row(), 5));
+                rock.setPosition(new Position(undo.from().row(), 7));
+                rock.setHasMovedFalse();
+                this.setPiece(rock);
+                this.setNull(new Position(undo.from().row(), 5));
+
+                break;
+
+            case LONG_CASTELING:
+
+                break;
+
+            case PROMOTION:
+
+                break;
+
+            case ENPASSANT:
+
+                break;
         
+            default:
+                break;
+        }
+        return false;
     }
 
 

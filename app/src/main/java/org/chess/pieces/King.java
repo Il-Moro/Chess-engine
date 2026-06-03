@@ -46,11 +46,14 @@ public class King extends Piece{
             moves.add(new Position(row, 6));
             moves.add(new Position(row, 2));
         }
-        return moves;        
+        return moves;
     }
 
     public void setHasMovedTrue(){
         this.hasMoved = true;
+    }
+    public void setHasMovedFalse(){
+        this.hasMoved = false;
     }
     public boolean getHasMoved(){
         return this.hasMoved;
