@@ -384,6 +384,11 @@ public class ChessBoard {
         }
     }
 
+    public boolean undoMove(){
+        
+    }
+
+
     /**
      * Valuta se la posizione corrente per il colore indicato determina la conclusione della partita.
      * @param colour colore del giocatore attivo sotto analisi
