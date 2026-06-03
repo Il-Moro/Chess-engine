@@ -49,6 +49,8 @@ class NodeTest {
 
     @Test
     void testIsLeaf_noChildren() {
+        Node root=new Node(new ChessBoard(), true, null,null);
+        assertTrue(root.isLeaf());
     }
 
     @Test
@@ -61,6 +63,8 @@ class NodeTest {
 
     @Test
     void testIsTerminal_terminalState() {
+        // Terminal for white
+
     }
 
     @Test

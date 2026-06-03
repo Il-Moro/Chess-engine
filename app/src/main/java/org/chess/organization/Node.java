@@ -1,6 +1,7 @@
 package org.chess.organization;
 import org.chess.pieces.Piece;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.chess.dataTypes.Move;
@@ -15,6 +16,7 @@ public class Node {
     // Root Node
     public Node(ChessBoard board, boolean isWhite) {
         this(board, isWhite, null, null);
+        this.children=new ArrayList<>();
     }
 
     // Child Node
@@ -23,11 +25,14 @@ public class Node {
         this.isWhite = isWhite;
         this.parent = parent;
         this.moveApplied = moveApplied;
+        this.children=new ArrayList<>();
     }
 
 
     // TODO: public List<Node> generateChildren() {}
-    // public boolean isLeaf(){}
+    public boolean isLeaf(){
+        return children.isEmpty();
+    }
     // public boolean isTerminal(){}
     // public int getPathToRoot() {}
 
