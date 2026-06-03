@@ -3,11 +3,14 @@ package org.chess;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.List;
+
 import org.chess.dataTypes.Colour;
 import org.chess.dataTypes.Move;
 import org.chess.dataTypes.Position;
 import org.chess.organization.ChessBoard;
 import org.chess.organization.Node;
+import org.chess.pieces.King;
 import org.chess.pieces.Pawn;
 
 class NodeTest {
@@ -41,6 +44,13 @@ class NodeTest {
 
     @Test
     void testGenerateChildren_placeholder() {
+        ChessBoard board=new ChessBoard();
+        board.setPiece(new King(new Position(1,4),Colour.BLACK));
+        board.setPiece(new King(new Position(7,5),Colour.WHITE));
+        Node rootNode=new Node(board, true);
+        List<Node> children=rootNode.generateChildren();
+        assertEquals(5, children.size());
+        
     }
 
     // -------------------------------------------------------------------------

@@ -29,7 +29,9 @@ public class Node {
     }
 
 
-    // TODO: public List<Node> generateChildren() {}
+    public List<Node> generateChildren() {
+        return children;
+    }
     public boolean isLeaf(){
         return children.isEmpty();
     }
