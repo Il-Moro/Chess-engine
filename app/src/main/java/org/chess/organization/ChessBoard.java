@@ -328,6 +328,8 @@ public class ChessBoard {
      * @param from posizione geometrica di partenza
      * @param to posizione geometrica di arrivo
      */
+
+    // TODO : per ogni mossa creata salvare in UndoInfo
     public void physicalMovement(Position from, Position to){
         Piece piece = this.getPiece(from);
 
@@ -361,10 +363,17 @@ public class ChessBoard {
                 this.setPiece(rock);
                 this.setNull(new Position(to.row(), 0));
             }
-        } else if(piece instanceof Pawn && ((piece.getColour() == Colour.WHITE && to.row() == 7) || piece.getColour() == Colour.BLACK && to.row() == 0)){
-            Piece newPiece = askPieceToUser(to, piece.getColour());
-            this.setPiece(newPiece);
-            this.setNull(from);
+        } else if(piece instanceof Pawn){
+            if(((piece.getColour() == Colour.WHITE && to.row() == 7) || piece.getColour() == Colour.BLACK && to.row() == 0)){
+                Piece newPiece = askPieceToUser(to, piece.getColour());
+                this.setPiece(newPiece);
+                this.setNull(from);
+            }
+            /* // TODO: implementare en passant in physicalMovement
+            else if(){
+
+            }
+             */
         } else{
             piece.setPosition(to);
             this.setNull(from);
@@ -384,6 +393,8 @@ public class ChessBoard {
         }
     }
 
+
+    // TODO: finire undoMove
     public boolean undoMove(UndoInfo undo){
         switch (undo.special()) {
             case SHORT_CASTELING:
@@ -403,17 +414,27 @@ public class ChessBoard {
                 break;
 
             case LONG_CASTELING:
+                k = (King) undo.movedPiece();
+                k.setPosition(undo.to());
+                k.setHasMovedFalse();
+                this.setPiece(k);
+                this.setNull(undo.from());
 
-                break;
+                rock = (Rock) this.getPiece(new Position(undo.from().row(), 3));
+                rock.setPosition(new Position(undo.from().row(), 0));
+                rock.setHasMovedFalse();
+                this.setPiece(rock);
+                this.setNull(new Position(undo.from().row(), 3));
 
-            case PROMOTION:
-
-                break;
-
+            break;
+            // TODO : finire ENPASSANT in undoMove
             case ENPASSANT:
+                Pawn pawn = (Pawn) undo.movedPiece();
+
 
                 break;
-        
+            
+            // Finire Default in undoMove
             default:
                 break;
         }

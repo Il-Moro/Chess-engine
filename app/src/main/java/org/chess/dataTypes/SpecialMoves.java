@@ -5,4 +5,5 @@ public enum SpecialMoves {
     LONG_CASTELING,
     PROMOTION,
     ENPASSANT,
+    DEFAULT_MOVE
 }
