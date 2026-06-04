@@ -332,6 +332,13 @@ public class ChessBoard {
     // TODO : per ogni mossa creata salvare in UndoInfo
     public void physicalMovement(Position from, Position to){
         Piece piece = this.getPiece(from);
+        boolean rowDiff=false;
+        boolean colDiff=false;
+        
+        if (lastPawnMoved != null) {
+            rowDiff=Math.abs(lastPawnFromPosition.row()-lastPawnMoved.getPosition().row()) == 2;
+            colDiff=Math.abs(lastPawnFromPosition.column()-lastPawnMoved.getPosition().column())==0;   
+        }
 
         int direction = to.column() - from.column();
 
@@ -369,11 +376,20 @@ public class ChessBoard {
                 this.setPiece(newPiece);
                 this.setNull(from);
             }
-            /* // TODO: implementare en passant in physicalMovement
-            else if(){
+            // TODO: implementare en passant in physicalMovement
+            else if(from.row()!=to.row() && from.column()!=to.column() && this.isNull(to)){
+                if(lastPawnMoved != null){
+                    if(to.column() == lastPawnMoved.getPosition().column() && from.row() == lastPawnMoved.getPosition().row()){
+                        if(colDiff || rowDiff){
+                            piece.setPosition(to);
+                            this.setPiece(piece);
+                            this.setNull(from);
+                            this.setNull(lastPawnMoved.getPosition());
+                        }
 
+                    }
+                }
             }
-             */
         } else{
             piece.setPosition(to);
             this.setNull(from);
