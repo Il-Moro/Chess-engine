@@ -438,12 +438,16 @@ public class ChessBoard {
             // TODO : finire ENPASSANT in undoMove
             case ENPASSANT:
                 Pawn pawn = (Pawn) undo.movedPiece();
-
-
+                this.setPiece(undo.eatenPiece());
+                pawn.setPosition(undo.from());
+                this.setPiece(pawn);
+                this.setNull(undo.to());
                 break;
             
             // Finire Default in undoMove
             default:
+
+                
                 break;
         }
         return false;
