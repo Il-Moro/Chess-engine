@@ -317,7 +317,7 @@ public class ChessBoard {
      */
 
     // TODO : per ogni mossa creata salvare in UndoInfo
-    public SpecialMoves physicalMovement(Position from, Position to){
+    public UndoInfo physicalMovement(Position from, Position to){
         Piece piece = this.getPiece(from);
         boolean rowDiff=false;
         
@@ -342,7 +342,7 @@ public class ChessBoard {
                 this.setPiece(rock);
                 this.setNull(new Position(to.row(), 7));
                 updateAfterMove(piece, from);
-                return SpecialMoves.SHORT_CASTELING;
+                return new UndoInfo(piece, from, to, null, SpecialMoves.SHORT_CASTELING);
                 //arrocco lungo
             } else if(direction < 0){
                 k.setPosition(to);
@@ -357,14 +357,15 @@ public class ChessBoard {
                 this.setPiece(rock);
                 this.setNull(new Position(to.row(), 0));
                 updateAfterMove(piece, from);
-                return SpecialMoves.LONG_CASTELING;
+                return new UndoInfo(piece, from, to, null, SpecialMoves.LONG_CASTELING);
             }
         } else if(piece instanceof Pawn && ((piece.getColour() == Colour.WHITE && to.row() == 7) || piece.getColour() == Colour.BLACK && to.row() == 0)){
                 Piece newPiece = askPieceToUser(to, piece.getColour());
+                Piece eatenPiece = this.getPiece(to);
                 this.setPiece(newPiece);
                 this.setNull(from);
                 updateAfterMove(piece, from);
-                return SpecialMoves.NONE;
+                return new UndoInfo(piece, from, to, eatenPiece, SpecialMoves.NONE);
         }
         else if(piece instanceof Pawn &&(from.row()!=to.row() && from.column()!=to.column() && this.isNull(to))){
             if(lastPawnMoved != null){
@@ -375,18 +376,19 @@ public class ChessBoard {
                         this.setNull(from);
                         this.setNull(lastPawnMoved.getPosition());
                         updateAfterMove(piece, from);
-                        return SpecialMoves.ENPASSANT;
+                        return new UndoInfo(piece, from, to, lastPawnMoved, SpecialMoves.ENPASSANT);
                     }
 
                 }
             }
         }
         // caso generale
+        Piece eatenPiece = this.getPiece(to);
         piece.setPosition(to);
         this.setNull(from);
         this.setPiece(piece);
         updateAfterMove(piece, from);
-        return SpecialMoves.NONE;
+        return new UndoInfo(piece, from, to, eatenPiece, SpecialMoves.NONE);
         
         
     }
