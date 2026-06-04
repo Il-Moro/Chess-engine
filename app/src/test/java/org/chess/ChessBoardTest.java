@@ -5,14 +5,18 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+
 import org.chess.dataTypes.Colour;
 import org.chess.dataTypes.End;
 import org.chess.dataTypes.Position;
+import org.chess.dataTypes.SpecialMoves;
+import org.chess.dataTypes.UndoInfo;
 import org.chess.organization.ChessBoard;
 import org.chess.pieces.Bishop;
 import org.chess.pieces.King;
 import org.chess.pieces.Knight;
 import org.chess.pieces.Pawn;
+import org.chess.pieces.Piece;
 import org.chess.pieces.Queen;
 import org.chess.pieces.Rock;
 import org.junit.jupiter.api.Test;
@@ -650,10 +654,30 @@ public class ChessBoardTest {
         ChessBoard board = new ChessBoard(true);
         assertTrue(board.isMoveLegal(new Position(1,3),new Position(3,3)));
         board.physicalMovement(new Position(1,3), new Position(3,3));
-        assertTrue(board.isMoveLegal(new Position(6,5),new Position(6,5)));
-        board.physicalMovement(new Position(5,5), new Position(5,5));
-        board.undoMove(null);
-        board.undoMove(null);
+        assertTrue(board.isNull(new Position(1,3)));
+        assertFalse(board.isNull(new Position(3,3)));
+
+        assertTrue(board.isMoveLegal(new Position(6,5),new Position(5,5)));
+        board.physicalMovement(new Position(6,5), new Position(5,5));
+        assertTrue(board.isNull(new Position(6,5)));
+        assertFalse(board.isNull(new Position(5,5)));
+
+
+        Piece firsPiece=board.getPiece(new Position(3,3));
+        Piece secondPiece=board.getPiece(new Position(5,5));
+
+        UndoInfo undoOne=new UndoInfo(firsPiece,new Position(1,3),new Position(3,3),null, SpecialMoves.NONE);
+        UndoInfo undoTwo=new UndoInfo(secondPiece,new Position(6,5),new Position(5,5),null, SpecialMoves.NONE);
+        
+        board.undoMove(undoOne);
+        board.undoMove(undoTwo);
+
+        assertTrue(board.isNull(new Position(3,3)));
+        assertFalse(board.isNull(new Position(1,3)));
+
+        assertTrue(board.isNull(new Position(5,5)));
+        assertFalse(board.isNull(new Position(6,5)));
+
     }
     
     @Test

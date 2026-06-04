@@ -435,19 +435,29 @@ public class ChessBoard {
                 this.setNull(new Position(undo.from().row(), 3));
 
             break;
-            // TODO : finire ENPASSANT in undoMove
+
             case ENPASSANT:
                 Pawn pawn = (Pawn) undo.movedPiece();
-                this.setPiece(undo.eatenPiece());
                 pawn.setPosition(undo.from());
                 this.setPiece(pawn);
                 this.setNull(undo.to());
+                this.setPiece(undo.eatenPiece());
                 break;
             
             // Finire Default in undoMove
             default:
+                Piece piece=undo.movedPiece();
+                piece.setPosition(undo.from());
+                this.setPiece(piece);
+                this.setNull(undo.to());
+                if(undo.eatenPiece() != null)
+                    this.setPiece(undo.eatenPiece());
+                if(undo.special() == SpecialMoves.PROMOTION){
+                    pawn = new Pawn(piece.getPosition(), piece.getColour());
+                    this.setPiece(pawn);
+                }
 
-                
+
                 break;
         }
         return false;
