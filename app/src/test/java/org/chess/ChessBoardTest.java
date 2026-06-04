@@ -682,6 +682,29 @@ public class ChessBoardTest {
     
     @Test
     void testUndoMoveWithCapture() {
+        ChessBoard board = new ChessBoard();
+        Bishop bishop = new Bishop(new Position(0,6),Colour.WHITE);
+        Rock rock = new Rock(new Position(5,1),Colour.BLACK);
+        board.setPiece(new King(new Position(7,4), Colour.BLACK));
+        board.setPiece(new King(new Position(0,4), Colour.WHITE));
+        board.setPiece(bishop);
+        board.setPiece(rock);
+
+        assertTrue(board.isMoveLegal(new Position(0,6),new Position(5,1)));
+        board.physicalMovement(new Position(0,6),new Position(5,1));
+
+        assertTrue(board.isNull(new Position(0,6)));
+        assertTrue(board.isNull(new Position(5,1)) == false && board.getPiece(new Position(5,1)) instanceof Bishop);
+        
+        UndoInfo undo = new UndoInfo(bishop,new Position(0,6),new Position(5,1),rock, SpecialMoves.NONE);
+
+        board.undoMove(undo);
+
+        assertTrue(board.isNull(new Position(0,6))==false && board.getPiece(new Position(0,6)) instanceof Bishop);
+        assertTrue(board.isNull(new Position(5,1))==false && board.getPiece(new Position(5,1)) instanceof Rock);
+
+
+
     }
     
     @Test
