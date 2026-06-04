@@ -226,6 +226,30 @@ public class ChessBoardTest {
         assertFalse(board.isMoveLegal(whitePawn.getPosition(),new Position(2,3)));
     }
 
+    @Test
+    void enpassantPhysicalMovement(){
+        ChessBoard board= new ChessBoard();
+        Pawn blackPawn = new Pawn(new Position(6,4), Colour.BLACK);
+        Pawn whitePawn = new Pawn(new Position(4,3), Colour.WHITE);
+        board.setPiece(new King(new Position(7,4), Colour.BLACK));
+        board.setPiece(new King(new Position(0,4), Colour.WHITE));
+        board.setPiece(whitePawn);
+        board.setPiece(blackPawn);
+
+        assertTrue(board.isMoveLegal(blackPawn.getPosition(), new Position(4,4)));
+        board.physicalMovement(blackPawn.getPosition(), new Position(4,4));
+        assertFalse(board.isNull(new Position(4,4)));
+        
+        assertTrue(board.isMoveLegal(whitePawn.getPosition(),new Position(5,4)));
+        board.physicalMovement(whitePawn.getPosition(), new Position(5,4));
+        assertFalse(board.isNull(new Position(5,4)));
+        
+        // Verify if enpassant movement was done well
+        assertTrue(board.isNull(new Position(4,4)));
+        assertTrue(board.isNull(new Position(6,4)));
+        assertTrue(board.isNull(new Position(4,3)));
+    }
+
     @Test 
     void kingToSquareControlledByAdversary(){
         ChessBoard board = settings();

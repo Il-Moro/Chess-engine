@@ -174,11 +174,9 @@ public class ChessBoard {
         Position piecePosition = piece.getPosition();
         Colour pieceColour = piece.getColour();
         boolean rowDiff=false;
-        boolean colDiff=false;
         
         if (lastPawnMoved != null) {
-            rowDiff=Math.abs(lastPawnFromPosition.row()-lastPawnMoved.getPosition().row()) != 2;
-            colDiff=Math.abs(lastPawnFromPosition.column()-lastPawnMoved.getPosition().column())!=0;   
+            rowDiff=Math.abs(lastPawnFromPosition.row()-lastPawnMoved.getPosition().row()) != 2;   
         }
         
         boolean legal=true;
@@ -299,24 +297,13 @@ public class ChessBoard {
             if(from.row()!=to.row() && from.column()!=to.column() && this.isNull(to)){
                 if(lastPawnMoved != null){
                     if(to.column() == lastPawnMoved.getPosition().column() && from.row() == lastPawnMoved.getPosition().row()){
-                        if(colDiff || rowDiff)
+                        if(rowDiff)
                             legal = false;
                     }
                     else legal = false;
                 }
                 else
                     legal=false;
-            }
-        }
-
-        if(legal){
-            if(piece instanceof Pawn){
-                lastPawnMoved = (Pawn) piece;
-                lastPawnFromPosition = from;
-            }
-            else{
-                lastPawnMoved = null;
-                lastPawnFromPosition = null;
             }
         }
         return legal;
@@ -333,11 +320,9 @@ public class ChessBoard {
     public void physicalMovement(Position from, Position to){
         Piece piece = this.getPiece(from);
         boolean rowDiff=false;
-        boolean colDiff=false;
         
         if (lastPawnMoved != null) {
-            rowDiff=Math.abs(lastPawnFromPosition.row()-lastPawnMoved.getPosition().row()) == 2;
-            colDiff=Math.abs(lastPawnFromPosition.column()-lastPawnMoved.getPosition().column())==0;   
+            rowDiff=Math.abs(lastPawnFromPosition.row()-lastPawnMoved.getPosition().row()) == 2;   
         }
 
         int direction = to.column() - from.column();
@@ -370,27 +355,26 @@ public class ChessBoard {
                 this.setPiece(rock);
                 this.setNull(new Position(to.row(), 0));
             }
-        } else if(piece instanceof Pawn){
-            if(((piece.getColour() == Colour.WHITE && to.row() == 7) || piece.getColour() == Colour.BLACK && to.row() == 0)){
+        } else if(piece instanceof Pawn && ((piece.getColour() == Colour.WHITE && to.row() == 7) || piece.getColour() == Colour.BLACK && to.row() == 0)){
                 Piece newPiece = askPieceToUser(to, piece.getColour());
                 this.setPiece(newPiece);
                 this.setNull(from);
-            }
-            // TODO: implementare en passant in physicalMovement
-            else if(from.row()!=to.row() && from.column()!=to.column() && this.isNull(to)){
-                if(lastPawnMoved != null){
-                    if(to.column() == lastPawnMoved.getPosition().column() && from.row() == lastPawnMoved.getPosition().row()){
-                        if(colDiff || rowDiff){
-                            piece.setPosition(to);
-                            this.setPiece(piece);
-                            this.setNull(from);
-                            this.setNull(lastPawnMoved.getPosition());
-                        }
-
+        }
+        // TODO: implementare en passant in physicalMovement
+        else if(piece instanceof Pawn &&(from.row()!=to.row() && from.column()!=to.column() && this.isNull(to))){
+            if(lastPawnMoved != null){
+                if(to.column() == lastPawnMoved.getPosition().column() && from.row() == lastPawnMoved.getPosition().row()){
+                    if(rowDiff){
+                        piece.setPosition(to);
+                        this.setPiece(piece);
+                        this.setNull(from);
+                        this.setNull(lastPawnMoved.getPosition());
                     }
+
                 }
             }
-        } else{
+        }
+        else{
             piece.setPosition(to);
             this.setNull(from);
             this.setPiece(piece);
@@ -406,6 +390,15 @@ public class ChessBoard {
             k.setHasMovedTrue();
         } else if(piece instanceof Rock r){
             r.setHasMovedTrue();
+        }
+
+        if(piece instanceof Pawn){
+                lastPawnMoved = (Pawn) piece;
+                lastPawnFromPosition = from;
+            }
+        else{
+            lastPawnMoved = null;
+            lastPawnFromPosition = null;
         }
     }
 
