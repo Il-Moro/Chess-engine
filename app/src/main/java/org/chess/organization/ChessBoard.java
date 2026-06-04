@@ -360,7 +360,6 @@ public class ChessBoard {
                 this.setPiece(newPiece);
                 this.setNull(from);
         }
-        // TODO: implementare en passant in physicalMovement
         else if(piece instanceof Pawn &&(from.row()!=to.row() && from.column()!=to.column() && this.isNull(to))){
             if(lastPawnMoved != null){
                 if(to.column() == lastPawnMoved.getPosition().column() && from.row() == lastPawnMoved.getPosition().row()){

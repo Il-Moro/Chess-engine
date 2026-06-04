@@ -642,4 +642,37 @@ public class ChessBoardTest {
         assertFalse(board.getPiece(new Position(0, 3)) instanceof Pawn, "Il pedone nero deve essere stato promosso");
     }
     */
+
+
+
+@Test
+    void testUndoMoveRestoresOriginalState() {
+        ChessBoard board = new ChessBoard(true);
+        assertTrue(board.isMoveLegal(new Position(1,3),new Position(3,3)));
+        board.physicalMovement(new Position(1,3), new Position(3,3));
+        assertTrue(board.isMoveLegal(new Position(6,5),new Position(6,5)));
+        board.physicalMovement(new Position(5,5), new Position(5,5));
+        board.undoMove(null);
+        board.undoMove(null);
+    }
+    
+    @Test
+    void testUndoMoveWithCapture() {
+    }
+    
+    @Test
+    void testUndoShortCastling() {
+    }
+    
+    @Test
+    void testUndoLongCastling() {
+    }
+    
+    @Test
+    void testUndoMoveRestoresHasMovedFlag() {
+    }
+    
+    @Test
+    void testUndoMoveWithNullEatenPiece() {
+    }
 }
