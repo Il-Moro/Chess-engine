@@ -317,7 +317,7 @@ public class ChessBoard {
      */
 
     // TODO : per ogni mossa creata salvare in UndoInfo
-    public void physicalMovement(Position from, Position to){
+    public SpecialMoves physicalMovement(Position from, Position to){
         Piece piece = this.getPiece(from);
         boolean rowDiff=false;
         
@@ -341,6 +341,8 @@ public class ChessBoard {
                 rock.setHasMovedTrue();
                 this.setPiece(rock);
                 this.setNull(new Position(to.row(), 7));
+                updateAfterMove(piece, from);
+                return SpecialMoves.SHORT_CASTELING;
                 //arrocco lungo
             } else if(direction < 0){
                 k.setPosition(to);
@@ -354,11 +356,15 @@ public class ChessBoard {
                 rock.setHasMovedTrue();
                 this.setPiece(rock);
                 this.setNull(new Position(to.row(), 0));
+                updateAfterMove(piece, from);
+                return SpecialMoves.LONG_CASTELING;
             }
         } else if(piece instanceof Pawn && ((piece.getColour() == Colour.WHITE && to.row() == 7) || piece.getColour() == Colour.BLACK && to.row() == 0)){
                 Piece newPiece = askPieceToUser(to, piece.getColour());
                 this.setPiece(newPiece);
                 this.setNull(from);
+                updateAfterMove(piece, from);
+                return SpecialMoves.NONE;
         }
         else if(piece instanceof Pawn &&(from.row()!=to.row() && from.column()!=to.column() && this.isNull(to))){
             if(lastPawnMoved != null){
@@ -368,17 +374,24 @@ public class ChessBoard {
                         this.setPiece(piece);
                         this.setNull(from);
                         this.setNull(lastPawnMoved.getPosition());
+                        updateAfterMove(piece, from);
+                        return SpecialMoves.ENPASSANT;
                     }
 
                 }
             }
         }
-        else{
-            piece.setPosition(to);
-            this.setNull(from);
-            this.setPiece(piece);
-        }
-               
+        // caso generale
+        piece.setPosition(to);
+        this.setNull(from);
+        this.setPiece(piece);
+        updateAfterMove(piece, from);
+        return SpecialMoves.NONE;
+        
+        
+    }
+
+    private void updateAfterMove(Piece piece, Position from){
         this.updateControl();
 
         if (this.whiteKing != null && this.blackKing != null){
@@ -399,7 +412,7 @@ public class ChessBoard {
             lastPawnMoved = null;
             lastPawnFromPosition = null;
         }
-    }
+    }    
 
 
     // TODO: finire undoMove
