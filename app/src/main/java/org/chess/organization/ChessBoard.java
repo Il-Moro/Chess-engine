@@ -316,7 +316,6 @@ public class ChessBoard {
      * @param to posizione geometrica di arrivo
      */
 
-    // TODO : per ogni mossa creata salvare in UndoInfo
     public UndoInfo physicalMovement(Position from, Position to){
         Piece piece = this.getPiece(from);
         boolean rowDiff=false;
@@ -473,7 +472,6 @@ public class ChessBoard {
                     pawn = new Pawn(piece.getPosition(), piece.getColour());
                     this.setPiece(pawn);
                 }
-
                 break;
         }
     }

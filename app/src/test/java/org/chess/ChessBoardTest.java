@@ -20,7 +20,7 @@ import org.chess.pieces.Piece;
 import org.chess.pieces.Queen;
 import org.chess.pieces.Rock;
 import org.junit.jupiter.api.Test;
-
+import org.junitpioneer.jupiter.StdIo;
 /**
  * Test:
  * a. matrici di controllo
@@ -737,6 +737,20 @@ public class ChessBoardTest {
     }
     
     @Test
+    @StdIo("Q")
     void testUndoMovePromotion() {
+        ChessBoard board= new ChessBoard();
+        Pawn whitePawn = new Pawn(new Position(6,3), Colour.WHITE);
+        board.setPiece(new King(new Position(7,4), Colour.BLACK));
+        board.setPiece(new King(new Position(0,4), Colour.WHITE));
+        board.setPiece(whitePawn);
+        
+        assertTrue(board.isMoveLegal(whitePawn.getPosition(),new Position(7,3)));
+        UndoInfo undoPromotion = board.physicalMovement(whitePawn.getPosition(),new Position(7,3));
+        assertTrue(board.getPiece(new Position(7,3)) instanceof Queen);
+
+        board.undoMove(undoPromotion);
+        assertTrue(board.isNull(new Position(7,3)));
+        assertTrue(board.isNull(new Position(6,3))==false && board.getPiece(new Position(6,3)) instanceof Pawn);
     }
 }
