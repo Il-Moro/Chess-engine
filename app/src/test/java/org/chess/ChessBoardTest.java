@@ -666,8 +666,8 @@ public class ChessBoardTest {
         Piece firsPiece=board.getPiece(new Position(3,3));
         Piece secondPiece=board.getPiece(new Position(5,5));
 
-        UndoInfo undoOne=new UndoInfo(firsPiece,new Position(1,3),new Position(3,3),null, SpecialMoves.NONE);
-        UndoInfo undoTwo=new UndoInfo(secondPiece,new Position(6,5),new Position(5,5),null, SpecialMoves.NONE);
+        UndoInfo undoOne=new UndoInfo(firsPiece,new Position(1,3),new Position(3,3),null,SpecialMoves.NONE);
+        UndoInfo undoTwo=new UndoInfo(secondPiece,new Position(6,5),new Position(5,5),null,SpecialMoves.NONE);
         
         board.undoMove(undoOne);
         board.undoMove(undoTwo);
@@ -696,15 +696,12 @@ public class ChessBoardTest {
         assertTrue(board.isNull(new Position(0,6)));
         assertTrue(board.isNull(new Position(5,1)) == false && board.getPiece(new Position(5,1)) instanceof Bishop);
         
-        UndoInfo undo = new UndoInfo(bishop,new Position(0,6),new Position(5,1),rock, SpecialMoves.NONE);
+        UndoInfo undo = new UndoInfo(bishop,new Position(0,6),new Position(5,1),rock,SpecialMoves.NONE);
 
         board.undoMove(undo);
 
         assertTrue(board.isNull(new Position(0,6))==false && board.getPiece(new Position(0,6)) instanceof Bishop);
         assertTrue(board.isNull(new Position(5,1))==false && board.getPiece(new Position(5,1)) instanceof Rock);
-
-
-
     }
     
     @Test
@@ -716,10 +713,30 @@ public class ChessBoardTest {
     }
     
     @Test
-    void testUndoMoveRestoresHasMovedFlag() {
+    void testUndoMoveEnpassant() {
+        ChessBoard board= new ChessBoard();
+        Pawn blackPawn = new Pawn(new Position(6,4), Colour.BLACK);
+        Pawn whitePawn = new Pawn(new Position(4,3), Colour.WHITE);
+        board.setPiece(new King(new Position(7,4), Colour.BLACK));
+        board.setPiece(new King(new Position(0,4), Colour.WHITE));
+        board.setPiece(whitePawn);
+        board.setPiece(blackPawn);
+
+        assertTrue(board.isMoveLegal(blackPawn.getPosition(), new Position(4,4)));
+        board.physicalMovement(blackPawn.getPosition(), new Position(4,4));
+        assertTrue(board.isNull(new Position(4,4))==false && board.getPiece(new Position(4,4)) instanceof Pawn);
+        
+        assertTrue(board.isMoveLegal(whitePawn.getPosition(),new Position(5,4)));
+        UndoInfo undoEnpassant= board.physicalMovement(whitePawn.getPosition(), new Position(5,4));
+        assertTrue(board.isNull(new Position(5,4))==false && board.getPiece(new Position(5,4)) instanceof Pawn);    
+        assertTrue(board.isNull(new Position(4,4)));
+        
+        board.undoMove(undoEnpassant);
+        assertTrue(board.isNull(new Position(4,4))==false && board.getPiece(new Position(4,4)) instanceof Pawn);
+        assertTrue(board.isNull(new Position(4,3))==false && board.getPiece(new Position(4,3)) instanceof Pawn);
     }
     
     @Test
-    void testUndoMoveWithNullEatenPiece() {
+    void testUndoMovePromotion() {
     }
 }

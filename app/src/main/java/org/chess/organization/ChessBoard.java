@@ -382,6 +382,15 @@ public class ChessBoard {
                 }
             }
         }
+        if(piece instanceof Pawn){
+            lastPawnMoved = (Pawn) piece;
+            lastPawnFromPosition = from;
+        }
+        else{
+            lastPawnMoved = null;
+            lastPawnFromPosition = null;
+        }
+
         // caso generale
         Piece eatenPiece = this.getPiece(to);
         piece.setPosition(to);
@@ -394,6 +403,7 @@ public class ChessBoard {
     }
 
     private void updateAfterMove(Piece piece, Position from){
+        
         this.updateControl();
 
         if (this.whiteKing != null && this.blackKing != null){
@@ -406,21 +416,13 @@ public class ChessBoard {
             r.setHasMovedTrue();
         }
 
-        if(piece instanceof Pawn){
-                lastPawnMoved = (Pawn) piece;
-                lastPawnFromPosition = from;
-            }
-        else{
-            lastPawnMoved = null;
-            lastPawnFromPosition = null;
-        }
     }    
 
 
     // TODO: finire undoMove
-    public boolean undoMove(UndoInfo undo){
+    public void undoMove(UndoInfo undo){
         switch (undo.special()) {
-            case SHORT_CASTELING:
+            case SpecialMoves.SHORT_CASTELING:
                 King k= (King) undo.movedPiece();
                 k.setPosition(undo.from());
                 k.setHasMovedFalse(); 
@@ -436,7 +438,7 @@ public class ChessBoard {
 
                 break;
 
-            case LONG_CASTELING:
+            case SpecialMoves.LONG_CASTELING:
                 k = (King) undo.movedPiece();
                 k.setPosition(undo.to());
                 k.setHasMovedFalse();
@@ -451,7 +453,7 @@ public class ChessBoard {
 
             break;
 
-            case ENPASSANT:
+            case SpecialMoves.ENPASSANT:
                 Pawn pawn = (Pawn) undo.movedPiece();
                 pawn.setPosition(undo.from());
                 this.setPiece(pawn);
@@ -472,10 +474,8 @@ public class ChessBoard {
                     this.setPiece(pawn);
                 }
 
-
                 break;
         }
-        return false;
     }
 
 
