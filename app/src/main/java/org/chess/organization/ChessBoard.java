@@ -418,7 +418,6 @@ public class ChessBoard {
     }    
 
 
-    // TODO: finire undoMove
     public void undoMove(UndoInfo undo){
         switch (undo.special()) {
             case SpecialMoves.SHORT_CASTELING:
