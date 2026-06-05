@@ -738,19 +738,83 @@ public class ChessBoardTest {
     
     @Test
     @StdIo("Q")
-    void testUndoMovePromotion() {
-        ChessBoard board= new ChessBoard();
-        Pawn whitePawn = new Pawn(new Position(6,3), Colour.WHITE);
-        board.setPiece(new King(new Position(7,4), Colour.BLACK));
-        board.setPiece(new King(new Position(0,4), Colour.WHITE));
+    void testUndoMoveQueenPromotion() {
+        ChessBoard board = new ChessBoard();
+
+        Pawn whitePawn = new Pawn(new Position(6, 3), Colour.WHITE);
+        board.setPiece(new King(new Position(7, 4), Colour.BLACK));
+        board.setPiece(new King(new Position(0, 4), Colour.WHITE));
         board.setPiece(whitePawn);
         
-        assertTrue(board.isMoveLegal(whitePawn.getPosition(),new Position(7,3)));
-        UndoInfo undoPromotion = board.physicalMovement(whitePawn.getPosition(),new Position(7,3));
-        assertTrue(board.getPiece(new Position(7,3)) instanceof Queen);
-
+        assertTrue(board.isMoveLegal(whitePawn.getPosition(), new Position(7, 3)));
+        UndoInfo undoPromotion = board.physicalMovement(whitePawn.getPosition(), new Position(7, 3));
+        assertTrue(board.getPiece(new Position(7, 3)) instanceof Queen);
+        
         board.undoMove(undoPromotion);
-        assertTrue(board.isNull(new Position(7,3)));
-        assertTrue(board.isNull(new Position(6,3))==false && board.getPiece(new Position(6,3)) instanceof Pawn);
+        assertTrue(board.isNull(new Position(7, 3)));
+        assertFalse(board.isNull(new Position(6, 3)));
+        assertTrue(board.getPiece(new Position(6, 3)) instanceof Pawn);
+        
+    }
+
+    @Test
+    @StdIo("R")
+    void testUndoMoveRockPromotion() {
+
+        ChessBoard board = new ChessBoard();
+        
+        Pawn whitePawn = new Pawn(new Position(6, 3), Colour.WHITE);
+        board.setPiece(new King(new Position(7, 4), Colour.BLACK));
+        board.setPiece(new King(new Position(0, 4), Colour.WHITE));
+        board.setPiece(whitePawn);
+        
+        assertTrue(board.isMoveLegal(whitePawn.getPosition(), new Position(7, 3)));
+        UndoInfo undoPromotion = board.physicalMovement(whitePawn.getPosition(), new Position(7, 3));
+        assertTrue(board.getPiece(new Position(7, 3)) instanceof Rock);
+        
+        board.undoMove(undoPromotion);
+        assertTrue(board.isNull(new Position(7, 3)));
+        assertFalse(board.isNull(new Position(6, 3)));
+        assertTrue(board.getPiece(new Position(6, 3)) instanceof Pawn);
+        
+    }
+
+    @Test
+    @StdIo("K")
+    void testUndoMoveKnightPromotion() {
+        ChessBoard board = new ChessBoard();
+        
+        Pawn whitePawn = new Pawn(new Position(6, 3), Colour.WHITE);
+        board.setPiece(new King(new Position(7, 4), Colour.BLACK));
+        board.setPiece(new King(new Position(0, 4), Colour.WHITE));
+        board.setPiece(whitePawn);
+        
+        assertTrue(board.isMoveLegal(whitePawn.getPosition(), new Position(7, 3)));
+        UndoInfo undoPromotion = board.physicalMovement(whitePawn.getPosition(), new Position(7, 3));
+        assertTrue(board.getPiece(new Position(7, 3)) instanceof Knight);
+        board.undoMove(undoPromotion);
+        assertTrue(board.isNull(new Position(7, 3)));
+        assertFalse(board.isNull(new Position(6, 3)));
+        assertTrue(board.getPiece(new Position(6, 3)) instanceof Pawn);
+    }
+
+    @Test
+    @StdIo("B")
+    void testUndoMoveBishopPromotion() {
+        ChessBoard board = new ChessBoard();
+    
+        Pawn whitePawn = new Pawn(new Position(6, 3), Colour.WHITE);
+        board.setPiece(new King(new Position(7, 4), Colour.BLACK));
+        board.setPiece(new King(new Position(0, 4), Colour.WHITE));
+        board.setPiece(whitePawn);
+        
+        assertTrue(board.isMoveLegal(whitePawn.getPosition(), new Position(7, 3)));
+        UndoInfo undoPromotion = board.physicalMovement(whitePawn.getPosition(), new Position(7, 3));
+        assertTrue(board.getPiece(new Position(7, 3)) instanceof Bishop);
+        
+        board.undoMove(undoPromotion);
+        assertTrue(board.isNull(new Position(7, 3)));
+        assertFalse(board.isNull(new Position(6, 3)));
+        assertTrue(board.getPiece(new Position(6, 3)) instanceof Pawn);
     }
 }
