@@ -439,10 +439,10 @@ public class ChessBoard {
 
             case SpecialMoves.LONG_CASTELING:
                 k = (King) undo.movedPiece();
-                k.setPosition(undo.to());
+                k.setPosition(undo.from());
                 k.setHasMovedFalse();
                 this.setPiece(k);
-                this.setNull(undo.from());
+                this.setNull(undo.to());
 
                 rock = (Rock) this.getPiece(new Position(undo.from().row(), 3));
                 rock.setPosition(new Position(undo.from().row(), 0));
