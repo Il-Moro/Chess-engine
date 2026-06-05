@@ -706,10 +706,26 @@ public class ChessBoardTest {
     
     @Test
     void testUndoShortCastling() {
+        ChessBoard board = new ChessBoard();
+        board.setPiece(new King(new Position(7,4), Colour.BLACK));
+        board.setPiece(new King(new Position(0,4), Colour.WHITE, false));
+        board.setPiece(new Rock(new Position(0,7),Colour.WHITE,false));
+        assertTrue(board.isMoveLegal(new Position(0,4),new Position(0,6)));
+        UndoInfo undoShortCastle=board.physicalMovement(new Position(0,4),new Position(0,6));
+        
+        assertTrue(board.isNull(new Position(0,4)) && board.getPiece(new Position(0,6)) instanceof King);
+        assertTrue(board.isNull(new Position(0,7)) && board.getPiece(new Position(0,5)) instanceof Rock);
+        
+        board.undoMove(undoShortCastle);
+        assertTrue(board.isNull(new Position(0,4))==false && board.getPiece(new Position(0,4)) instanceof King);
+        assertTrue(board.isNull(new Position(0,7))==false && board.getPiece(new Position(0,7)) instanceof Rock);
+        
+        assertTrue(board.isMoveLegal(new Position(0,4),new Position(0,6)));
     }
     
     @Test
     void testUndoLongCastling() {
+        
     }
     
     @Test
