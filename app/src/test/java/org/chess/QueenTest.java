@@ -37,7 +37,7 @@ public class QueenTest {
 
         ChessBoard board = new ChessBoard();
         Queen queen = new Queen(new Position(4,4), Colour.WHITE);
-        Rock rock = new Rock(new Position(5, 5), Colour.BLACK);
+        Rook rock = new Rook(new Position(5, 5), Colour.BLACK);
         
         board.setPiece(queen);
         board.setPiece(rock);
@@ -50,7 +50,7 @@ public class QueenTest {
     void blockByOwnPieceQueen(){
         ChessBoard board = new ChessBoard();
         Queen queen = new Queen(new Position(4,4), Colour.WHITE);
-        Rock rock = new Rock(new Position(5, 5), Colour.WHITE);
+        Rook rock = new Rook(new Position(5, 5), Colour.WHITE);
         
         board.setPiece(queen);
         board.setPiece(rock);
@@ -65,9 +65,9 @@ public class QueenTest {
         Queen queen = new Queen(new Position(7,7), Colour.WHITE);
 
         board.setPiece(queen);
-        board.setPiece(new Rock(new Position(7,6), Colour.BLACK));
-        board.setPiece(new Rock(new Position(6,6), Colour.BLACK));
-        board.setPiece(new Rock(new Position(6,7), Colour.BLACK));
+        board.setPiece(new Rook(new Position(7,6), Colour.BLACK));
+        board.setPiece(new Rook(new Position(6,6), Colour.BLACK));
+        board.setPiece(new Rook(new Position(6,7), Colour.BLACK));
 
         Set<Position> positionsCalculated = queen.getPotentialMoves(board);
         assertEquals(3, positionsCalculated.size());
@@ -79,9 +79,9 @@ public class QueenTest {
         Queen queen = new Queen(new Position(7,7), Colour.WHITE);
 
         board.setPiece(queen);
-        board.setPiece(new Rock(new Position(7,6),Colour.WHITE));
-        board.setPiece(new Rock(new Position(6,6),Colour.WHITE));
-        board.setPiece(new Rock(new Position(6,7),Colour.WHITE));
+        board.setPiece(new Rook(new Position(7,6),Colour.WHITE));
+        board.setPiece(new Rook(new Position(6,6),Colour.WHITE));
+        board.setPiece(new Rook(new Position(6,7),Colour.WHITE));
 
         Set<Position> positionsCalculated = queen.getPotentialMoves(board);
         assertEquals(3, positionsCalculated.size());

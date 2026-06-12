@@ -6,16 +6,16 @@ import java.util.Set;
 import org.chess.dataTypes.*;
 import org.chess.organization.*; 
 
-public class Rock extends Piece {
+public class Rook extends Piece {
 
     private boolean hasMoved;
 
-    public Rock(Position position, Colour colour){
+    public Rook(Position position, Colour colour){
         super(position, colour);
         this.value = 5;
     }
 
-    public Rock(Position position, Colour colour, boolean hasMoved){
+    public Rook(Position position, Colour colour, boolean hasMoved){
         super(position, colour);
         this.value = 5;
         this.hasMoved = hasMoved;
@@ -37,7 +37,7 @@ public class Rock extends Piece {
             int targetRow = pieceRow + d[0];
             int targetColumn = pieceColumn + d[1];
 
-            while (0 <= targetRow && targetRow < 8 && 0 <= targetColumn && targetColumn < 8) {
+            while (Position.isInsideBounds(targetRow, targetColumn)) {
                 
                 Position targePosition = new Position(targetRow, targetColumn);
                 
