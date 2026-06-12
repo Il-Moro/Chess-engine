@@ -480,7 +480,7 @@ public class ChessBoard {
                 Piece piece=undo.movedPiece();
                 piece.setPosition(undo.from());
                 this.setPiece(piece);
-                this.setNull(undo.to());
+               
                 if(undo.eatenPiece() != null)
                     this.setPiece(undo.eatenPiece());
                 if(undo.special() == SpecialMoves.PROMOTION){
