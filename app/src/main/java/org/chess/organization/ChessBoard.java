@@ -19,6 +19,8 @@ import org.chess.pieces.*;
  */
 public class ChessBoard {
 
+    public static final int BOARD_SIZE = 8;
+
     private Piece[][] chessboard;
     // matrici di controllo delle celle 
     private int[][] squaresControlledByWhite;
@@ -364,7 +366,7 @@ public class ChessBoard {
                 this.setPiece(newPiece);
                 this.setNull(from);
                 updateAfterMove(piece, from);
-                return new UndoInfo(piece, from, to, eatenPiece, SpecialMoves.NONE);
+                return new UndoInfo(piece, from, to, eatenPiece, SpecialMoves.PROMOTION);
         }
         else if(piece instanceof Pawn &&(from.row()!=to.row() && from.column()!=to.column() && this.isNull(to))){
             if(lastPawnMoved != null){
@@ -397,8 +399,6 @@ public class ChessBoard {
         this.setPiece(piece);
         updateAfterMove(piece, from);
         return new UndoInfo(piece, from, to, eatenPiece, SpecialMoves.NONE);
-        
-        
     }
 
     private void updateAfterMove(Piece piece, Position from){
@@ -483,9 +483,8 @@ public class ChessBoard {
                
                 if(undo.eatenPiece() != null)
                     this.setPiece(undo.eatenPiece());
-                if(undo.special() == SpecialMoves.PROMOTION){
-                    pawn = new Pawn(piece.getPosition(), piece.getColour());
-                    this.setPiece(pawn);
+                else{
+                    this.setNull(undo.to());
                 }
                 break;
         }
@@ -682,16 +681,16 @@ public class ChessBoard {
     }
 
     private Piece askPieceToUser(Position to, Colour colour ){
-        Scanner scanner = new Scanner(System.in))
-        System.out.println("Promozione! Scegli un pezzo (Q = Queen, R = Rock, B = Bishop, K = Knight): ");
-        String choice = scanner.nextLine().trim().toUpperCase();
+        try (Scanner scanner = new Scanner(System.in)) {
+            System.out.println("Promozione! Scegli un pezzo (Q = Queen, R = Rock, B = Bishop, K = Knight): ");
+            String choice = scanner.nextLine().trim().toUpperCase();
 
-        return switch (choice) {
-            case "R" -> new Rock(to, colour, true); 
-            case "B" -> new Bishop(to, colour);
-            case "K" -> new Knight(to, colour);
-            default  -> new Queen(to, colour); 
-        };
-    
+            return switch (choice) {
+                case "R" -> new Rock(to, colour, true); 
+                case "B" -> new Bishop(to, colour);
+                case "K" -> new Knight(to, colour);
+                default  -> new Queen(to, colour); 
+            };
+        }
     }
 }
