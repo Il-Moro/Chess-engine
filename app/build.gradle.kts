@@ -21,6 +21,8 @@ dependencies {
 
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
+    testImplementation("org.junit-pioneer:junit-pioneer:2.3.0")
+
     // This dependency is used by the application.
     implementation(libs.guava)
 }
