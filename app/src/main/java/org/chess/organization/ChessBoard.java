@@ -475,7 +475,7 @@ public class ChessBoard {
                     this.setNull(undo.to());
                 }
                 break;
-            // Finire Default in undoMove
+
             default:
                 Piece piece=undo.movedPiece();
                 piece.setPosition(undo.from());
@@ -488,6 +488,11 @@ public class ChessBoard {
                     this.setPiece(pawn);
                 }
                 break;
+        }
+        // Ricalcolo Pin e del control Maps
+        this.updateControl();
+        if (this.whiteKing != null && this.blackKing != null){
+            updateKingPin();
         }
     }
 
