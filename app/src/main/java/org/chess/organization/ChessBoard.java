@@ -456,7 +456,12 @@ public class ChessBoard {
                 pawn.setPosition(undo.from());
                 this.setPiece(pawn);
                 this.setNull(undo.to());
-                this.setPiece(undo.eatenPiece());
+                
+                // Ripristino pezzo mangiato
+                Piece enemyPawn = undo.eatenPiece();
+                Position enemyOriginalPosition = new Position(undo.from().row(), undo.to().column());
+                enemyPawn.setPosition(enemyOriginalPosition);
+                this.setPiece(enemyPawn);
                 break;
             
             // Finire Default in undoMove
