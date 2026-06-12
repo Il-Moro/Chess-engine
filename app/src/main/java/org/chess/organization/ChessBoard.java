@@ -463,7 +463,18 @@ public class ChessBoard {
                 enemyPawn.setPosition(enemyOriginalPosition);
                 this.setPiece(enemyPawn);
                 break;
-            
+            case SpecialMoves.PROMOTION:
+                // Ripristino pedone originale
+                Piece originalPawn = undo.movedPiece();
+                originalPawn.setPosition(undo.from());
+                this.setPiece(originalPawn);
+                
+                if(undo.eatenPiece() != null) {
+                    this.setPiece(undo.eatenPiece());
+                } else {
+                    this.setNull(undo.to());
+                }
+                break;
             // Finire Default in undoMove
             default:
                 Piece piece=undo.movedPiece();
