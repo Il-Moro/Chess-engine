@@ -6,19 +6,9 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
-import org.chess.dataTypes.Colour;
-import org.chess.dataTypes.End;
-import org.chess.dataTypes.Position;
-import org.chess.dataTypes.SpecialMoves;
-import org.chess.dataTypes.UndoInfo;
-import org.chess.organization.ChessBoard;
-import org.chess.pieces.Bishop;
-import org.chess.pieces.King;
-import org.chess.pieces.Knight;
-import org.chess.pieces.Pawn;
-import org.chess.pieces.Piece;
-import org.chess.pieces.Queen;
-import org.chess.pieces.Rock;
+import org.chess.dataTypes.*;
+import org.chess.organization.*;
+import org.chess.pieces.*;
 import org.junit.jupiter.api.Test;
 import org.junitpioneer.jupiter.StdIo;
 /**

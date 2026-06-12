@@ -33,7 +33,7 @@ public class King extends Piece{
 
             Position targetPosition = new Position(targetRow, targetColumn);
 
-            if(0 <= targetRow && targetRow < 8 && 0 <= targetColumn && targetColumn < 8){   
+            if(Position.isInsideBounds(targetRow, targetColumn)){   
                 moves.add(targetPosition);
             }
         }
