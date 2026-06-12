@@ -6,16 +6,16 @@ import java.util.Set;
 import org.chess.dataTypes.*;
 import org.chess.organization.*; 
 
-public class Rock extends Piece {
+public class Rook extends Piece {
 
     private boolean hasMoved;
 
-    public Rock(Position position, Colour colour){
+    public Rook(Position position, Colour colour){
         super(position, colour);
         this.value = 5;
     }
 
-    public Rock(Position position, Colour colour, boolean hasMoved){
+    public Rook(Position position, Colour colour, boolean hasMoved){
         super(position, colour);
         this.value = 5;
         this.hasMoved = hasMoved;
