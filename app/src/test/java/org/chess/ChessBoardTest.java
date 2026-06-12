@@ -2,6 +2,7 @@ package org.chess;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -599,43 +600,48 @@ public class ChessBoardTest {
         assertNull(board.getPiece(new Position(7, 0)));
     }
 
-    /*
+    
     @Test
-    void promotions() {
-        ChessBoard board = setOnlyKing(); // Solo i Re presenti sulla scacchiera
+    @StdIo("Q") 
+    void testWhitePawnPromotionToQueen() {
+        ChessBoard board = setOnlyKing();
 
-        // promozione bianco
-        // Piazziamo un pedone bianco in settima traversa (6, 4)
+        // Pedone bianco a un passo dalla promozione (riga 6)
         Pawn whitePawn = new Pawn(new Position(6, 4), Colour.WHITE);
         board.setPiece(whitePawn);
         board.updateControl();
         board.updateKingPin();
 
-        // Spingiamo il pedone in ottava traversa (7, 4) -> Scatta la promozione
+        // Spinta in ottava traversa (riga 7)
         board.physicalMovement(new Position(6, 4), new Position(7, 4));
 
-        // Verifiche: il pedone in (6,4) non c'è più, e in (7,4) c'è il pezzo promosso (es. Queen)
-        assertNull(board.getPiece(new Position(6, 4)));
-        assertNotNull(board.getPiece(new Position(7, 4)));
-        assertFalse(board.getPiece(new Position(7, 4)) instanceof Pawn, "Il pezzo non deve più essere un pedone");
+        // Verifiche
+        assertNull(board.getPiece(new Position(6, 4)), "Il pedone di partenza deve essere rimosso");
+        assertNotNull(board.getPiece(new Position(7, 4)), "Deve esserci un pezzo nella casa di arrivo");
+        assertTrue(board.getPiece(new Position(7, 4)) instanceof Queen, "Il pezzo promosso deve essere una Queen");
+    }
 
+    @Test
+    @StdIo("R") 
+    void testBlackPawnPromotionToRook() {
+        ChessBoard board = setOnlyKing();
 
-        // promozione nero
-        // Piazziamo un pedone nero in seconda traversa (1, 3)
+        // Pedone nero a un passo dalla promozione (riga 1)
         Pawn blackPawn = new Pawn(new Position(1, 3), Colour.BLACK);
         board.setPiece(blackPawn);
         board.updateControl();
         board.updateKingPin();
 
-        // Spingiamo il pedone in prima traversa (0, 3) -> Scatta la promozione
+        // Spinta in prima traversa (riga 0)
         board.physicalMovement(new Position(1, 3), new Position(0, 3));
 
         // Verifiche
-        assertNull(board.getPiece(new Position(1, 3)));
-        assertNotNull(board.getPiece(new Position(0, 3)));
-        assertFalse(board.getPiece(new Position(0, 3)) instanceof Pawn, "Il pedone nero deve essere stato promosso");
+        assertNull(board.getPiece(new Position(1, 3)), "Il pedone di partenza deve essere rimosso");
+        assertNotNull(board.getPiece(new Position(0, 3)), "Deve esserci un pezzo nella casa di arrivo");
+        assertFalse(board.getPiece(new Position(0, 3)) instanceof Pawn, "Non deve più essere un pedone");
+        // Se hai rinominato la classe in Rook usa Rook.class, altrimenti Rock.class
+        assertTrue(board.getPiece(new Position(0, 3)) instanceof Rook, "Il pezzo promosso deve essere una Torre");
     }
-    */
 
 
 

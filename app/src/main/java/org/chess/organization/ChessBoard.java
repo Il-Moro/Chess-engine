@@ -680,17 +680,18 @@ public class ChessBoard {
         }
     }
 
+    @SuppressWarnings("resource")
     private Piece askPieceToUser(Position to, Colour colour ){
-        try (Scanner scanner = new Scanner(System.in)) {
-            System.out.println("Promozione! Scegli un pezzo (Q = Queen, R = Rock, B = Bishop, K = Knight): ");
-            String choice = scanner.nextLine().trim().toUpperCase();
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Promozione! Scegli un pezzo (Q = Queen, R = Rock, B = Bishop, K = Knight): ");
+        String choice = scanner.nextLine().trim().toUpperCase();
 
-            return switch (choice) {
-                case "R" -> new Rook(to, colour, true); 
-                case "B" -> new Bishop(to, colour);
-                case "K" -> new Knight(to, colour);
-                default  -> new Queen(to, colour); 
-            };
-        }
+        return switch (choice) {
+            case "R" -> new Rook(to, colour, true); 
+            case "B" -> new Bishop(to, colour);
+            case "K" -> new Knight(to, colour);
+            default  -> new Queen(to, colour); 
+        };
+        
     }
 }
