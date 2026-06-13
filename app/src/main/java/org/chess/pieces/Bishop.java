@@ -28,7 +28,7 @@ public class Bishop extends Piece {
             int targetRow = pieceRow + d[0];
             int targetColumn = pieceColumn + d[1];
 
-            while (0 <= targetRow && targetRow < 8 && 0 <= targetColumn && targetColumn < 8) {
+            while (Position.isInsideBounds(targetRow, targetColumn)) {
                 
                 Position targetPosition = new Position(targetRow, targetColumn);
                 

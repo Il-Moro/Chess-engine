@@ -33,7 +33,7 @@ public class King extends Piece{
 
             Position targetPosition = new Position(targetRow, targetColumn);
 
-            if(0 <= targetRow && targetRow < 8 && 0 <= targetColumn && targetColumn < 8){   
+            if(Position.isInsideBounds(targetRow, targetColumn)){   
                 moves.add(targetPosition);
             }
         }
@@ -46,11 +46,14 @@ public class King extends Piece{
             moves.add(new Position(row, 6));
             moves.add(new Position(row, 2));
         }
-        return moves;        
+        return moves;
     }
 
     public void setHasMovedTrue(){
         this.hasMoved = true;
+    }
+    public void setHasMovedFalse(){
+        this.hasMoved = false;
     }
     public boolean getHasMoved(){
         return this.hasMoved;
