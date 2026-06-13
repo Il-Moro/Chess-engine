@@ -6,34 +6,16 @@ import org.chess.dataTypes.Colour;
 import org.chess.dataTypes.Move;
 import org.chess.dataTypes.Position;
 
-public class Player {
+public abstract class Player {
 
-    private ChessBoard board;
-    private Colour colour;
-    private Piece agentPiece;
-    private Position toAgentPiece;
+    protected ChessBoard board;
+    protected Colour colour;
     
 
     public Player(Colour colour, ChessBoard board){
         this.colour=colour;
         this.board=board;
     }
+    public abstract Move submitMove(Piece selectedPiece, Position to);
 
-    public Move submitHumanMove(Piece selectedPiece, Position to){
-        Move chosenMove=null;
-        if(board.isMoveLegal(selectedPiece.getPosition(), to))
-            chosenMove= new Move(selectedPiece,to);
-        return chosenMove;
-    }
-
-    public Move agentMove(){
-        
-        // TODO: Implement agent ai algorithm
-        return new Move(agentPiece,toAgentPiece);
-    }
-
-
-    public Colour getColour(){
-        return this.colour;
-    }
 }
