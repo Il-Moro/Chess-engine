@@ -8,7 +8,6 @@ import org.chess.dataTypes.Colour;
 import org.chess.dataTypes.Move;
 import org.chess.dataTypes.Position;
 import org.chess.organization.ChessBoard;
-import org.chess.organization.Player;
 import org.chess.organization.PlayerHuman;
 import org.chess.pieces.King;
 import org.chess.pieces.Piece;
@@ -18,7 +17,7 @@ import org.chess.pieces.Piece;
 public class PlayerHumanTest {
 
     private ChessBoard board;
-    private Player player;
+    private PlayerHuman player;
     private Piece whiteKing;
     private Piece blackKing;
     @BeforeEach
@@ -35,7 +34,8 @@ public class PlayerHumanTest {
     @Test
     void validMove(){
         Position to = new Position(1, 0);
-        Move move = player.submitMove(whiteKing,to);
+        player.setMove(whiteKing,to);
+        Move move = player.decideMove();
         assertNotSame(Move.INVALID, move);
         assertEquals(whiteKing, move.selectedPiece());
         assertEquals(to, move.to());
@@ -44,7 +44,8 @@ public class PlayerHumanTest {
     @Test
     void invalidMove(){
         Position to = new Position(2, 0);
-        Move move = player.submitMove(whiteKing,to);
+        player.setMove(whiteKing,to);
+        Move move = player.decideMove();
         assertEquals(Move.INVALID, move);
     }
 
