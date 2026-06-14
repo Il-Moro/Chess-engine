@@ -24,7 +24,12 @@ public class PlayerAgent extends Player{
 
     @Override
     public Move decideMove(){
+        maximizer(SEARCH_DEPTH, Integer.MIN_VALUE, Integer.MAX_VALUE);
         return bestMove;
+    }
+
+    int maximizer(int depth,int alpha,int beta){
+        return 0;
     }
 
     public List<Move> computeAllLegalMoves(){
@@ -40,5 +45,9 @@ public class PlayerAgent extends Player{
             }
         }
         return moves;
+    }
+
+    public int evaluateBoard(){
+        return 0;
     }
 }

@@ -14,7 +14,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 
-public class PlayerAgentTest {
+public class PlayerTest {
     
     private ChessBoard board;
     private PlayerAgent whiteAgent;

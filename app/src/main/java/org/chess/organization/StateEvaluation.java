@@ -1,0 +1,254 @@
+package org.chess.organization;
+
+import org.chess.dataTypes.Colour;
+import org.chess.dataTypes.End;
+import org.chess.dataTypes.Position;
+import org.chess.dataTypes.Move;
+import org.chess.pieces.*;
+
+import java.util.List;
+import java.util.Set;
+
+
+public class StateEvaluation {
+
+    
+
+    private static final double MATERIAL_WEIGHT = 1.0;
+    private static final double MOBILITY_WEIGHT = 0.1;
+    private static final double KING_SAFETY_WEIGHT = 0.5;
+    private static final double CENTER_CONTROL_WEIGHT = 0.3;
+    private static final double PAWN_STRUCTURE_WEIGHT = 0.4;
+    private static final double KING_TROPISM_WEIGHT = 0.2;
+    
+    private static final int PAWN_VALUE = 100;
+    private static final int KNIGHT_VALUE = 320;
+    private static final int BISHOP_VALUE = 330;
+    private static final int ROOK_VALUE = 500;
+    private static final int QUEEN_VALUE = 900;
+    private static final int KING_VALUE = 10000;
+
+
+
+    private static final Position[] CENTER_SQUARES = {
+        new Position(3, 3), new Position(3, 4),
+        new Position(4, 3), new Position(4, 4)
+    };
+    
+    private static final Position[] EXTENDED_CENTER = {
+        new Position(2, 2), new Position(2, 3), new Position(2, 4), new Position(2, 5),
+        new Position(3, 2), new Position(3, 3), new Position(3, 4), new Position(3, 5),
+        new Position(4, 2), new Position(4, 3), new Position(4, 4), new Position(4, 5),
+        new Position(5, 2), new Position(5, 3), new Position(5, 4), new Position(5, 5)
+    };
+
+
+    private ChessBoard board;
+    private PlayerAgent player;
+    private Player opponent;
+    
+    public StateEvaluation(ChessBoard board, PlayerAgent player,Player opponent) {
+        this.board = board;
+        this.player=player;
+        this.opponent=opponent;
+    }
+
+/*
+    public int evaluate() {
+        int materialScore = evaluateMaterial();
+        int mobilityScore = evaluateMobility();
+        int kingSafetyScore = evaluateKingSafety();
+        int centerControlScore = evaluateCenterControl();
+        int pawnStructureScore = evaluatePawnStructure();
+        int kingTropismScore = evaluateKingTropism();
+        
+        int totalScore = (int)(
+            MATERIAL_WEIGHT * materialScore +
+            MOBILITY_WEIGHT * mobilityScore +
+            KING_SAFETY_WEIGHT * kingSafetyScore +
+            CENTER_CONTROL_WEIGHT * centerControlScore +
+            PAWN_STRUCTURE_WEIGHT * pawnStructureScore +
+            KING_TROPISM_WEIGHT * kingTropismScore
+        );
+        
+        return totalScore;
+    }
+
+     */
+
+
+    private int evaluateMaterial() {
+        int whiteMaterial = 0;
+        int blackMaterial = 0;
+        
+        for (int row = 0; row < 8; row++) {
+            for (int col = 0; col < 8; col++) {
+                Piece piece = board.getPiece(new Position(row, col));
+                if (piece != null) {
+                    int value = getPieceValue(piece);
+                    if (piece.getColour() == Colour.WHITE) {
+                        whiteMaterial += value;
+                    } else {
+                        blackMaterial += value;
+                    }
+                }
+            }
+        }
+
+        if (player.colour == Colour.WHITE) {
+            return whiteMaterial - blackMaterial;    
+        }
+        
+        return blackMaterial - whiteMaterial;
+    }
+
+
+    private int getPieceValue(Piece piece) {
+        if (piece instanceof Pawn) return PAWN_VALUE;
+        if (piece instanceof Knight) return KNIGHT_VALUE;
+        if (piece instanceof Bishop) return BISHOP_VALUE;
+        if (piece instanceof Rook) return ROOK_VALUE;
+        if (piece instanceof Queen) return QUEEN_VALUE;
+        if (piece instanceof King) return KING_VALUE;
+        return 0;
+    }
+
+    private int evaluateMobility() {
+        int whiteMobility;
+        int blackMobility;
+
+        switch (player.colour) {
+            case Colour.WHITE:
+                whiteMobility=player.computeAllLegalMoves().size();
+                blackMobility=opponent.computeAllLegalMoves().size();
+                return whiteMobility - blackMobility;
+        
+            default:
+                blackMobility=player.computeAllLegalMoves().size();
+                whiteMobility=opponent.computeAllLegalMoves().size();
+                return blackMobility - whiteMobility;
+        }
+        
+    }
+
+
+    private int evaluateKingSafety() {
+        King whiteKing = findKing(Colour.WHITE);
+        King blackKing = findKing(Colour.BLACK);
+        
+        int whiteSafety = calculateKingSafety(whiteKing, Colour.WHITE);
+        int blackSafety = calculateKingSafety(blackKing, Colour.BLACK);
+        
+        if(player.colour == Colour.WHITE)
+            return whiteSafety - blackSafety;
+        else
+            return blackSafety - whiteSafety;
+    }
+
+    
+    private King findKing(Colour colour) {
+        for (int row = 0; row < 8; row++) {
+            for (int col = 0; col < 8; col++) {
+                Piece piece = board.getPiece(new Position(row, col));
+                if (piece instanceof King && piece.getColour() == colour) {
+                    return (King) board.getPiece(new Position(row, col));
+                }
+            }
+        }
+        return null;
+    }
+
+    private int calculateKingSafety(King king, Colour colour) {
+        
+        if(board.isCheckmateOrStalemate(player.colour) == End.CHECKMATE)
+            return Integer.MIN_VALUE;
+        else if(board.isCheckmateOrStalemate(player.colour) == End.STALEMATE)
+            return 0;
+
+        int safety = 0;
+
+        if(!king.getHasMoved() && colour == Colour.WHITE)
+            safety+=30;
+        if(!king.getHasMoved() && colour == Colour.BLACK)
+            safety+=30;
+
+        int exposedPenality = evaluateKingExposure(king, colour);
+        safety-=exposedPenality*10;
+
+        int pawnShield = countPawnShield(king, colour);
+        safety += pawnShield * 15;
+        
+        return safety;
+    }
+
+    private int evaluateKingExposure(King king, Colour colour){
+        int [][] squaresControlledOpponent;
+        int attackCount = 0;
+        Set<Position> kingMoves;
+        
+        if (king.getColour()==player.colour) {
+            squaresControlledOpponent = board.getSquareControlledBy(opponent.colour);
+            kingMoves = king.getPotentialMoves(board);
+        }
+        else{
+            squaresControlledOpponent = board.getSquareControlledBy(player.colour);
+            kingMoves = king.getPotentialMoves(board);
+        }
+
+        for(Position p:kingMoves){
+            attackCount+=squaresControlledOpponent[p.row()][p.column()];
+        }
+
+        if(squaresControlledOpponent[king.getPosition().row()][king.getPosition().column()] != 0)
+            attackCount +=100;
+
+        return attackCount;
+    }
+
+    private int countPawnShield(King king, Colour colour){
+        int shieldCount = 0;
+
+        Set<Position> kingMoves;
+        kingMoves = king.getPotentialMoves(board);
+
+
+        for(Position p:kingMoves){
+            Piece piece = board.getPiece(p);
+            if(piece != null && piece instanceof Pawn)
+                shieldCount+=1;
+        }
+
+        return shieldCount;
+    }
+
+
+    private int evaluateCenterControl() {
+
+
+        int whiteControl=countSquares(Colour.WHITE, CENTER_SQUARES);
+        int blackControl=countSquares(Colour.BLACK, CENTER_SQUARES);
+
+        whiteControl+=countSquares(Colour.WHITE, EXTENDED_CENTER);
+        blackControl+=countSquares(Colour.BLACK, EXTENDED_CENTER);
+
+        if(player.colour==Colour.WHITE)
+            return whiteControl-blackControl;
+
+        return blackControl - whiteControl;
+    }
+
+    private int countSquares(Colour colour,Position[] square){
+        int [][] squaresControlled;
+        int sum = 0;
+        
+        squaresControlled = board.getSquareControlledBy(colour);
+
+        for (Position center : square) {
+            sum+=squaresControlled[center.row()][center.column()];
+        }
+        return sum;
+    }
+
+    
+
+}

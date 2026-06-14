@@ -3,6 +3,7 @@ package org.chess.organization;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.chess.dataTypes.Colour;
 import org.chess.dataTypes.Move;
@@ -30,6 +31,21 @@ public abstract class Player {
             }
         }
         return pieces;
+    }
+
+    public List<Move> computeAllLegalMoves(){
+        List<Piece> pieces = getAlivePieces();
+        List<Move> moves=new ArrayList<>();
+
+        for(Piece p : pieces){
+            Set<Position> potentialMoves=p.getPotentialMoves(board);
+            for(Position m:potentialMoves){
+                if (board.isMoveLegal(p.getPosition(), m)) {
+                    moves.add(new Move(p,m));
+                }
+            }
+        }
+        return moves;
     }
 
     public abstract Move decideMove();
