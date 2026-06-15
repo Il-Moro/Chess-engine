@@ -24,7 +24,8 @@ public class StateEvaluationTest {
         evaluation = new StateEvaluation(board, whitePlayer, blackPlayer);
     }
 
-    @Test void queenAdvantageShouldIncreaseEvaluation(){
+    @Test
+    void queenAdvantageShouldIncreaseEvaluation(){
         King whiteKing = new King(new Position(0,0),Colour.WHITE);
         King blackKing = new King(new Position(7,0),Colour.BLACK);
         board.setPiece(whiteKing);
@@ -41,7 +42,7 @@ public class StateEvaluationTest {
 
         board.setPiece(new King(new Position(0, 0), Colour.WHITE));
         board.setPiece(new King(new Position(7, 7), Colour.BLACK));
-        board.setPiece(new Pawn(new Position(4, 4), Colour.WHITE)); // e5
+        board.setPiece(new Pawn(new Position(4, 4), Colour.WHITE));
 
         StateEvaluation eval1 =new StateEvaluation(board, whitePlayer, blackPlayer);
 
@@ -54,11 +55,58 @@ public class StateEvaluationTest {
         int blockedPawnScore = eval2.evaluate();
 
         assertTrue(passedPawnScore > blockedPawnScore);
-        
+
     }
 
 
-    @Test void piecesNearEnemyKingShouldIncreaseTropism(){
+    @Test
+    void doubledPawnsShouldBePenalized() {
+
+        board.setPiece(new King(new Position(0, 0), Colour.WHITE));
+        board.setPiece(new King(new Position(7, 7), Colour.BLACK));
+        board.setPiece(new Pawn(new Position(1, 4), Colour.WHITE));
+        board.setPiece(new Pawn(new Position(1, 5), Colour.WHITE));
+
+        StateEvaluation eval1 = new StateEvaluation(board, whitePlayer, blackPlayer);
+
+        int normalStructure = eval1.evaluate();
+
+
+        board.setNull(new Position(1,5));
+        board.setPiece(new Pawn(new Position(2, 4), Colour.WHITE));
+
+        StateEvaluation eval2 = new StateEvaluation(board, whitePlayer, blackPlayer);
+
+        int doubledStructure = eval2.evaluate();
+
+        assertTrue(normalStructure > doubledStructure);
+    }
+
+
+    @Test
+    void kingWithPawnShieldShouldBeSafer() {
+
+        board.setPiece(new King(new Position(3, 3), Colour.WHITE));
+        board.setPiece(new King(new Position(7, 7), Colour.BLACK));
+
+        board.setPiece(new Pawn(new Position(4, 2), Colour.WHITE));
+        board.setPiece(new Pawn(new Position(4, 3), Colour.WHITE));
+        board.setPiece(new Pawn(new Position(4, 4), Colour.WHITE));
+
+        int protectedKing = new StateEvaluation(board, whitePlayer, blackPlayer).evaluate();
+
+        board.setNull(new Position(4, 2));
+        board.setNull(new Position(4, 3));
+        board.setNull(new Position(4, 4));
+
+        int exposedKing = new StateEvaluation(board, whitePlayer, blackPlayer).evaluate();
+
+        assertTrue(protectedKing > exposedKing);
+    }
+
+
+    @Test
+    void piecesNearEnemyKingShouldIncreaseTropism(){
 
         King whiteKing = new King(new Position(0,4),Colour.WHITE);
         King blackKing = new King(new Position(7,7),Colour.BLACK);
