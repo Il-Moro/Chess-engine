@@ -155,17 +155,15 @@ public class StateEvaluation {
 
     private int calculateKingSafety(King king, Colour colour) {
         
-        if(board.isCheckmateOrStalemate(player.colour) == End.CHECKMATE)
-            return Integer.MIN_VALUE;
-        else if(board.isCheckmateOrStalemate(player.colour) == End.STALEMATE)
+        if(board.isCheckmateOrStalemate(colour) == End.CHECKMATE)
+            return -1000000;
+        else if(board.isCheckmateOrStalemate(colour) == End.STALEMATE)
             return 0;
 
         int safety = 0;
 
-        if(!king.getHasMoved() && colour == Colour.WHITE)
-            safety+=30;
-        if(!king.getHasMoved() && colour == Colour.BLACK)
-            safety+=30;
+        if(!king.getHasMoved())
+            safety += 30;
 
         int exposedPenality = evaluateKingExposure(king, colour);
         safety-=exposedPenality*10;
@@ -317,8 +315,12 @@ public class StateEvaluation {
         King whiteKing = findKing(Colour.WHITE);
         King blackKing = findKing(Colour.BLACK);
         
+        if (whiteKing == null || blackKing == null)
+            return 0;
+
         int whiteTropism = calculateTropism(Colour.WHITE, blackKing.getPosition());
         int blackTropism = calculateTropism(Colour.BLACK, whiteKing.getPosition());
+        
         if(player.colour==Colour.WHITE)
             return whiteTropism - blackTropism;
         
@@ -339,8 +341,23 @@ public class StateEvaluation {
                 Piece piece = board.getPiece(new Position(row, col));
                 if (piece != null && piece.getColour() == colour) {
                     int distance = calculateDistance(new Position(row, col), enemyKingPos);
-                    int bonus = (piece instanceof Queen || piece instanceof Knight) ? 20 : 10;
-                    tropism += bonus * (7 - distance);
+                    int bonus = 0;
+                    if (piece instanceof Queen)
+                        bonus = 20;
+
+                    else if (piece instanceof Knight)
+                        bonus = 15;
+
+                    else if (piece instanceof Rook)
+                        bonus = 10;
+
+                    else if (piece instanceof Bishop)
+                        bonus = 10;
+
+                    else if (piece instanceof Pawn)
+                        bonus = 3;
+                        
+                    tropism += bonus * (14 - distance);
                 }
             }
         }
@@ -352,7 +369,6 @@ public class StateEvaluation {
     private int calculateDistance(Position p1, Position p2) {
         return Math.abs(p1.row() - p2.row()) + Math.abs(p1.column() - p2.column());
     }
-
     
 
 }

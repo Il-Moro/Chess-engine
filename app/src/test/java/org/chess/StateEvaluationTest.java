@@ -1,0 +1,81 @@
+package org.chess;
+
+import org.chess.organization.*;
+import org.chess.dataTypes.Colour;
+import org.chess.dataTypes.Position;
+import org.chess.pieces.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+public class StateEvaluationTest {
+
+    private ChessBoard board;
+    private PlayerAgent whitePlayer;
+    private PlayerAgent blackPlayer;
+    private StateEvaluation evaluation;
+
+    @BeforeEach
+    void setUp() {
+        board = new ChessBoard();
+        whitePlayer = new PlayerAgent(Colour.WHITE, board,5);
+        blackPlayer = new PlayerAgent(Colour.BLACK, board,5);
+        evaluation = new StateEvaluation(board, whitePlayer, blackPlayer);
+    }
+
+    @Test void queenAdvantageShouldIncreaseEvaluation(){
+        King whiteKing = new King(new Position(0,0),Colour.WHITE);
+        King blackKing = new King(new Position(7,0),Colour.BLACK);
+        board.setPiece(whiteKing);
+        board.setPiece(blackKing);
+        int equalPosition = evaluation.evaluate();
+        Queen whiteQueen = new Queen(new Position(0,7),Colour.WHITE);
+        board.setPiece(whiteQueen);
+        int whiteAdvantage = evaluation.evaluate();
+        assertTrue(whiteAdvantage > equalPosition);
+    }
+
+    @Test
+    void passedPawnShouldBeRewarded() {
+
+        board.setPiece(new King(new Position(0, 0), Colour.WHITE));
+        board.setPiece(new King(new Position(7, 7), Colour.BLACK));
+        board.setPiece(new Pawn(new Position(4, 4), Colour.WHITE)); // e5
+
+        StateEvaluation eval1 =new StateEvaluation(board, whitePlayer, blackPlayer);
+
+        int passedPawnScore = eval1.evaluate();
+
+        board.setPiece(new Pawn(new Position(5, 4), Colour.BLACK));
+
+        StateEvaluation eval2 = new StateEvaluation(board, whitePlayer, blackPlayer);
+
+        int blockedPawnScore = eval2.evaluate();
+
+        assertTrue(passedPawnScore > blockedPawnScore);
+        
+    }
+
+
+    @Test void piecesNearEnemyKingShouldIncreaseTropism(){
+
+        King whiteKing = new King(new Position(0,4),Colour.WHITE);
+        King blackKing = new King(new Position(7,7),Colour.BLACK);
+        Queen whiteQueen = new Queen(new Position(0,0),Colour.WHITE);
+        
+        board.setPiece(whiteKing);
+        board.setPiece(blackKing);
+        board.setPiece(whiteQueen);
+        
+        int evalA = evaluation.evaluate();
+        assertTrue(board.isMoveLegal(whiteQueen.getPosition(),new Position(6,6)));
+        board.physicalMovement(whiteQueen.getPosition(), new Position(6,6));
+        int evalB = evaluation.evaluate();
+        assertTrue(evalB>evalA);
+    }
+
+    @Test void evaluateCenterControl(){
+
+    }
+}
