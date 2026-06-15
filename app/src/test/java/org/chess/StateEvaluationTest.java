@@ -106,6 +106,23 @@ public class StateEvaluationTest {
 
 
     @Test
+    void centerControlShouldBeRewarded() {
+
+        board.setPiece(new King(new Position(0, 0), Colour.WHITE));
+        board.setPiece(new King(new Position(4,4), Colour.BLACK));
+        board.setPiece(new Knight(new Position(3, 3), Colour.WHITE));
+
+        int centerKnight = new StateEvaluation(board, whitePlayer, blackPlayer).evaluate();
+
+        board.setNull(new Position(3, 3));
+        board.setPiece(new Knight(new Position(0, 7), Colour.WHITE));
+
+        int cornerKnight = new StateEvaluation(board, whitePlayer, blackPlayer).evaluate();
+
+        assertTrue(centerKnight > cornerKnight);
+    }
+
+    @Test
     void piecesNearEnemyKingShouldIncreaseTropism(){
 
         King whiteKing = new King(new Position(0,4),Colour.WHITE);
@@ -123,7 +140,16 @@ public class StateEvaluationTest {
         assertTrue(evalB>evalA);
     }
 
-    @Test void evaluateCenterControl(){
 
+    @Test
+    void evaluationShouldBeSymmetric() {
+
+        ChessBoard boardInit = new ChessBoard(true);
+
+        int whiteScore = new StateEvaluation(boardInit, whitePlayer, blackPlayer).evaluate();
+
+        int blackScore = new StateEvaluation(boardInit, blackPlayer, whitePlayer).evaluate();
+
+        assertEquals(whiteScore-blackScore, 0);
     }
 }
