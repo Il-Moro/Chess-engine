@@ -152,4 +152,21 @@ public class StateEvaluationTest {
 
         assertEquals(whiteScore-blackScore, 0);
     }
+
+    @Test
+    void checkmateShouldDominatEvaluation() {
+
+        King whiteKing = new King(new Position(4,4),Colour.WHITE);
+        King blackKing = new King(new Position(7,7),Colour.BLACK);
+        Queen whiteQueen = new Queen(new Position(6,6),Colour.WHITE);
+        Rook whiteRook = new Rook(new Position(0,6),Colour.WHITE);
+        board.setPiece(whiteKing);
+        board.setPiece(blackKing);
+        board.setPiece(whiteQueen);
+        board.setPiece(whiteRook);
+
+        int score = new StateEvaluation(board, whitePlayer, blackPlayer).evaluate();
+
+        assertTrue(score > -500000);
+    }
 }
