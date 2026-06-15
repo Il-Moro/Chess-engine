@@ -3,10 +3,8 @@ package org.chess.organization;
 import org.chess.dataTypes.Colour;
 import org.chess.dataTypes.End;
 import org.chess.dataTypes.Position;
-import org.chess.dataTypes.Move;
 import org.chess.pieces.*;
 
-import java.util.List;
 import java.util.Set;
 
 
@@ -45,16 +43,14 @@ public class StateEvaluation {
     private ChessBoard board;
     private PlayerAgent player;
     private Player opponent;
-    private List<Piece> alivePieces;
     
     public StateEvaluation(ChessBoard board, PlayerAgent player,Player opponent) {
         this.board = board;
         this.player=player;
         this.opponent=opponent;
-        this.alivePieces=player.getAlivePieces();
     }
 
-/*
+
     public int evaluate() {
         int materialScore = evaluateMaterial();
         int mobilityScore = evaluateMobility();
@@ -74,8 +70,6 @@ public class StateEvaluation {
         
         return totalScore;
     }
-
-     */
 
 
     private int evaluateMaterial() {
@@ -300,7 +294,7 @@ public class StateEvaluation {
     }
 
 
-        private boolean isPassedPawn(Position pawnPos, Colour colour) {
+    private boolean isPassedPawn(Position pawnPos, Colour colour) {
         int direction = (colour == Colour.WHITE) ? 1 : -1;
         int startRow = pawnPos.row() + direction;
         int endRow = (colour == Colour.WHITE) ? 7 : 0;
@@ -317,6 +311,46 @@ public class StateEvaluation {
             }
         }
         return true;
+    }
+
+    private int evaluateKingTropism() {
+        King whiteKing = findKing(Colour.WHITE);
+        King blackKing = findKing(Colour.BLACK);
+        
+        int whiteTropism = calculateTropism(Colour.WHITE, blackKing.getPosition());
+        int blackTropism = calculateTropism(Colour.BLACK, whiteKing.getPosition());
+        if(player.colour==Colour.WHITE)
+            return whiteTropism - blackTropism;
+        
+        return blackTropism - whiteTropism;
+    }
+
+
+
+
+    private int calculateTropism(Colour colour, Position enemyKingPos) {
+
+        if (enemyKingPos == null) return 0;
+        
+        int tropism = 0;
+        
+        for (int row = 0; row < 8; row++) {
+            for (int col = 0; col < 8; col++) {
+                Piece piece = board.getPiece(new Position(row, col));
+                if (piece != null && piece.getColour() == colour) {
+                    int distance = calculateDistance(new Position(row, col), enemyKingPos);
+                    int bonus = (piece instanceof Queen || piece instanceof Knight) ? 20 : 10;
+                    tropism += bonus * (7 - distance);
+                }
+            }
+        }
+        
+        return tropism;
+    }
+
+    
+    private int calculateDistance(Position p1, Position p2) {
+        return Math.abs(p1.row() - p2.row()) + Math.abs(p1.column() - p2.column());
     }
 
     
