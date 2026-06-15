@@ -32,21 +32,6 @@ public class PlayerAgent extends Player{
         return 0;
     }
 
-    public List<Move> computeAllLegalMoves(){
-        List<Piece> pieces = super.getAlivePieces();
-        List<Move> moves=new ArrayList<>();
-
-        for(Piece p : pieces){
-            Set<Position> potentialMoves=p.getPotentialMoves(super.board);
-            for(Position m:potentialMoves){
-                if (super.board.isMoveLegal(p.getPosition(), m)) {
-                    moves.add(new Move(p,m));
-                }
-            }
-        }
-        return moves;
-    }
-
     public int evaluateBoard(){
         return 0;
     }

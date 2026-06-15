@@ -29,7 +29,6 @@ public class StateEvaluation {
     private static final int KING_VALUE = 10000;
 
 
-
     private static final Position[] CENTER_SQUARES = {
         new Position(3, 3), new Position(3, 4),
         new Position(4, 3), new Position(4, 4)
@@ -46,11 +45,13 @@ public class StateEvaluation {
     private ChessBoard board;
     private PlayerAgent player;
     private Player opponent;
+    private List<Piece> alivePieces;
     
     public StateEvaluation(ChessBoard board, PlayerAgent player,Player opponent) {
         this.board = board;
         this.player=player;
         this.opponent=opponent;
+        this.alivePieces=player.getAlivePieces();
     }
 
 /*
@@ -247,6 +248,75 @@ public class StateEvaluation {
             sum+=squaresControlled[center.row()][center.column()];
         }
         return sum;
+    }
+
+
+    private int evaluatePawnStructure() {
+
+        int whitePawnScore = evaluatePawnsForColour(Colour.WHITE);
+        int blackPawnScore = evaluatePawnsForColour(Colour.BLACK);
+        
+        if(player.colour == Colour.WHITE)
+            return whitePawnScore - blackPawnScore;
+        else
+            return blackPawnScore -whitePawnScore;
+    }
+    
+    private int evaluatePawnsForColour(Colour colour) {
+        int score = 0;
+        
+        for (int row = 0; row < 8; row++) {
+            for (int col = 0; col < 8; col++) {
+                Piece piece = board.getPiece(new Position(row, col));
+                if (piece instanceof Pawn && piece.getColour() == colour) {
+                    
+                    if (isPassedPawn(new Position(row, col), colour)) {
+                        score += 20;
+                    }
+                    
+                    if (col == 3 || col == 4) {
+                        score += 5;
+                    }
+                }
+            }
+        }
+        
+        int doubledPawns = 0;
+        for (int col = 0; col < 8; col++) {
+            int pawnCount = 0;
+            for (int row = 0; row < 8; row++) {
+                Piece piece = board.getPiece(new Position(row, col));
+                if (piece instanceof Pawn && piece.getColour() == colour) {
+                    pawnCount++;
+                }
+            }
+            if (pawnCount > 1) {
+                doubledPawns += (pawnCount - 1);
+            }
+        }
+        score -= doubledPawns * 15;
+        
+        return score;
+    }
+
+
+        private boolean isPassedPawn(Position pawnPos, Colour colour) {
+        int direction = (colour == Colour.WHITE) ? 1 : -1;
+        int startRow = pawnPos.row() + direction;
+        int endRow = (colour == Colour.WHITE) ? 7 : 0;
+        
+        for (int row = startRow; row != endRow + direction; row += direction) {
+            for (int dc = -1; dc <= 1; dc++) {
+                int col = pawnPos.column() + dc;
+                if (col >= 0 && col < 8) {
+                    Piece piece = board.getPiece(new Position(row, col));
+                    if (piece instanceof Pawn && piece.getColour() != colour) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
     }
 
     
