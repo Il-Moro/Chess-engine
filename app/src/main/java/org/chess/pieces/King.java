@@ -12,7 +12,6 @@ public class King extends Piece{
 
     public King(Position position, Colour colour){
         super(position, colour);
-        this.value = Integer.MAX_VALUE;
     }
 
     public King(Position position, Colour colour, boolean hasMoved){

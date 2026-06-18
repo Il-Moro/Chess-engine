@@ -10,7 +10,6 @@ public class Bishop extends Piece {
     
     public Bishop(Position position, Colour colour) {
         super(position, colour);
-        this.value = 3;
     }
 
     

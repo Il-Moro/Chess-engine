@@ -12,7 +12,6 @@ public class Pawn extends Piece{
 
     public Pawn(Position position, Colour colour){
         super(position, colour);
-        this.value = 3;
     }
 
     @Override
