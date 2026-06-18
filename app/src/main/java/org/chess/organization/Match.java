@@ -58,11 +58,6 @@ public class Match {
         return currentPlayerTurn;
     }
 
-    // sets the current player turn based on the colour
-    public void setCurrentPlayerTurn(Colour colour) {
-        currentPlayerTurn = (colour == Colour.WHITE) ? whitePlayer : blackPlayer;
-    }
-
     // returns the white player
     public Player getWhitePlayer() {
         return whitePlayer;
