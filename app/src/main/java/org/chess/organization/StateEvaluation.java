@@ -97,7 +97,7 @@ public class StateEvaluation {
     }
 
 
-    private int getPieceValue(Piece piece) {
+    private static int getPieceValue(Piece piece) {
         if (piece instanceof Pawn) return PAWN_VALUE;
         if (piece instanceof Knight) return KNIGHT_VALUE;
         if (piece instanceof Bishop) return BISHOP_VALUE;
@@ -369,7 +369,7 @@ public class StateEvaluation {
     }
 
     
-    private int calculateDistance(Position p1, Position p2) {
+    private static int calculateDistance(Position p1, Position p2) {
         return Math.abs(p1.row() - p2.row()) + Math.abs(p1.column() - p2.column());
     }
     

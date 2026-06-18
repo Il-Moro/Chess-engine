@@ -695,7 +695,7 @@ public class ChessBoard {
         }
     }
 
-    private void markCheckPath(int startRow, int startCol, int endRow, int endCol, int[] d, Pin[][] kingPin) {
+    private static void markCheckPath(int startRow, int startCol, int endRow, int endCol, int[] d, Pin[][] kingPin) {
         int row = startRow + d[0];
         int column = startCol + d[1];
         while (row != endRow || column != endCol) {
