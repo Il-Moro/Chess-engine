@@ -23,8 +23,8 @@ public class PlayerTest {
     @BeforeEach
     void setUp() {
         board = new ChessBoard(true);
-        whiteAgent = new PlayerAgent(Colour.WHITE, board,5);
-        blackAgent = new PlayerAgent(Colour.BLACK, board,5);
+        whiteAgent = new PlayerAgent(Colour.WHITE, board,5,blackAgent);
+        blackAgent = new PlayerAgent(Colour.BLACK, board,5,whiteAgent);
     }
 
     @Test
@@ -56,7 +56,7 @@ public class PlayerTest {
 
         ChessBoard emptyBoard = new ChessBoard();
         
-        PlayerAgent agent = new PlayerAgent(Colour.WHITE, emptyBoard,5);
+        PlayerAgent agent = new PlayerAgent(Colour.WHITE, emptyBoard,5,blackAgent);
         List<Move> moves = agent.computeAllLegalMoves();
         
         assertNotNull(moves);

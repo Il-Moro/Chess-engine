@@ -10,8 +10,6 @@ import java.util.Set;
 
 public class StateEvaluation {
 
-    
-
     private static final double MATERIAL_WEIGHT = 1.0;
     private static final double MOBILITY_WEIGHT = 0.1;
     private static final double KING_SAFETY_WEIGHT = 0.5;
@@ -43,6 +41,7 @@ public class StateEvaluation {
     private ChessBoard board;
     private PlayerAgent player;
     private Player opponent;
+
     
     public StateEvaluation(ChessBoard board, PlayerAgent player,Player opponent) {
         this.board = board;
@@ -155,6 +154,10 @@ public class StateEvaluation {
 
     private int calculateKingSafety(King king, Colour colour) {
         
+        if (king == null) {
+            return -1000000;
+        }
+
         if(board.isCheckmateOrStalemate(colour) == End.CHECKMATE)
             return -1000000;
         else if(board.isCheckmateOrStalemate(colour) == End.STALEMATE)
