@@ -593,7 +593,8 @@ public class ChessBoard {
         int checks = 0;
 
         checks += calculateLinearDirections(king.getColour(), linearDirections, kingRow, kingColumn, checks, kingPin);
-        calculateKnightDirections(king.getColour(), knightDirections, kingRow, kingColumn, checks, kingPin);
+        checks += calculatePawnDirections(king.getColour(), kingRow, kingColumn, checks, kingPin);
+        calculateKnightDirections(king.getColour(), knightDirections, kingRow, kingColumn, checks, kingPin);        
     }
 
     private int calculateLinearDirections(Colour colour, int[][] directions, int kingRow, int kingColumn, int checks,
@@ -641,9 +642,30 @@ public class ChessBoard {
         return checks;
     }
 
-    private void calculateKnightDirections(Colour colour, int[][] directions, int kingRow, int kingColumn, int checks,
-            Pin[][] kingPin) {
-        for (int[] d : directions) {
+    private int calculatePawnDirections(Colour colour, int kingRow, int kingColumn, int checks, Pin[][] kingPin){
+        int[][] directions = (colour == Colour.WHITE) ? new int[][] {{1,-1}, {1,1}} : new int[][] {{-1,-1}, {-1,1}};
+        
+        for (int[] d : directions){
+            int targetRow = kingRow + d[0];
+            int targetColumn = kingColumn + d[1];
+            if(Position.isInsideBounds(targetRow, targetColumn)){
+                Piece targetPiece = chessboard[targetRow][targetColumn];
+                if(targetPiece != null && targetPiece instanceof Pawn && targetPiece.getColour() != colour){
+                    checks += 1;
+                    if (checks == 1) {
+                        kingPin[kingRow][kingColumn] = Pin.UNDER_CHECK_LINE;
+                    } else {
+                        kingPin[kingRow][kingColumn] = Pin.DOUBLE_CHECK;
+                    }
+                    kingPin[targetRow][targetColumn] = Pin.KING_ATTACKER;
+                }
+            }
+        }
+        return checks;
+    }
+
+    private void calculateKnightDirections(Colour colour, int[][] directions, int kingRow, int kingColumn, int checks, Pin[][] kingPin) {
+        for (int[] d : directions) {           
             int targetRow = kingRow + d[0];
             int targetColumn = kingColumn + d[1];
 
