@@ -168,7 +168,7 @@ public class PlayerAgentTest {
         ChessBoard mateBoard = new ChessBoard();
  
         King  whiteKing  = new King (new Position(5, 2), Colour.WHITE, true);
-        Queen whiteQueen = new Queen(new Position(4, 0), Colour.WHITE);
+        Queen whiteQueen = new Queen(new Position(5, 0), Colour.WHITE);
 
         King  blackKing  = new King (new Position(7, 0), Colour.BLACK, true);
  
@@ -177,7 +177,7 @@ public class PlayerAgentTest {
         mateBoard.setPiece(blackKing);
  
         PlayerHuman blackPlayer = new PlayerHuman(Colour.BLACK, mateBoard);
-        PlayerAgent whiteAgent  = new PlayerAgent(Colour.WHITE, mateBoard, 1, blackPlayer);
+        PlayerAgent whiteAgent  = new PlayerAgent(Colour.WHITE, mateBoard, 2, blackPlayer);
  
         Move chosen = whiteAgent.decideMove();
         assertNotNull(chosen);
