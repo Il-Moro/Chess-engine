@@ -19,8 +19,8 @@ public class StateEvaluationTest {
     @BeforeEach
     void setUp() {
         board = new ChessBoard();
-        whitePlayer = new PlayerAgent(Colour.WHITE, board,5);
-        blackPlayer = new PlayerAgent(Colour.BLACK, board,5);
+        whitePlayer = new PlayerAgent(Colour.WHITE, board,5,blackPlayer);
+        blackPlayer = new PlayerAgent(Colour.BLACK, board,5,whitePlayer);
         evaluation = new StateEvaluation(board, whitePlayer, blackPlayer);
     }
 

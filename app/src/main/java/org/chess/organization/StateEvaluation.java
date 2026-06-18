@@ -43,6 +43,7 @@ public class StateEvaluation {
     private ChessBoard board;
     private PlayerAgent player;
     private Player opponent;
+
     
     public StateEvaluation(ChessBoard board, PlayerAgent player,Player opponent) {
         this.board = board;
