@@ -3,6 +3,8 @@
  */
 package org.chess;
 
+import org.chess.graphics.*;
+
 public class Chess {
     public String getGreeting() {
         return "Hello World!";
@@ -10,5 +12,6 @@ public class Chess {
 
     public static void main(String[] args) {
         System.out.println(new Chess().getGreeting());
+        new GUI();
     }
 }
