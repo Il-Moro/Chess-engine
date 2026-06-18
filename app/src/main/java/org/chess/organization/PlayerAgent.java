@@ -10,7 +10,7 @@ import org.chess.dataTypes.Move;
 public class PlayerAgent extends Player{
 
     private final int SEARCH_DEPTH;
-    private Move bestMove = null;
+    private Move bestMove;
     private StateEvaluation evaluator;
     private Player opponent;
 
@@ -24,6 +24,7 @@ public class PlayerAgent extends Player{
 
     @Override
     public Move decideMove(){
+        this.bestMove = null;
         this.evaluator = new StateEvaluation(board,this,this.opponent);
         maximizer(SEARCH_DEPTH, Integer.MIN_VALUE, Integer.MAX_VALUE);
         return bestMove;
@@ -46,11 +47,8 @@ public class PlayerAgent extends Player{
             int rating = minimizer(depth-1, alpha, beta);
             board.undoMove(undoInfo);
             
-            if(rating > alpha){
-                alpha = rating;
-                if(depth == SEARCH_DEPTH){
-                    bestMove = move;
-                }
+            if (depth == SEARCH_DEPTH && (bestMove == null || rating > alpha)) {    
+                bestMove = move;
             }
 
             if(alpha >= beta){

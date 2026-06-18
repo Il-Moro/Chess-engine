@@ -181,7 +181,7 @@ public class PlayerAgentTest {
  
         Move chosen = whiteAgent.decideMove();
         assertNotNull(chosen);
- 
+        System.out.println("Chosen move: " + chosen);
 
         mateBoard.physicalMovement(chosen.selectedPiece().getPosition(),chosen.to());
  
