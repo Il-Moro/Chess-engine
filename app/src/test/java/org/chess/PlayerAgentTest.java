@@ -11,6 +11,7 @@ import org.chess.pieces.King;
 import org.chess.pieces.Knight;
 import org.chess.pieces.Piece;
 import org.chess.pieces.Queen;
+import org.chess.pieces.Rook;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
  
@@ -164,7 +165,7 @@ public class PlayerAgentTest {
     }
 
     @Test
-    public void testDecideMove_choosesCheckmate_whenMateInOne() {
+    public void testDecideMove_choosesCheckmate_whenMateInOne1() {
         ChessBoard mateBoard = new ChessBoard();
  
         King  whiteKing  = new King (new Position(5, 2), Colour.WHITE, true);
@@ -180,15 +181,43 @@ public class PlayerAgentTest {
         PlayerAgent whiteAgent  = new PlayerAgent(Colour.WHITE, mateBoard, 2, blackPlayer);
  
         Move chosen = whiteAgent.decideMove();
+        System.out.println(">>> MOSSA SCELTA: " + chosen);
+        
         assertNotNull(chosen);
  
-
-        mateBoard.physicalMovement(chosen.selectedPiece().getPosition(),chosen.to());
+        mateBoard.physicalMovement(chosen.selectedPiece().getPosition(), chosen.to());
  
         End result = mateBoard.isCheckmateOrStalemate(Colour.BLACK);
-        assertEquals(End.CHECKMATE,result);
-
+        assertEquals(End.CHECKMATE, result);
     }
 
+    @Test
+    public void testDecideMove_choosesCheckmate_whenMateInOne2() {
+        ChessBoard mateBoard = new ChessBoard();
+ 
+        King  whiteKing  = new King (new Position(7, 7), Colour.WHITE, true);
+        Queen whiteQueen = new Queen(new Position(3, 2), Colour.WHITE);
+        Rook  whiteRook  = new Rook (new Position(1, 1), Colour.WHITE);
+
+        King  blackKing  = new King (new Position(7, 0), Colour.BLACK, true);
+ 
+        mateBoard.setPiece(whiteKing);
+        mateBoard.setPiece(whiteQueen);
+        mateBoard.setPiece(whiteRook);
+        mateBoard.setPiece(blackKing);
+ 
+        PlayerHuman blackPlayer = new PlayerHuman(Colour.BLACK, mateBoard);
+        PlayerAgent whiteAgent  = new PlayerAgent(Colour.WHITE, mateBoard, 2, blackPlayer);
+ 
+        Move chosen = whiteAgent.decideMove();
+        System.out.println(">>> MOSSA SCELTA: " + chosen);
+        
+        assertNotNull(chosen);
+ 
+        mateBoard.physicalMovement(chosen.selectedPiece().getPosition(), chosen.to());
+ 
+        End result = mateBoard.isCheckmateOrStalemate(Colour.BLACK);
+        assertEquals(End.CHECKMATE, result);
+    }
 
 }
