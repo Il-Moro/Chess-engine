@@ -633,7 +633,7 @@ public class ChessBoardTest {
         board.updateKingPin();
 
         // Spinta in prima traversa (riga 0)
-        board.physicalMovement(new Position(1, 3), new Position(0, 3));
+        board.physicalMovement(new Position(1, 3), new Position(0, 3), "R");
 
         // Verifiche
         assertNull(board.getPiece(new Position(1, 3)), "Il pedone di partenza deve essere rimosso");
@@ -787,7 +787,7 @@ public class ChessBoardTest {
         board.setPiece(whitePawn);
         
         assertTrue(board.isMoveLegal(whitePawn.getPosition(), new Position(7, 3)));
-        UndoInfo undoPromotion = board.physicalMovement(whitePawn.getPosition(), new Position(7, 3));
+        UndoInfo undoPromotion = board.physicalMovement(whitePawn.getPosition(), new Position(7, 3), "R");
         assertTrue(board.getPiece(new Position(7, 3)) instanceof Rook);
         
         board.undoMove(undoPromotion);
@@ -808,7 +808,7 @@ public class ChessBoardTest {
         board.setPiece(whitePawn);
         
         assertTrue(board.isMoveLegal(whitePawn.getPosition(), new Position(7, 3)));
-        UndoInfo undoPromotion = board.physicalMovement(whitePawn.getPosition(), new Position(7, 3));
+        UndoInfo undoPromotion = board.physicalMovement(whitePawn.getPosition(), new Position(7, 3), "K");
         assertTrue(board.getPiece(new Position(7, 3)) instanceof Knight);
         board.undoMove(undoPromotion);
         assertTrue(board.isNull(new Position(7, 3)));
@@ -827,7 +827,7 @@ public class ChessBoardTest {
         board.setPiece(whitePawn);
         
         assertTrue(board.isMoveLegal(whitePawn.getPosition(), new Position(7, 3)));
-        UndoInfo undoPromotion = board.physicalMovement(whitePawn.getPosition(), new Position(7, 3));
+        UndoInfo undoPromotion = board.physicalMovement(whitePawn.getPosition(), new Position(7, 3), "B");
         assertTrue(board.getPiece(new Position(7, 3)) instanceof Bishop);
         
         board.undoMove(undoPromotion);

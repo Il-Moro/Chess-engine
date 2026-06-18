@@ -29,9 +29,7 @@ public class ChessBoard {
     private int[][] squaresControlledByWhite;
     private int[][] squaresControlledByBlack;
     // matrici di pin e stato del re
-    private Pin[][] whiteKingPin; // matrice che controlla a partire dal re: Pieces in pin, Pieces attacker, marca
-                                  // il re se è sotto scacco da un pezzo lineare oppure da un cavallo o se è in
-                                  // doppio scacco
+    private Pin[][] whiteKingPin; // matrice che controlla a partire dal re: Pieces in pin, Pieces attacker, marca il re se è sotto scacco da un pezzo lineare oppure da un cavallo o se è in doppio scacco
     private Pin[][] blackKingPin;
     // re per semplificare i calcoli
     private King whiteKing;
@@ -343,9 +341,14 @@ public class ChessBoard {
      * @param from posizione geometrica di partenza
      * @param to   posizione geometrica di arrivo
      */
-
+    
     public UndoInfo physicalMovement(Position from, Position to) {
+        return physicalMovement(from, to, "Q"); 
+    }
+
+    public UndoInfo physicalMovement(Position from, Position to, String stringPiece) {
         Piece piece = this.getPiece(from);
+        Colour pieceColour = piece.getColour();
         boolean rowDiff = false;
 
         if (lastPawnMoved != null) {
@@ -386,11 +389,17 @@ public class ChessBoard {
                 updateAfterMove(piece, from);
                 return new UndoInfo(piece, from, to, null, SpecialMoves.LONG_CASTELING);
             }
-        } else if (piece instanceof Pawn && ((piece.getColour() == Colour.WHITE && to.row() == 7)
-                || piece.getColour() == Colour.BLACK && to.row() == 0)) {
-            Piece newPiece = askPieceToUser(to, piece.getColour());
+        } else if (piece instanceof Pawn && ((piece.getColour() == Colour.WHITE && to.row() == 7) || piece.getColour() == Colour.BLACK && to.row() == 0)) {
+            
+            Piece promotionPiece = switch (stringPiece) {
+            case "R" -> new Rook(to, pieceColour, true);
+            case "B" -> new Bishop(to, pieceColour);
+            case "K" -> new Knight(to, pieceColour);
+            default -> new Queen(to, pieceColour);
+        };
+
             Piece eatenPiece = this.getPiece(to);
-            this.setPiece(newPiece);
+            this.setPiece(promotionPiece);
             this.setNull(from);
             updateAfterMove(piece, from);
             return new UndoInfo(piece, from, to, eatenPiece, SpecialMoves.PROMOTION);
@@ -729,20 +738,5 @@ public class ChessBoard {
                 this.squaresControlledByBlack[s.row()][s.column()] += 1;
             }
         }
-    }
-
-    @SuppressWarnings("resource")
-    private Piece askPieceToUser(Position to, Colour colour) {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Promozione! Scegli un pezzo (Q = Queen, R = Rock, B = Bishop, K = Knight): ");
-        String choice = scanner.nextLine().trim().toUpperCase();
-
-        return switch (choice) {
-            case "R" -> new Rook(to, colour, true);
-            case "B" -> new Bishop(to, colour);
-            case "K" -> new Knight(to, colour);
-            default -> new Queen(to, colour);
-        };
-
     }
 }
