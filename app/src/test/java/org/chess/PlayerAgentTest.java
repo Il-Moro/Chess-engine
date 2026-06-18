@@ -180,15 +180,15 @@ public class PlayerAgentTest {
         PlayerAgent whiteAgent  = new PlayerAgent(Colour.WHITE, mateBoard, 2, blackPlayer);
  
         Move chosen = whiteAgent.decideMove();
+        System.out.println(">>> MOSSA SCELTA: " + chosen);
+        
         assertNotNull(chosen);
-        System.out.println("Chosen move: " + chosen);
+ 
 
         mateBoard.physicalMovement(chosen.selectedPiece().getPosition(),chosen.to());
  
         End result = mateBoard.isCheckmateOrStalemate(Colour.BLACK);
-        assertEquals(End.CHECKMATE,result);
-
+        assertEquals(End.CHECKMATE, result);
     }
-
 
 }

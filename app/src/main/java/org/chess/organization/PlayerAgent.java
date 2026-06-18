@@ -14,8 +14,7 @@ public class PlayerAgent extends Player{
     private StateEvaluation evaluator;
     private Player opponent;
 
-
-    public PlayerAgent(Colour colour, ChessBoard board,int SEARCH_DEPTH, Player opponent) {
+    public PlayerAgent(Colour colour, ChessBoard board, int SEARCH_DEPTH, Player opponent) {
         super(colour,board);
         this.SEARCH_DEPTH=SEARCH_DEPTH;
         this.opponent = opponent;
