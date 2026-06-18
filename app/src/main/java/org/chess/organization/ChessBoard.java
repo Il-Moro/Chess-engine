@@ -11,9 +11,12 @@ import org.chess.pieces.*;
  * Questa classe offre funzionalità per:
  * <ul>
  * <li>Il controllo sui singoli pezzi e la loro posizione.</li>
- * <li>Una panoramica delle matrici di controllo delle case per entrambi i giocatori.</li>
- * <li>La gestione delle matrici di pin (pezzi inchiodati, attaccanti, stato di scacco).</li>
- * <li>La verifica della legalità di una mossa, dello scacco matto e dello stallo.</li>
+ * <li>Una panoramica delle matrici di controllo delle case per entrambi i
+ * giocatori.</li>
+ * <li>La gestione delle matrici di pin (pezzi inchiodati, attaccanti, stato di
+ * scacco).</li>
+ * <li>La verifica della legalità di una mossa, dello scacco matto e dello
+ * stallo.</li>
  * </ul>
  * </p>
  */
@@ -22,11 +25,13 @@ public class ChessBoard {
     public static final int BOARD_SIZE = 8;
 
     private Piece[][] chessboard;
-    // matrici di controllo delle celle 
+    // matrici di controllo delle celle
     private int[][] squaresControlledByWhite;
     private int[][] squaresControlledByBlack;
     // matrici di pin e stato del re
-    private Pin[][] whiteKingPin; // matrice che controlla a partire dal re: Pieces in pin, Pieces attacker, marca il re se è sotto scacco da un pezzo lineare oppure da un cavallo o se è in doppio scacco
+    private Pin[][] whiteKingPin; // matrice che controlla a partire dal re: Pieces in pin, Pieces attacker, marca
+                                  // il re se è sotto scacco da un pezzo lineare oppure da un cavallo o se è in
+                                  // doppio scacco
     private Pin[][] blackKingPin;
     // re per semplificare i calcoli
     private King whiteKing;
@@ -36,7 +41,8 @@ public class ChessBoard {
     private Position lastPawnFromPosition = null;
 
     /**
-     * costruttore base: inizializza una chessboard vuota, nessun re, da riempire mediante le funzioni offerte
+     * costruttore base: inizializza una chessboard vuota, nessun re, da riempire
+     * mediante le funzioni offerte
      */
     public ChessBoard() {
         this.chessboard = new Piece[BOARD_SIZE][BOARD_SIZE];
@@ -51,9 +57,11 @@ public class ChessBoard {
 
     /**
      * costruttore completo per la posizione iniziale di una partita di scacchi
-     * @param initialPosition variabile booleana, per convenzione true, ma in realtà basta che sia presente un valore booleano
+     * 
+     * @param initialPosition variabile booleana, per convenzione true, ma in realtà
+     *                        basta che sia presente un valore booleano
      */
-    public ChessBoard(boolean initialPosition){
+    public ChessBoard(boolean initialPosition) {
         this.chessboard = new Piece[BOARD_SIZE][BOARD_SIZE];
         this.squaresControlledByBlack = new int[BOARD_SIZE][BOARD_SIZE];
         this.squaresControlledByWhite = new int[BOARD_SIZE][BOARD_SIZE];
@@ -61,30 +69,30 @@ public class ChessBoard {
         this.blackKingPin = new Pin[BOARD_SIZE][BOARD_SIZE];
 
         // Bianchi
-        for(int i = 0; i < BOARD_SIZE; i++){
+        for (int i = 0; i < BOARD_SIZE; i++) {
             this.setPiece(new Pawn(new Position(1, i), Colour.WHITE));
         }
-        this.setPiece(new Rook(new Position(0,0), Colour.WHITE, false));
-        this.setPiece(new Knight(new Position(0,1), Colour.WHITE));
-        this.setPiece(new Bishop(new Position(0,2), Colour.WHITE));
-        this.setPiece(new Queen(new Position(0,3), Colour.WHITE)); 
-        this.setPiece(new King(new Position(0,4), Colour.WHITE, false));  
-        this.setPiece(new Bishop(new Position(0,5), Colour.WHITE));
-        this.setPiece(new Knight(new Position(0,6), Colour.WHITE));
-        this.setPiece(new Rook(new Position(0,7), Colour.WHITE, false));
+        this.setPiece(new Rook(new Position(0, 0), Colour.WHITE, false));
+        this.setPiece(new Knight(new Position(0, 1), Colour.WHITE));
+        this.setPiece(new Bishop(new Position(0, 2), Colour.WHITE));
+        this.setPiece(new Queen(new Position(0, 3), Colour.WHITE));
+        this.setPiece(new King(new Position(0, 4), Colour.WHITE, false));
+        this.setPiece(new Bishop(new Position(0, 5), Colour.WHITE));
+        this.setPiece(new Knight(new Position(0, 6), Colour.WHITE));
+        this.setPiece(new Rook(new Position(0, 7), Colour.WHITE, false));
 
-        // Neri 
-        for(int i = 0; i < 8; i++){
-            this.setPiece(new Pawn (new Position(6, i), Colour.BLACK)); 
+        // Neri
+        for (int i = 0; i < 8; i++) {
+            this.setPiece(new Pawn(new Position(6, i), Colour.BLACK));
         }
-        this.setPiece(new Rook(new Position(7,0), Colour.BLACK, false));
-        this.setPiece(new Knight(new Position(7,1), Colour.BLACK));
-        this.setPiece(new Bishop(new Position(7,2), Colour.BLACK));
-        this.setPiece(new Queen(new Position(7,3), Colour.BLACK)); 
-        this.setPiece(new King(new Position(7,4), Colour.BLACK, false));  
-        this.setPiece(new Bishop(new Position(7,5), Colour.BLACK));
-        this.setPiece(new Knight(new Position(7,6), Colour.BLACK));
-        this.setPiece(new Rook(new Position(7,7), Colour.BLACK, false));
+        this.setPiece(new Rook(new Position(7, 0), Colour.BLACK, false));
+        this.setPiece(new Knight(new Position(7, 1), Colour.BLACK));
+        this.setPiece(new Bishop(new Position(7, 2), Colour.BLACK));
+        this.setPiece(new Queen(new Position(7, 3), Colour.BLACK));
+        this.setPiece(new King(new Position(7, 4), Colour.BLACK, false));
+        this.setPiece(new Bishop(new Position(7, 5), Colour.BLACK));
+        this.setPiece(new Knight(new Position(7, 6), Colour.BLACK));
+        this.setPiece(new Rook(new Position(7, 7), Colour.BLACK, false));
 
         // Inizializzazione automatica dello stato
         updateControl();
@@ -94,14 +102,15 @@ public class ChessBoard {
     // setter
     /**
      * Inserisce un nuovo Piece nella matrice dei pezzi della chessboard
+     * 
      * @param piece istanza dell'oggetto {@link Piece}
      */
     public void setPiece(Piece piece) {
         this.chessboard[piece.getPosition().row()][piece.getPosition().column()] = piece;
-        if(piece instanceof King k){
-            if(piece.getColour().equals(Colour.WHITE))
+        if (piece instanceof King k) {
+            if (piece.getColour().equals(Colour.WHITE))
                 whiteKing = k;
-            else{
+            else {
                 blackKing = k;
             }
         }
@@ -109,17 +118,20 @@ public class ChessBoard {
 
     /**
      * Serve a svuotare la casa della chessboard dal pezzo su di essa
+     * 
      * @param position di tipo {@link Position}
      */
-    public void setNull(Position position){
+    public void setNull(Position position) {
         this.chessboard[position.row()][position.column()] = null;
     }
 
     // getter
     /**
      * ritorna il pezzo che c'è nella posizione specificata della chessboard
+     * 
      * @param position di tipo {@link Position}
-     * @return l'istanza dell'oggetto {@link Piece} se presente, altrimenti {@code null}
+     * @return l'istanza dell'oggetto {@link Piece} se presente, altrimenti
+     *         {@code null}
      */
     public Piece getPiece(Position position) {
         return chessboard[position.row()][position.column()];
@@ -127,27 +139,33 @@ public class ChessBoard {
 
     /**
      * ritorna matrice dei pezzi
+     * 
      * @return matrice 8x8 con tutti i pezzi
      */
-    public Piece[][] getBoard(){
+    public Piece[][] getBoard() {
         return this.chessboard;
     }
 
     /**
-     * ritorna la matrice di controllo di un certo colore: ogni cella della matrice è contrassegnata da un numero naturale > 0, indica il numero di pezzo che controllano la cella nello specifico
-     * @param colour il colore della fazione di cui si richiede la mappa di controllo
+     * ritorna la matrice di controllo di un certo colore: ogni cella della matrice
+     * è contrassegnata da un numero naturale > 0, indica il numero di pezzo che
+     * controllano la cella nello specifico
+     * 
+     * @param colour il colore della fazione di cui si richiede la mappa di
+     *               controllo
      * @return matrice di interi 8x8
      */
-    public int[][] getSquareControlledBy(Colour colour){
-        if(colour.equals(Colour.WHITE)){
+    public int[][] getSquareControlledBy(Colour colour) {
+        if (colour.equals(Colour.WHITE)) {
             return this.squaresControlledByWhite;
-        } else{
+        } else {
             return this.squaresControlledByBlack;
         }
-    }    
+    }
 
     /**
      * Verifica se una determinata casa della chessboard è priva di pezzi
+     * 
      * @param position la coordinata da controllare
      * @return true se la casa è vuota, altrimenti false
      */
@@ -156,41 +174,44 @@ public class ChessBoard {
     }
 
     /**
-     * Ritorna la matrice di Pin e delle sottomatrici di scacco del Re per il colore richiesto
+     * Ritorna la matrice di Pin e delle sottomatrici di scacco del Re per il colore
+     * richiesto
+     * 
      * @param colour il colore del Re di riferimento
      * @return matrice 8x8 di oggetti {@link Pin}
      */
-    public Pin[][] getKingPin(Colour colour){
-        return (colour.equals(Colour.WHITE)) ? whiteKingPin : blackKingPin ;
+    public Pin[][] getKingPin(Colour colour) {
+        return (colour.equals(Colour.WHITE)) ? whiteKingPin : blackKingPin;
     }
 
     // movement of pieces
-    public boolean isMoveLegal(Position from, Position to){
+    public boolean isMoveLegal(Position from, Position to) {
         Piece piece = this.getPiece(from);
 
         // Se non c'è un pezzo nella posizione di partenza
-        if(piece == null){
+        if (piece == null) {
             return false;
         }
 
         Position piecePosition = piece.getPosition();
         Colour pieceColour = piece.getColour();
-        boolean rowDiff=false;
-        
+        boolean rowDiff = false;
+
         if (lastPawnMoved != null) {
-            rowDiff=Math.abs(lastPawnFromPosition.row()-lastPawnMoved.getPosition().row()) != 2;   
+            rowDiff = Math.abs(lastPawnFromPosition.row() - lastPawnMoved.getPosition().row()) != 2;
         }
-        
-        boolean legal=true;
+
+        boolean legal = true;
 
         // GESTIONE CASI GENERICI
         // eseguo controllo sul primo filtro di getPotentialMoves
         Set<Position> potentialMoves = piece.getPotentialMoves(this);
-        if(!potentialMoves.contains(to)){
+        if (!potentialMoves.contains(to)) {
             return false;
         }
-        
-        if(this.getPiece(to)!=null&& piece.getColour().equals(this.getPiece(to).getColour())){
+
+        if (this.getPiece(to) != null
+                && (piece.getColour().equals(this.getPiece(to).getColour()) || this.getPiece(to) instanceof King)) {
             return false;
         }
 
@@ -198,41 +219,44 @@ public class ChessBoard {
         King myKing = (pieceColour.equals(Colour.WHITE)) ? this.whiteKing : this.blackKing;
         Position myKingPosition = myKing.getPosition();
         Pin[][] kingPin = (myKing.getColour().equals(Colour.WHITE)) ? whiteKingPin : blackKingPin;
-        
-        if(kingPin[myKingPosition.row()][myKingPosition.column()] == Pin.DOUBLE_CHECK && !(piece instanceof King)) { 
-            return false; 
+
+        if (kingPin[myKingPosition.row()][myKingPosition.column()] == Pin.DOUBLE_CHECK && !(piece instanceof King)) {
+            return false;
         }
         // sotto scacco lineare
-        if(kingPin[myKingPosition.row()][myKingPosition.column()] == Pin.UNDER_CHECK_LINE){
+        if (kingPin[myKingPosition.row()][myKingPosition.column()] == Pin.UNDER_CHECK_LINE
+                && !(piece instanceof King)) {
             // considero prima se: il pezzo è in Pin NON può muoversi
-            if(
-                kingPin[piecePosition.row()][piecePosition.column()] == Pin.PINNED
-            ){ 
-                return false; 
-            } // se il pezzo non è in PIN può solo coprire le case denotate come CHECK_PATH o come King_attacker
-            else if(kingPin[to.row()][to.column()] != Pin.CHECK_PATH && kingPin[to.row()][to.column()] != Pin.KING_ATTACKER) { 
+            if (kingPin[piecePosition.row()][piecePosition.column()] == Pin.PINNED) {
+                return false;
+            } // se il pezzo non è in PIN può solo coprire le case denotate come CHECK_PATH o
+              // come King_attacker
+            else if (kingPin[to.row()][to.column()] != Pin.CHECK_PATH
+                    && kingPin[to.row()][to.column()] != Pin.KING_ATTACKER) {
                 return false;
             }
-        } else{ // il re non è sotto scacco: controllo se il pezzo è in pin e la casa di arrivo se si trova lungo la direzione di Pin
-            if(kingPin[piece.getPosition().row()][piece.getPosition().column()] == Pin.PINNED){
-                // calcolo del determinante per verificare se hanno lo stesso verso 
+        } else { // il re non è sotto scacco: controllo se il pezzo è in pin e la casa di arrivo
+                 // se si trova lungo la direzione di Pin
+            if (kingPin[piece.getPosition().row()][piece.getPosition().column()] == Pin.PINNED) {
+                // calcolo del determinante per verificare se hanno lo stesso verso
                 int deltaRowKing = piecePosition.row() - myKingPosition.row();
                 int deltaColKing = piecePosition.column() - myKingPosition.column();
                 int deltaRowTo = to.row() - myKingPosition.row();
                 int deltaColTo = to.column() - myKingPosition.column();
 
-                if((deltaRowKing * deltaColTo) - (deltaColKing * deltaRowTo) != 0){
+                if ((deltaRowKing * deltaColTo) - (deltaColKing * deltaRowTo) != 0) {
                     return false;
                 }
             }
         }
-        
+
         // caso cavalli
         // sotto scacco da cavallo
-        if (kingPin[myKingPosition.row()][myKingPosition.column()] == Pin.UNDER_CHECK_KNIGHT && !(piece instanceof King)) {
+        if (kingPin[myKingPosition.row()][myKingPosition.column()] == Pin.UNDER_CHECK_KNIGHT
+                && !(piece instanceof King)) {
             // Se il pezzo è in PIN, non può muoversi comunque per difendere dal cavallo
-            if (kingPin[piecePosition.row()][piecePosition.column()] == Pin.PINNED) { 
-                return false; 
+            if (kingPin[piecePosition.row()][piecePosition.column()] == Pin.PINNED) {
+                return false;
             }
             // Può muoversi solo se la casa d'arrivo coincide con l'attaccante (lo mangia)
             if (kingPin[to.row()][to.column()] != Pin.KING_ATTACKER) {
@@ -240,21 +264,19 @@ public class ChessBoard {
             }
         }
 
-        if(piece instanceof King k){
-            //      1. non può muoversi su case controllate da avversario
-            if(
-                (piece.getColour().equals(Colour.WHITE) && squaresControlledByBlack[to.row()][to.column()] != 0) ||
-                (piece.getColour().equals(Colour.BLACK) && squaresControlledByWhite[to.row()][to.column()] != 0)
-            ){
+        if (piece instanceof King k) {
+            // 1. non può muoversi su case controllate da avversario
+            if ((piece.getColour().equals(Colour.WHITE) && squaresControlledByBlack[to.row()][to.column()] != 0) ||
+                    (piece.getColour().equals(Colour.BLACK) && squaresControlledByWhite[to.row()][to.column()] != 0)) {
                 return false;
             }
-            //      3. controllo sull'arrocco
+            // 3. controllo sull'arrocco
             int direction = to.column() - from.column(); // Destra (+) o Sinistra (-)
-            
-            if (Math.abs(direction) == 2) { 
+
+            if (Math.abs(direction) == 2) {
                 int row = piecePosition.row();
                 Piece rook;
-                
+
                 // Trova la torre corretta in base alla direzione
                 if (direction > 0) { // Verso Destra -> Arrocco Corto
                     rook = this.chessboard[row][7];
@@ -263,74 +285,78 @@ public class ChessBoard {
                 }
 
                 // Validazione base dei pezzi coinvolti e dello scacco attuale
-                if (rook == null || !(rook instanceof Rook) || ((Rook) rook).getHasMoved() || 
-                    k.getHasMoved() || kingPin[row][piecePosition.column()] != null) {
+                if (rook == null || !(rook instanceof Rook) || ((Rook) rook).getHasMoved() ||
+                        k.getHasMoved() || kingPin[row][piecePosition.column()] != null) {
                     return false;
                 }
 
                 // Recuperiamo la matrice di controllo dell'avversario
-                int[][] adversaryControl = k.getColour().equals(Colour.WHITE) ? squaresControlledByBlack : squaresControlledByWhite;
+                int[][] adversaryControl = k.getColour().equals(Colour.WHITE) ? squaresControlledByBlack
+                        : squaresControlledByWhite;
 
                 // ARROCCO CORTO (Verso destra)
                 if (direction > 0) {
                     // Le case di passaggio (colonne 5 e 6) devono essere VUOTE e NON CONTROLLATE
                     if (this.chessboard[row][5] != null || this.chessboard[row][6] != null ||
-                        adversaryControl[row][5] != 0 || adversaryControl[row][6] != 0) {
+                            adversaryControl[row][5] != 0 || adversaryControl[row][6] != 0) {
                         return false;
                     }
-                } 
+                }
                 // ARROCCO LUNGO (Verso sinistra)
                 else {
                     // Le case di passaggio (colonne 1, 2, 3) devono essere VUOTE
-                    if (this.chessboard[row][1] != null || this.chessboard[row][2] != null || this.chessboard[row][3] != null ||
-                        adversaryControl[row][2] != 0 || adversaryControl[row][3] != 0) {
+                    if (this.chessboard[row][1] != null || this.chessboard[row][2] != null
+                            || this.chessboard[row][3] != null ||
+                            adversaryControl[row][2] != 0 || adversaryControl[row][3] != 0) {
                         return false;
                     }
                 }
             }
         }
 
-        // pedone: sasa 
-        else if(piece instanceof Pawn){
-            //      1. non può spostarsi in avanti se è presente un'altro pezzo
-            if(from.row()!=to.row() && from.column()==to.column() && !this.isNull(to))
-                legal=false;
-            //      2. enpassant
-            if(from.row()!=to.row() && from.column()!=to.column() && this.isNull(to)){
-                if(lastPawnMoved != null){
-                    if(to.column() == lastPawnMoved.getPosition().column() && from.row() == lastPawnMoved.getPosition().row()){
-                        if(rowDiff)
+        // pedone: sasa
+        else if (piece instanceof Pawn) {
+            // 1. non può spostarsi in avanti se è presente un'altro pezzo
+            if (from.row() != to.row() && from.column() == to.column() && !this.isNull(to))
+                legal = false;
+            // 2. enpassant
+            if (from.row() != to.row() && from.column() != to.column() && this.isNull(to)) {
+                if (lastPawnMoved != null) {
+                    if (to.column() == lastPawnMoved.getPosition().column()
+                            && from.row() == lastPawnMoved.getPosition().row()) {
+                        if (rowDiff)
                             legal = false;
-                    }
-                    else legal = false;
-                }
-                else
-                    legal=false;
+                    } else
+                        legal = false;
+                } else
+                    legal = false;
             }
         }
         return legal;
     }
 
     /**
-     * Esegue lo spostamento fisico dei pezzi sulla scacchiera. Gestisce nativamente l'Arrocco 
+     * Esegue lo spostamento fisico dei pezzi sulla scacchiera. Gestisce nativamente
+     * l'Arrocco
      * e intercetta le promozioni dei pedoni interrogando l'utente.
+     * 
      * @param from posizione geometrica di partenza
-     * @param to posizione geometrica di arrivo
+     * @param to   posizione geometrica di arrivo
      */
 
-    public UndoInfo physicalMovement(Position from, Position to){
+    public UndoInfo physicalMovement(Position from, Position to) {
         Piece piece = this.getPiece(from);
-        boolean rowDiff=false;
-        
+        boolean rowDiff = false;
+
         if (lastPawnMoved != null) {
-            rowDiff=Math.abs(lastPawnFromPosition.row()-lastPawnMoved.getPosition().row()) == 2;   
+            rowDiff = Math.abs(lastPawnFromPosition.row() - lastPawnMoved.getPosition().row()) == 2;
         }
 
         int direction = to.column() - from.column();
 
-        if(piece instanceof King k && Math.abs(direction) == 2){
+        if (piece instanceof King k && Math.abs(direction) == 2) {
             // arrocco corto
-            if(direction > 0){
+            if (direction > 0) {
                 k.setPosition(to);
                 k.setHasMovedTrue();
                 this.setPiece(k);
@@ -344,8 +370,8 @@ public class ChessBoard {
                 this.setNull(new Position(to.row(), 7));
                 updateAfterMove(piece, from);
                 return new UndoInfo(piece, from, to, null, SpecialMoves.SHORT_CASTELING);
-                //arrocco lungo
-            } else if(direction < 0){
+                // arrocco lungo
+            } else if (direction < 0) {
                 k.setPosition(to);
                 k.setHasMovedTrue();
                 this.setPiece(k);
@@ -360,18 +386,20 @@ public class ChessBoard {
                 updateAfterMove(piece, from);
                 return new UndoInfo(piece, from, to, null, SpecialMoves.LONG_CASTELING);
             }
-        } else if(piece instanceof Pawn && ((piece.getColour() == Colour.WHITE && to.row() == 7) || piece.getColour() == Colour.BLACK && to.row() == 0)){
-                Piece newPiece = askPieceToUser(to, piece.getColour());
-                Piece eatenPiece = this.getPiece(to);
-                this.setPiece(newPiece);
-                this.setNull(from);
-                updateAfterMove(piece, from);
-                return new UndoInfo(piece, from, to, eatenPiece, SpecialMoves.PROMOTION);
-        }
-        else if(piece instanceof Pawn &&(from.row()!=to.row() && from.column()!=to.column() && this.isNull(to))){
-            if(lastPawnMoved != null){
-                if(to.column() == lastPawnMoved.getPosition().column() && from.row() == lastPawnMoved.getPosition().row()){
-                    if(rowDiff){
+        } else if (piece instanceof Pawn && ((piece.getColour() == Colour.WHITE && to.row() == 7)
+                || piece.getColour() == Colour.BLACK && to.row() == 0)) {
+            Piece newPiece = askPieceToUser(to, piece.getColour());
+            Piece eatenPiece = this.getPiece(to);
+            this.setPiece(newPiece);
+            this.setNull(from);
+            updateAfterMove(piece, from);
+            return new UndoInfo(piece, from, to, eatenPiece, SpecialMoves.PROMOTION);
+        } else if (piece instanceof Pawn
+                && (from.row() != to.row() && from.column() != to.column() && this.isNull(to))) {
+            if (lastPawnMoved != null) {
+                if (to.column() == lastPawnMoved.getPosition().column()
+                        && from.row() == lastPawnMoved.getPosition().row()) {
+                    if (rowDiff) {
                         piece.setPosition(to);
                         this.setPiece(piece);
                         this.setNull(from);
@@ -383,11 +411,10 @@ public class ChessBoard {
                 }
             }
         }
-        if(piece instanceof Pawn){
+        if (piece instanceof Pawn) {
             lastPawnMoved = (Pawn) piece;
             lastPawnFromPosition = from;
-        }
-        else{
+        } else {
             lastPawnMoved = null;
             lastPawnFromPosition = null;
         }
@@ -401,29 +428,28 @@ public class ChessBoard {
         return new UndoInfo(piece, from, to, eatenPiece, SpecialMoves.NONE);
     }
 
-    private void updateAfterMove(Piece piece, Position from){
-        
+    private void updateAfterMove(Piece piece, Position from) {
+
         this.updateControl();
 
-        if (this.whiteKing != null && this.blackKing != null){
+        if (this.whiteKing != null && this.blackKing != null) {
             updateKingPin();
-        } 
+        }
 
-        if (piece instanceof King k){
+        if (piece instanceof King k) {
             k.setHasMovedTrue();
-        } else if(piece instanceof Rook r){
+        } else if (piece instanceof Rook r) {
             r.setHasMovedTrue();
         }
 
-    }    
+    }
 
-
-    public void undoMove(UndoInfo undo){
+    public void undoMove(UndoInfo undo) {
         switch (undo.special()) {
             case SpecialMoves.SHORT_CASTELING:
-                King k= (King) undo.movedPiece();
+                King k = (King) undo.movedPiece();
                 k.setPosition(undo.from());
-                k.setHasMovedFalse(); 
+                k.setHasMovedFalse();
                 this.setPiece(k);
                 this.setNull(undo.to());
 
@@ -449,14 +475,14 @@ public class ChessBoard {
                 this.setPiece(rook);
                 this.setNull(new Position(undo.from().row(), 3));
 
-            break;
+                break;
 
             case SpecialMoves.ENPASSANT:
                 Pawn pawn = (Pawn) undo.movedPiece();
                 pawn.setPosition(undo.from());
                 this.setPiece(pawn);
                 this.setNull(undo.to());
-                
+
                 // Ripristino pezzo mangiato
                 Piece enemyPawn = undo.eatenPiece();
                 Position enemyOriginalPosition = new Position(undo.from().row(), undo.to().column());
@@ -468,8 +494,8 @@ public class ChessBoard {
                 Piece originalPawn = undo.movedPiece();
                 originalPawn.setPosition(undo.from());
                 this.setPiece(originalPawn);
-                
-                if(undo.eatenPiece() != null) {
+
+                if (undo.eatenPiece() != null) {
                     this.setPiece(undo.eatenPiece());
                 } else {
                     this.setNull(undo.to());
@@ -477,40 +503,42 @@ public class ChessBoard {
                 break;
 
             default:
-                Piece piece=undo.movedPiece();
+                Piece piece = undo.movedPiece();
                 piece.setPosition(undo.from());
                 this.setPiece(piece);
-               
-                if(undo.eatenPiece() != null)
+
+                if (undo.eatenPiece() != null)
                     this.setPiece(undo.eatenPiece());
-                else{
+                else {
                     this.setNull(undo.to());
                 }
                 break;
         }
         // Ricalcolo Pin e del control Maps
         this.updateControl();
-        if (this.whiteKing != null && this.blackKing != null){
+        if (this.whiteKing != null && this.blackKing != null) {
             updateKingPin();
         }
     }
 
-
     /**
-     * Valuta se la posizione corrente per il colore indicato determina la conclusione della partita.
+     * Valuta se la posizione corrente per il colore indicato determina la
+     * conclusione della partita.
+     * 
      * @param colour colore del giocatore attivo sotto analisi
-     * @return un elemento dell'Enum {@link End} che denota lo stato conclusivo o attivo
+     * @return un elemento dell'Enum {@link End} che denota lo stato conclusivo o
+     *         attivo
      */
     public End isCheckmateOrStalemate(Colour colour) {
         Position kingPosition = colour.equals(Colour.WHITE) ? whiteKing.getPosition() : blackKing.getPosition();
-        Pin [][] kingPin = (colour.equals(Colour.WHITE)) ? whiteKingPin : blackKingPin;
-        
+        Pin[][] kingPin = (colour.equals(Colour.WHITE)) ? whiteKingPin : blackKingPin;
+
         boolean anyLegalMoves = hasAnyLegalMoves(colour);
 
         // 1. Per essere matto, il Re DEVE essere sotto scacco
         if (kingPin[kingPosition.row()][kingPosition.column()] == null && !anyLegalMoves) {
-            return End.STALEMATE; 
-        } else if(kingPin[kingPosition.row()][kingPosition.column()] != null && !anyLegalMoves){
+            return End.STALEMATE;
+        } else if (kingPin[kingPosition.row()][kingPosition.column()] != null && !anyLegalMoves) {
             return End.CHECKMATE;
         } else {
             return End.IN_PROGRESS;
@@ -526,25 +554,26 @@ public class ChessBoard {
                 if (p != null && p.getColour().equals(colour)) {
                     for (Position to : p.getPotentialMoves(this)) {
                         if (this.isMoveLegal(p.getPosition(), to)) {
-                            return true; 
+                            return true;
                         }
                     }
                 }
             }
         }
-        return false; 
+        return false;
     }
 
     /**
-     * Rinfresca e rigenera le matrici KingPin strutturali per entrambi i Re presenti.
+     * Rinfresca e rigenera le matrici KingPin strutturali per entrambi i Re
+     * presenti.
      */
-    public void updateKingPin(){
+    public void updateKingPin() {
         generateKingPinData(blackKingPin, blackKing);
         generateKingPinData(whiteKingPin, whiteKing);
     }
 
     private void generateKingPinData(Pin[][] kingPin, King king) {
-        if (king == null){
+        if (king == null) {
             return;
         }
         for (int row = 0; row < BOARD_SIZE; row++) {
@@ -553,8 +582,10 @@ public class ChessBoard {
             }
         }
 
-        int[][] linearDirections = {{1, 1}, {-1, 1}, {-1, -1}, {1, -1}, {1, 0}, {-1, 0}, {0, 1}, {0, -1}};
-        int[][] knightDirections = {{2, -1}, {2, 1}, {1, 2}, {-1, 2}, {-2, 1}, {-2, -1}, {-1, -2}, {1, -2}};
+        int[][] linearDirections = { { 1, 1 }, { -1, 1 }, { -1, -1 }, { 1, -1 }, { 1, 0 }, { -1, 0 }, { 0, 1 },
+                { 0, -1 } };
+        int[][] knightDirections = { { 2, -1 }, { 2, 1 }, { 1, 2 }, { -1, 2 }, { -2, 1 }, { -2, -1 }, { -1, -2 },
+                { 1, -2 } };
 
         int kingRow = king.getPosition().row();
         int kingColumn = king.getPosition().column();
@@ -562,49 +593,45 @@ public class ChessBoard {
         int checks = 0;
 
         checks += calculateLinearDirections(king.getColour(), linearDirections, kingRow, kingColumn, checks, kingPin);
-        calculateKnightDirections(king.getColour(), knightDirections, kingRow, kingColumn, checks, kingPin);        
+        calculateKnightDirections(king.getColour(), knightDirections, kingRow, kingColumn, checks, kingPin);
     }
 
-    private int calculateLinearDirections(Colour colour, int[][] directions, int kingRow, int kingColumn, int checks, Pin[][] kingPin) {
+    private int calculateLinearDirections(Colour colour, int[][] directions, int kingRow, int kingColumn, int checks,
+            Pin[][] kingPin) {
 
-        for (int[] d : directions) {           
+        for (int[] d : directions) {
             int targetRow = kingRow + d[0];
             int targetColumn = kingColumn + d[1];
-            Piece ownPiece = null; 
+            Piece ownPiece = null;
             while (Position.isInsideBounds(targetRow, targetColumn)) {
-                Piece targetPiece = chessboard[targetRow][targetColumn]; 
-                if (targetPiece != null) { 
-                    if (targetPiece.getColour().equals(colour)) { 
+                Piece targetPiece = chessboard[targetRow][targetColumn];
+                if (targetPiece != null) {
+                    if (targetPiece.getColour().equals(colour)) {
                         if (ownPiece == null) {
-                            ownPiece = targetPiece; 
+                            ownPiece = targetPiece;
                         } else {
-                            break; 
+                            break;
                         }
-                    } 
-                    else { 
-                        boolean isDiagonal = (d[0] * d[1] != 0); 
+                    } else {
+                        boolean isDiagonal = (d[0] * d[1] != 0);
                         if (ownPiece != null) { //
-                            if (
-                                (isDiagonal && (targetPiece instanceof Bishop || targetPiece instanceof Queen)) ||
-                                (!isDiagonal && (targetPiece instanceof Rook || targetPiece instanceof Queen))
-                            ) {
+                            if ((isDiagonal && (targetPiece instanceof Bishop || targetPiece instanceof Queen)) ||
+                                    (!isDiagonal && (targetPiece instanceof Rook || targetPiece instanceof Queen))) {
                                 kingPin[ownPiece.getPosition().row()][ownPiece.getPosition().column()] = Pin.PINNED;
-                            } 
-                        } else if(
-                            (isDiagonal && (targetPiece instanceof Bishop || targetPiece instanceof Queen)) || 
-                            (!isDiagonal && (targetPiece instanceof Rook || targetPiece instanceof Queen))
-                            ){
+                            }
+                        } else if ((isDiagonal && (targetPiece instanceof Bishop || targetPiece instanceof Queen)) ||
+                                (!isDiagonal && (targetPiece instanceof Rook || targetPiece instanceof Queen))) {
                             checks += 1;
                             if (checks == 1) {
                                 kingPin[kingRow][kingColumn] = Pin.UNDER_CHECK_LINE;
-                            } else if(checks == 2){
+                            } else if (checks == 2) {
                                 kingPin[kingRow][kingColumn] = Pin.DOUBLE_CHECK;
                             }
 
                             kingPin[targetRow][targetColumn] = Pin.KING_ATTACKER;
                             markCheckPath(kingRow, kingColumn, targetRow, targetColumn, d, kingPin);
-                        }              
-                        break; 
+                        }
+                        break;
                     }
                 }
                 targetRow += d[0];
@@ -614,11 +641,12 @@ public class ChessBoard {
         return checks;
     }
 
-    private void calculateKnightDirections(Colour colour, int[][] directions, int kingRow, int kingColumn, int checks, Pin[][] kingPin) {
-        for (int[] d : directions) {           
+    private void calculateKnightDirections(Colour colour, int[][] directions, int kingRow, int kingColumn, int checks,
+            Pin[][] kingPin) {
+        for (int[] d : directions) {
             int targetRow = kingRow + d[0];
             int targetColumn = kingColumn + d[1];
-            
+
             if (Position.isInsideBounds(targetRow, targetColumn)) {
                 Piece targetPiece = chessboard[targetRow][targetColumn];
                 if (targetPiece != null) {
@@ -647,51 +675,52 @@ public class ChessBoard {
     }
 
     /**
-     * Azzera ed esegue l'aggiornamento completo delle mappe di controllo geometrico per entrambi i colori.
+     * Azzera ed esegue l'aggiornamento completo delle mappe di controllo geometrico
+     * per entrambi i colori.
      */
-    public void updateControl(){
-        for(int i = 0; i < BOARD_SIZE; i++){
-            for(int j = 0; j < BOARD_SIZE; j++){
+    public void updateControl() {
+        for (int i = 0; i < BOARD_SIZE; i++) {
+            for (int j = 0; j < BOARD_SIZE; j++) {
                 this.squaresControlledByBlack[i][j] = 0;
                 this.squaresControlledByWhite[i][j] = 0;
             }
         }
 
-        for(Piece[] positions : this.chessboard){
-            for(Piece p : positions){
-                if(p != null){
+        for (Piece[] positions : this.chessboard) {
+            for (Piece p : positions) {
+                if (p != null) {
                     this.fillControlMap(p);
                 }
             }
-        }        
+        }
     }
 
-    private void fillControlMap(Piece piece){
+    private void fillControlMap(Piece piece) {
         Set<Position> set = piece.getPotentialMoves(this);
 
-        if(piece.getColour().equals(Colour.WHITE)){
-            for(Position s : set){
+        if (piece.getColour().equals(Colour.WHITE)) {
+            for (Position s : set) {
                 this.squaresControlledByWhite[s.row()][s.column()] += 1;
             }
-        } else{
-            for(Position s : set){
+        } else {
+            for (Position s : set) {
                 this.squaresControlledByBlack[s.row()][s.column()] += 1;
             }
         }
     }
 
     @SuppressWarnings("resource")
-    private Piece askPieceToUser(Position to, Colour colour ){
+    private Piece askPieceToUser(Position to, Colour colour) {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Promozione! Scegli un pezzo (Q = Queen, R = Rock, B = Bishop, K = Knight): ");
         String choice = scanner.nextLine().trim().toUpperCase();
 
         return switch (choice) {
-            case "R" -> new Rook(to, colour, true); 
+            case "R" -> new Rook(to, colour, true);
             case "B" -> new Bishop(to, colour);
             case "K" -> new Knight(to, colour);
-            default  -> new Queen(to, colour); 
+            default -> new Queen(to, colour);
         };
-        
+
     }
 }
