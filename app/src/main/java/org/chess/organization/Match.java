@@ -27,9 +27,48 @@ public class Match {
         this.moveHistory = new ArrayList<>();
     }
 
-    // TODO: public update move list
-    // TODO: public Player getCurrentPlayerTurn(){}
-    // TODO : public void setCurrentPlayerTurn(){}
+    // returns the chess board
+    public ChessBoard getBoard() {
+        return board;
+    }
 
+    // switches the current player turn
+    public void switchTurn() {
+        currentPlayerTurn = (currentPlayerTurn == whitePlayer) ? blackPlayer : whitePlayer;
+    }
 
+    // sets the current game state
+    public void setState(End state) {
+        this.state = state;
+    }
+
+    // returns the current game state
+    public End getState() {
+        return state;
+    }
+
+    // adds a move to the move history
+    public void updateMoveHistory(Move move) {
+        moveHistory.add(move);
+    }
+
+    // returns the move history
+    public List<Move> getMoveHistory() {
+        return moveHistory;
+    }
+
+    // returns the current player turn
+    public Player getCurrentPlayerTurn() {
+        return currentPlayerTurn;
+    }
+
+    // returns the white player
+    public Player getWhitePlayer() {
+        return whitePlayer;
+    }
+
+    // returns the black player
+    public Player getBlackPlayer() {
+        return blackPlayer;
+    }
 }
