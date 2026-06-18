@@ -8,7 +8,7 @@ import org.chess.organization.*;
 
 public class King extends Piece{
 
-    private boolean hasMoved = true;
+    private boolean hasMoved = false;
 
     public King(Position position, Colour colour){
         super(position, colour);
