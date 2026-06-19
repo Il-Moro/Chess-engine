@@ -50,4 +50,7 @@ public abstract class Player {
 
     public abstract Move decideMove();
 
+    public Colour getColour(){
+        return this.colour;
+    }
 }
