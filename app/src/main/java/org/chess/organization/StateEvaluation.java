@@ -75,8 +75,8 @@ public class StateEvaluation {
         int whiteMaterial = 0;
         int blackMaterial = 0;
         
-        for (int row = 0; row < 8; row++) {
-            for (int col = 0; col < 8; col++) {
+        for (int row = 0; row < ChessBoard.BOARD_SIZE; row++) {
+            for (int col = 0; col < ChessBoard.BOARD_SIZE; col++) {
                 Piece piece = board.getPiece(new Position(row, col));
                 if (piece != null) {
                     int value = getPieceValue(piece);
@@ -89,7 +89,7 @@ public class StateEvaluation {
             }
         }
 
-        if (player.colour == Colour.WHITE) {
+        if (player.getColour() == Colour.WHITE) {
             return whiteMaterial - blackMaterial;    
         }
         
@@ -97,7 +97,7 @@ public class StateEvaluation {
     }
 
 
-    private int getPieceValue(Piece piece) {
+    private static int getPieceValue(Piece piece) {
         if (piece instanceof Pawn) return PAWN_VALUE;
         if (piece instanceof Knight) return KNIGHT_VALUE;
         if (piece instanceof Bishop) return BISHOP_VALUE;
@@ -111,7 +111,7 @@ public class StateEvaluation {
         int whiteMobility;
         int blackMobility;
 
-        switch (player.colour) {
+        switch (player.getColour()) {
             case Colour.WHITE:
                 whiteMobility=player.computeAllLegalMoves().size();
                 blackMobility=opponent.computeAllLegalMoves().size();
@@ -133,7 +133,7 @@ public class StateEvaluation {
         int whiteSafety = calculateKingSafety(whiteKing, Colour.WHITE);
         int blackSafety = calculateKingSafety(blackKing, Colour.BLACK);
         
-        if(player.colour == Colour.WHITE)
+        if(player.getColour() == Colour.WHITE)
             return whiteSafety - blackSafety;
         else
             return blackSafety - whiteSafety;
@@ -141,8 +141,8 @@ public class StateEvaluation {
 
     
     private King findKing(Colour colour) {
-        for (int row = 0; row < 8; row++) {
-            for (int col = 0; col < 8; col++) {
+        for (int row = 0; row < ChessBoard.BOARD_SIZE; row++) {
+            for (int col = 0; col < ChessBoard.BOARD_SIZE; col++) {
                 Piece piece = board.getPiece(new Position(row, col));
                 if (piece instanceof King && piece.getColour() == colour) {
                     return (King) board.getPiece(new Position(row, col));
@@ -182,12 +182,12 @@ public class StateEvaluation {
         int attackCount = 0;
         Set<Position> kingMoves;
         
-        if (king.getColour()==player.colour) {
-            squaresControlledOpponent = board.getSquareControlledBy(opponent.colour);
+        if (king.getColour()==player.getColour()) {
+            squaresControlledOpponent = board.getSquaresControlledBy(opponent.getColour());
             kingMoves = king.getPotentialMoves(board);
         }
         else{
-            squaresControlledOpponent = board.getSquareControlledBy(player.colour);
+            squaresControlledOpponent = board.getSquaresControlledBy(player.getColour());
             kingMoves = king.getPotentialMoves(board);
         }
 
@@ -227,7 +227,7 @@ public class StateEvaluation {
         whiteControl+=countSquares(Colour.WHITE, EXTENDED_CENTER);
         blackControl+=countSquares(Colour.BLACK, EXTENDED_CENTER);
 
-        if(player.colour==Colour.WHITE)
+        if(player.getColour()==Colour.WHITE)
             return whiteControl-blackControl;
 
         return blackControl - whiteControl;
@@ -237,7 +237,7 @@ public class StateEvaluation {
         int [][] squaresControlled;
         int sum = 0;
         
-        squaresControlled = board.getSquareControlledBy(colour);
+        squaresControlled = board.getSquaresControlledBy(colour);
 
         for (Position center : square) {
             sum+=squaresControlled[center.row()][center.column()];
@@ -251,7 +251,7 @@ public class StateEvaluation {
         int whitePawnScore = evaluatePawnsForColour(Colour.WHITE);
         int blackPawnScore = evaluatePawnsForColour(Colour.BLACK);
         
-        if(player.colour == Colour.WHITE)
+        if(player.getColour() == Colour.WHITE)
             return whitePawnScore - blackPawnScore;
         else
             return blackPawnScore -whitePawnScore;
@@ -260,8 +260,8 @@ public class StateEvaluation {
     private int evaluatePawnsForColour(Colour colour) {
         int score = 0;
         
-        for (int row = 0; row < 8; row++) {
-            for (int col = 0; col < 8; col++) {
+        for (int row = 0; row < ChessBoard.BOARD_SIZE; row++) {
+            for (int col = 0; col < ChessBoard.BOARD_SIZE; col++) {
                 Piece piece = board.getPiece(new Position(row, col));
                 if (piece instanceof Pawn && piece.getColour() == colour) {
                     
@@ -277,9 +277,9 @@ public class StateEvaluation {
         }
         
         int doubledPawns = 0;
-        for (int col = 0; col < 8; col++) {
+        for (int col = 0; col < ChessBoard.BOARD_SIZE; col++) {
             int pawnCount = 0;
-            for (int row = 0; row < 8; row++) {
+            for (int row = 0; row < ChessBoard.BOARD_SIZE; row++) {
                 Piece piece = board.getPiece(new Position(row, col));
                 if (piece instanceof Pawn && piece.getColour() == colour) {
                     pawnCount++;
@@ -303,7 +303,7 @@ public class StateEvaluation {
         for (int row = startRow; row != endRow + direction; row += direction) {
             for (int dc = -1; dc <= 1; dc++) {
                 int col = pawnPos.column() + dc;
-                if (col >= 0 && col < 8) {
+                if (col >= 0 && col < ChessBoard.BOARD_SIZE) {
                     Piece piece = board.getPiece(new Position(row, col));
                     if (piece instanceof Pawn && piece.getColour() != colour) {
                         return false;
@@ -324,7 +324,7 @@ public class StateEvaluation {
         int whiteTropism = calculateTropism(Colour.WHITE, blackKing.getPosition());
         int blackTropism = calculateTropism(Colour.BLACK, whiteKing.getPosition());
         
-        if(player.colour==Colour.WHITE)
+        if(player.getColour()==Colour.WHITE)
             return whiteTropism - blackTropism;
         
         return blackTropism - whiteTropism;
@@ -339,8 +339,8 @@ public class StateEvaluation {
         
         int tropism = 0;
         
-        for (int row = 0; row < 8; row++) {
-            for (int col = 0; col < 8; col++) {
+        for (int row = 0; row < ChessBoard.BOARD_SIZE; row++) {
+            for (int col = 0; col < ChessBoard.BOARD_SIZE; col++) {
                 Piece piece = board.getPiece(new Position(row, col));
                 if (piece != null && piece.getColour() == colour) {
                     int distance = calculateDistance(new Position(row, col), enemyKingPos);
@@ -369,7 +369,7 @@ public class StateEvaluation {
     }
 
     
-    private int calculateDistance(Position p1, Position p2) {
+    private static int calculateDistance(Position p1, Position p2) {
         return Math.abs(p1.row() - p2.row()) + Math.abs(p1.column() - p2.column());
     }
     

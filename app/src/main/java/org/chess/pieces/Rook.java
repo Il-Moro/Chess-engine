@@ -12,12 +12,10 @@ public class Rook extends Piece {
 
     public Rook(Position position, Colour colour){
         super(position, colour);
-        this.value = 5;
     }
 
     public Rook(Position position, Colour colour, boolean hasMoved){
         super(position, colour);
-        this.value = 5;
         this.hasMoved = hasMoved;
     }
 
