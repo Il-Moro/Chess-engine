@@ -184,36 +184,31 @@ public class ChessBoard {
 
     // movement of pieces
     public boolean isMoveLegal(Position from, Position to) {
-        Piece piece = this.getPiece(from);
-
+        
         // Se non c'è un pezzo nella posizione di partenza
-        if (piece == null) {
-            return false;
-        }
+        if (this.getPiece(from) == null) { return false; }
 
-        Position piecePosition = piece.getPosition();
+        Piece piece = this.getPiece(from);
+        Position piecePosition = from;
         Colour pieceColour = piece.getColour();
 
-        boolean rowDiff = false;
-
-        if (lastPawnMoved != null) {
-            rowDiff = Math.abs(lastPawnFromPosition.row() - lastPawnMoved.getPosition().row()) != 2;
-        }
-
-        boolean legal = true;
+        Piece targetPiece = this.getPiece(to);
+        
 
         // GESTIONE CASI GENERICI
-        if(!generalCasesForLegalMoves(piece, pieceColour, from, to)) return false;
+        boolean legal = generalCasesForLegalMoves(piece, targetPiece, pieceColour, from, to);
+        if(!legal) { return false; }
 
         // GESTIONE CASI PARTICOLARI
         King myKing = (pieceColour == (Colour.WHITE)) ? this.whiteKing : this.blackKing;
         Position myKingPosition = myKing.getPosition();
         Pin[][] kingPin = (myKing.getColour() == (Colour.WHITE)) ? whiteKingPin : blackKingPin;
 
-        if (kingPin[myKingPosition.row()][myKingPosition.column()] == Pin.DOUBLE_CHECK && !(piece instanceof King)) {
-            return false;
-        }
-        // sotto scacco lineare
+        // double check on king
+        legal = doubleCheckCaseForLegalMoves(piece, kingPin, myKingPosition);
+        if(!legal){ return false; }
+
+        // re sotto scacco lineare
         if (kingPin[myKingPosition.row()][myKingPosition.column()] == Pin.UNDER_CHECK_LINE
                 && !(piece instanceof King)) {
             // considero prima se: il pezzo è in Pin NON può muoversi
@@ -304,8 +299,13 @@ public class ChessBoard {
             }
         }
 
+        boolean rowDiff = false;
+        if (lastPawnMoved != null) {
+            rowDiff = Math.abs(lastPawnFromPosition.row() - lastPawnMoved.getPosition().row()) != 2;
+        }
+
         // pedone: sasa
-        else if (piece instanceof Pawn) {
+        if (piece instanceof Pawn) {
             // 1. non può spostarsi in avanti se è presente un'altro pezzo
             if (from.row() != to.row() && from.column() == to.column() && !this.isNull(to))
                 legal = false;
@@ -326,15 +326,28 @@ public class ChessBoard {
     }
 
 
-    private boolean generalCasesForLegalMoves(Piece piece, Colour colourPiece, Position from, Position to){
+    private boolean generalCasesForLegalMoves(Piece piece, Piece targetPiece, Colour colourPiece, Position from, Position to){
         // eseguo controllo sul primo filtro di getPotentialMoves
         Set<Position> potentialMoves = piece.getPotentialMoves(this);
         if (!potentialMoves.contains(to)) {
             return false;
         }
 
-        if (this.getPiece(to) != null
-                && (piece.getColour() == (this.getPiece(to).getColour()) || this.getPiece(to) instanceof King)) {
+        if (
+            (targetPiece != null) && 
+            (colourPiece == (targetPiece.getColour()) || 
+            (targetPiece instanceof King))) 
+        {
+            return false;
+        }
+        return true;
+    }
+    
+    private static boolean doubleCheckCaseForLegalMoves(Piece piece, Pin[][] kingPin, Position myKingPosition){
+        if (
+            (kingPin[myKingPosition.row()][myKingPosition.column()] == Pin.DOUBLE_CHECK) && 
+            (!(piece instanceof King))) 
+        {
             return false;
         }
         return true;
