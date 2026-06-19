@@ -460,7 +460,6 @@ public class ChessBoard {
             lastPawnFromPosition = null;
         }
 
-        updateAfterMove(piece, from);
         return undoInfo;
     }
 
@@ -569,6 +568,7 @@ public class ChessBoard {
         piece.setPosition(to);
         this.setNull(from);
         this.setPiece(piece);
+        updateAfterMove(piece, from);
         return new UndoInfo(piece, from, to, eatenPiece, SpecialMoves.NONE);
     }
 
@@ -725,8 +725,8 @@ public class ChessBoard {
 
         int checks = 0;
 
-        checks += calculateLinearDirectionsForKingPin(king.getColour(), linearDirections, kingRow, kingColumn, checks, kingPin);
-        checks += calculatePawnDirectionsForKingPin(king.getColour(), kingRow, kingColumn, checks, kingPin);
+        checks = calculateLinearDirectionsForKingPin(king.getColour(), linearDirections, kingRow, kingColumn, checks, kingPin);
+        checks = calculatePawnDirectionsForKingPin(king.getColour(), kingRow, kingColumn, checks, kingPin);
         calculateKnightDirectionsForKingPin(king.getColour(), knightDirections, kingRow, kingColumn, checks, kingPin);        
     }
 
@@ -748,22 +748,24 @@ public class ChessBoard {
                         }
                     } else {
                         boolean isDiagonal = (d[0] * d[1] != 0);
-                        if (ownPiece != null) { //
-                            if ((isDiagonal && (targetPiece instanceof Bishop || targetPiece instanceof Queen)) ||
-                                    (!isDiagonal && (targetPiece instanceof Rook || targetPiece instanceof Queen))) {
-                                kingPin[ownPiece.getPosition().row()][ownPiece.getPosition().column()] = Pin.PINNED;
-                            }
-                        } else if ((isDiagonal && (targetPiece instanceof Bishop || targetPiece instanceof Queen)) ||
-                                (!isDiagonal && (targetPiece instanceof Rook || targetPiece instanceof Queen))) {
-                            checks += 1;
-                            if (checks == 1) {
-                                kingPin[kingRow][kingColumn] = Pin.UNDER_CHECK_LINE;
-                            } else if (checks == 2) {
-                                kingPin[kingRow][kingColumn] = Pin.DOUBLE_CHECK;
-                            }
+                        boolean validAttacker = (
+                            isDiagonal && (targetPiece instanceof Bishop || targetPiece instanceof Queen)) ||
+                            (!isDiagonal && (targetPiece instanceof Rook || targetPiece instanceof Queen));
 
-                            kingPin[targetRow][targetColumn] = Pin.KING_ATTACKER;
-                            markCheckPathForKingPin(kingRow, kingColumn, targetRow, targetColumn, d, kingPin);
+                        if (validAttacker) { 
+                            if (ownPiece != null) {
+                                kingPin[ownPiece.getPosition().row()][ownPiece.getPosition().column()] = Pin.PINNED;
+                            } else {
+                                checks += 1;
+                                if (checks == 1) {
+                                    kingPin[kingRow][kingColumn] = Pin.UNDER_CHECK_LINE;
+                                } else if (checks == 2) {
+                                    kingPin[kingRow][kingColumn] = Pin.DOUBLE_CHECK;
+                                }
+                            
+                                kingPin[targetRow][targetColumn] = Pin.KING_ATTACKER;
+                                markCheckPathForKingPin(kingRow, kingColumn, targetRow, targetColumn, d, kingPin);
+                            }
                         }
                         break;
                     }
@@ -775,23 +777,20 @@ public class ChessBoard {
         return checks;
     }
 
-    private int calculatePawnDirectionsForKingPin(Colour colour, int kingRow, int kingColumn, int checks, Pin[][] kingPin){
+    private int calculatePawnDirectionsForKingPin(Colour colour, int kingRow, int kingColumn, int checks, Pin[][] kingPin) {
         int[][] directions = (colour == Colour.WHITE) ? new int[][] {{1,-1}, {1,1}} : new int[][] {{-1,-1}, {-1,1}};
         
-        for (int[] d : directions){
+        for (int[] d : directions) {
             int targetRow = kingRow + d[0];
             int targetColumn = kingColumn + d[1];
-            if(Position.isInsideBounds(targetRow, targetColumn)){
-                Piece targetPiece = chessboard[targetRow][targetColumn];
-                if(targetPiece != null && targetPiece instanceof Pawn && targetPiece.getColour() != colour){
-                    checks += 1;
-                    if (checks == 1) {
-                        kingPin[kingRow][kingColumn] = Pin.UNDER_CHECK_LINE;
-                    } else {
-                        kingPin[kingRow][kingColumn] = Pin.DOUBLE_CHECK;
-                    }
-                    kingPin[targetRow][targetColumn] = Pin.KING_ATTACKER;
-                }
+            
+            if (!Position.isInsideBounds(targetRow, targetColumn)) continue;
+            
+            Piece targetPiece = chessboard[targetRow][targetColumn];
+            if (targetPiece instanceof Pawn && targetPiece.getColour() != colour) {
+                checks += 1;
+                kingPin[kingRow][kingColumn] = (checks == 1) ? Pin.UNDER_CHECK_LINE : Pin.DOUBLE_CHECK;
+                kingPin[targetRow][targetColumn] = Pin.KING_ATTACKER;
             }
         }
         return checks;
@@ -802,19 +801,13 @@ public class ChessBoard {
             int targetRow = kingRow + d[0];
             int targetColumn = kingColumn + d[1];
 
-            if (Position.isInsideBounds(targetRow, targetColumn)) {
-                Piece targetPiece = chessboard[targetRow][targetColumn];
-                if (targetPiece != null) {
-                    if (!(targetPiece.getColour() == (colour)) && targetPiece instanceof Knight) {
-                        checks += 1;
-                        if (checks == 1) {
-                            kingPin[kingRow][kingColumn] = Pin.UNDER_CHECK_KNIGHT;
-                        } else {
-                            kingPin[kingRow][kingColumn] = Pin.DOUBLE_CHECK;
-                        }
-                        kingPin[targetRow][targetColumn] = Pin.KING_ATTACKER;
-                    }
-                }
+            if (!Position.isInsideBounds(targetRow, targetColumn)) continue;
+            
+            Piece targetPiece = chessboard[targetRow][targetColumn];
+            if (targetPiece instanceof Knight && targetPiece.getColour() != colour) {
+                checks += 1;
+                kingPin[kingRow][kingColumn] = (checks == 1) ? Pin.UNDER_CHECK_KNIGHT : Pin.DOUBLE_CHECK;
+                kingPin[targetRow][targetColumn] = Pin.KING_ATTACKER;
             }
         }
     }
