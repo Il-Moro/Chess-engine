@@ -75,8 +75,8 @@ public class StateEvaluation {
         int whiteMaterial = 0;
         int blackMaterial = 0;
         
-        for (int row = 0; row < 8; row++) {
-            for (int col = 0; col < 8; col++) {
+        for (int row = 0; row < ChessBoard.BOARD_SIZE; row++) {
+            for (int col = 0; col < ChessBoard.BOARD_SIZE; col++) {
                 Piece piece = board.getPiece(new Position(row, col));
                 if (piece != null) {
                     int value = getPieceValue(piece);
@@ -141,8 +141,8 @@ public class StateEvaluation {
 
     
     private King findKing(Colour colour) {
-        for (int row = 0; row < 8; row++) {
-            for (int col = 0; col < 8; col++) {
+        for (int row = 0; row < ChessBoard.BOARD_SIZE; row++) {
+            for (int col = 0; col < ChessBoard.BOARD_SIZE; col++) {
                 Piece piece = board.getPiece(new Position(row, col));
                 if (piece instanceof King && piece.getColour() == colour) {
                     return (King) board.getPiece(new Position(row, col));
@@ -260,8 +260,8 @@ public class StateEvaluation {
     private int evaluatePawnsForColour(Colour colour) {
         int score = 0;
         
-        for (int row = 0; row < 8; row++) {
-            for (int col = 0; col < 8; col++) {
+        for (int row = 0; row < ChessBoard.BOARD_SIZE; row++) {
+            for (int col = 0; col < ChessBoard.BOARD_SIZE; col++) {
                 Piece piece = board.getPiece(new Position(row, col));
                 if (piece instanceof Pawn && piece.getColour() == colour) {
                     
@@ -277,9 +277,9 @@ public class StateEvaluation {
         }
         
         int doubledPawns = 0;
-        for (int col = 0; col < 8; col++) {
+        for (int col = 0; col < ChessBoard.BOARD_SIZE; col++) {
             int pawnCount = 0;
-            for (int row = 0; row < 8; row++) {
+            for (int row = 0; row < ChessBoard.BOARD_SIZE; row++) {
                 Piece piece = board.getPiece(new Position(row, col));
                 if (piece instanceof Pawn && piece.getColour() == colour) {
                     pawnCount++;

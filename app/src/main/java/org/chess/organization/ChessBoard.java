@@ -557,7 +557,7 @@ public class ChessBoard {
     // scansiona se esistono mosse legali
     private boolean hasAnyLegalMoves(Colour colour) {
         for (int row = 0; row < BOARD_SIZE; row++) {
-            for (int column = 0; column < 8; column++) {
+            for (int column = 0; column < BOARD_SIZE; column++) {
                 Piece p = chessboard[row][column];
 
                 if (p != null && p.getColour().equals(colour)) {
