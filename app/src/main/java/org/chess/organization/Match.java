@@ -21,7 +21,7 @@ public class Match {
         
         this.whitePlayer = white;
         this.blackPlayer = black;
-        this.board = new ChessBoard();
+        this.board = new ChessBoard(true);
         this.currentPlayerTurn = white;          
         this.state = End.IN_PROGRESS;
         this.moveHistory = new ArrayList<>();
@@ -71,4 +71,5 @@ public class Match {
     public Player getBlackPlayer() {
         return blackPlayer;
     }
+
 }
