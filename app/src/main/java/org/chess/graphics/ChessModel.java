@@ -6,28 +6,37 @@ import org.chess.organization.*;
 
 public class ChessModel {
 
-    public ChessBoard board;
-    public Match match = null;
-    public Player player1 = null;
-    public Player player2 = null;
+    private ChessBoard board;
+    private Match match = null;
+    private Player player1 = null;
+    private Player player2 = null;
+    private Colour playerColor;
+    private Colour opponentColor;
     private int DEPTH = 3;
 
     public ChessModel() {}
 
-    public void setAgentVSAgent(){
-        this.player1 = new PlayerAgent(Colour.WHITE, board, DEPTH, player2);
-        this.player2 = new PlayerAgent(Colour.BLACK, board, DEPTH, player1);
+    public void choosePlayerColors(String color){
+        switch (color) {
+            case "BLACK" -> {
+                playerColor = Colour.BLACK;
+                opponentColor = Colour.WHITE;
+            }
+            default -> {
+                playerColor = Colour.WHITE;
+                opponentColor = Colour.BLACK;
+            }
+        }
     }
-
-
+    
     public void setHumanVSAgent(){
-        this.player1 = new PlayerHuman(Colour.WHITE, board);
-        this.player2 = new PlayerAgent(Colour.BLACK, board, DEPTH, player1);
+        this.player1 = new PlayerHuman(playerColor, board);
+        this.player2 = new PlayerAgent(opponentColor, board, DEPTH, player1);
     }
 
     public void setHumanVSHuman(){
-        this.player1 = new PlayerHuman(Colour.WHITE, board);
-        this.player2 = new PlayerHuman(Colour.BLACK, board);
+        this.player1 = new PlayerHuman(playerColor, board);
+        this.player2 = new PlayerHuman(opponentColor, board);
     }
      
     public void setDifficulty(int depth){

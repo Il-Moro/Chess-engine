@@ -1,7 +1,6 @@
 package org.chess.graphics;
 
 import org.chess.pieces.*;
-import org.chess.organization.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,67 +9,83 @@ import java.util.Map;
 
 public class SwingChessView  implements ChessView {
         
-    private JFrame frame;
-    private JPanel boardPanel;
-    private JLabel statusLabel;
-    private JLabel topLabel;
-    private JLabel bottomLabel;
-
-
-    private JPanel[][] squares = new JPanel[8][8];
     private ChessController controller;
+    private JFrame frame;
+    private JPanel setupPanel;
+    private String selectedMode;
+    private String selectedColor;
+    private String selectedDifficulty;
 
-    public SwingChessView (){
+    public SwingChessView() {
+        initFrame();
+        setupScreen();
+        show();
+    }
+
+
+    public void setController(ChessController controller) {
+        this.controller = controller;
+    }
+
+    private void initFrame() {
         frame = new JFrame("Chess Game");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(700, 700);
-
-        JPanel container = new JPanel(new BorderLayout());
-        container.setBorder(BorderFactory.createEmptyBorder(30, 30, 10, 30));
-
-        // Pannello superiore (es. "Pezzi avversario")
-        JPanel topPanel = new JPanel();
-        topLabel = new JLabel("Pezzi avversario");
-        topPanel.add(topLabel);
-        container.add(topPanel, BorderLayout.NORTH);
-
-        // Pannello centrale: la scacchiera (vuota all'inizio)
-        boardPanel = createChessboardPanel(); // crea la griglia 8x8, ma senza icone
-        container.add(boardPanel, BorderLayout.CENTER);
-
-        // Pannello inferiore con label di stato
-        JPanel bottomPanel = new JPanel();
-        statusLabel = new JLabel("In attesa di iniziare...");
-        bottomPanel.add(statusLabel);
-        container.add(bottomPanel, BorderLayout.SOUTH);
-
-        frame.add(container);
+        frame.setSize(800, 800);
+        frame.setLocationRelativeTo(null);
+        frame.setLayout(new BorderLayout());
     }
 
-    private JPanel createChessboardPanel() {
-        JPanel panel = new JPanel(new GridLayout(8, 8));
-        for (int row = 0; row < 8; row++) {
-            for (int col = 0; col < 8; col++) {
-                JPanel square = new JPanel(new BorderLayout());
-                boolean isLight = (row + col) % 2 == 0;
-                square.setBackground(isLight ? new Color(240, 217, 181) : new Color(181, 136, 99));
-                square.setOpaque(true);
-                /*
-                final int r = row, c = col;
-                square.addMouseListener(new java.awt.event.MouseAdapter() {
-                    @Override
-                    public void mouseClicked(java.awt.event.MouseEvent e) {
-                        if (controller != null) {
-                            // TODO:controller.onSquareClicked(r, c);
-                        }
-                    }
-                }); */
-                squares[row][col] = square;
-                panel.add(square);
+
+    @Override
+    public void setupScreen() {
+        frame.getContentPane().removeAll();
+
+        setupPanel = new JPanel();
+        setupPanel.setLayout(new GridLayout(5, 1, 10, 10));
+        setupPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        
+        JLabel title = new JLabel("Select Game Mode", SwingConstants.CENTER);
+        title.setFont(new Font("Arial", Font.BOLD, 20));
+        JButton humanVsAi = new JButton("Human vs AI");
+        JButton humanVsHuman = new JButton("Human vs Human");
+        JComboBox<String> colorComboBox = new JComboBox<>(new String[]{"WHITE", "BLACK"});
+        JComboBox<String> difficultyComboBox = new JComboBox<>(new String[]{"EASY", "MEDIUM", "HARD"});
+        JButton startButton = new JButton("Start Game");
+
+        humanVsAi.addActionListener(e -> { 
+            selectedMode = humanVsAi.getText();
+            difficultyComboBox.setVisible(true);
+        });
+        
+        humanVsHuman.addActionListener(e -> selectedMode = humanVsHuman.getText());
+        colorComboBox.addActionListener(e -> selectedColor = (String) colorComboBox.getSelectedItem());
+        
+        difficultyComboBox.addActionListener(e -> selectedDifficulty = (String) difficultyComboBox.getSelectedItem());
+        difficultyComboBox.setVisible(false);        
+
+        startButton.addActionListener(e -> {
+            if (controller != null) {
+                controller.startGame(selectedMode, selectedColor, selectedDifficulty);
             }
-        }
-        return panel;
+        });
+
+        setupPanel.add(title);
+        setupPanel.add(humanVsAi);
+        setupPanel.add(humanVsHuman);
+        setupPanel.add(colorComboBox);
+        setupPanel.add(difficultyComboBox);
+        setupPanel.add(startButton);
+
+        frame.add(setupPanel, BorderLayout.CENTER);
+
+        frame.revalidate();
+        frame.repaint();
     }
+
+    @Override
+    public void gameScreen() { 
+    }
+
 
     @Override
     public void displayBoard(Piece[][] board) {
@@ -84,7 +99,12 @@ public class SwingChessView  implements ChessView {
     public void clearHighlights() {}
 
     @Override
-    public void showGameOver(String result) {}
+    public void setStatus(String message) {
+
+    }
+
+    @Override
+    public void gameover(String result) {}
 
     @Override
     public void show() {
