@@ -193,6 +193,7 @@ public class ChessBoard {
 
         Position piecePosition = piece.getPosition();
         Colour pieceColour = piece.getColour();
+
         boolean rowDiff = false;
 
         if (lastPawnMoved != null) {
@@ -202,16 +203,7 @@ public class ChessBoard {
         boolean legal = true;
 
         // GESTIONE CASI GENERICI
-        // eseguo controllo sul primo filtro di getPotentialMoves
-        Set<Position> potentialMoves = piece.getPotentialMoves(this);
-        if (!potentialMoves.contains(to)) {
-            return false;
-        }
-
-        if (this.getPiece(to) != null
-                && (piece.getColour() == (this.getPiece(to).getColour()) || this.getPiece(to) instanceof King)) {
-            return false;
-        }
+        if(!generalCasesForLegalMoves(piece, pieceColour, from, to)) return false;
 
         // GESTIONE CASI PARTICOLARI
         King myKing = (pieceColour == (Colour.WHITE)) ? this.whiteKing : this.blackKing;
@@ -331,6 +323,21 @@ public class ChessBoard {
             }
         }
         return legal;
+    }
+
+
+    private boolean generalCasesForLegalMoves(Piece piece, Colour colourPiece, Position from, Position to){
+        // eseguo controllo sul primo filtro di getPotentialMoves
+        Set<Position> potentialMoves = piece.getPotentialMoves(this);
+        if (!potentialMoves.contains(to)) {
+            return false;
+        }
+
+        if (this.getPiece(to) != null
+                && (piece.getColour() == (this.getPiece(to).getColour()) || this.getPiece(to) instanceof King)) {
+            return false;
+        }
+        return true;
     }
 
     /**
