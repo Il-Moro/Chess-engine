@@ -372,7 +372,7 @@ public class ChessBoard {
                 this.setPiece(rook);
                 this.setNull(new Position(to.row(), 7));
                 updateAfterMove(piece, from);
-                return new UndoInfo(piece, from, to, null, SpecialMoves.SHORT_CASTELING);
+                return new UndoInfo(piece, from, to, null, SpecialMoves.SHORT_CASTLING);
                 // arrocco lungo
             } else if (direction < 0) {
                 k.setPosition(to);
@@ -387,7 +387,7 @@ public class ChessBoard {
                 this.setPiece(rook);
                 this.setNull(new Position(to.row(), 0));
                 updateAfterMove(piece, from);
-                return new UndoInfo(piece, from, to, null, SpecialMoves.LONG_CASTELING);
+                return new UndoInfo(piece, from, to, null, SpecialMoves.LONG_CASTLING);
             }
         } else if (piece instanceof Pawn && ((piece.getColour() == Colour.WHITE && to.row() == 7) || piece.getColour() == Colour.BLACK && to.row() == 0)) {
             
@@ -455,7 +455,7 @@ public class ChessBoard {
 
     public void undoMove(UndoInfo undo) {
         switch (undo.special()) {
-            case SpecialMoves.SHORT_CASTELING:
+            case SpecialMoves.SHORT_CASTLING:
                 King k = (King) undo.movedPiece();
                 k.setPosition(undo.from());
                 k.setHasMovedFalse();
@@ -471,7 +471,7 @@ public class ChessBoard {
 
                 break;
 
-            case SpecialMoves.LONG_CASTELING:
+            case SpecialMoves.LONG_CASTLING:
                 k = (King) undo.movedPiece();
                 k.setPosition(undo.from());
                 k.setHasMovedFalse();
