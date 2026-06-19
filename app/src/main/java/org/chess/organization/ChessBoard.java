@@ -462,41 +462,50 @@ public class ChessBoard {
 
     private UndoInfo physicalMovementCastling(Piece piece, Position from, Position to){
         int direction = to.column() - from.column();
+        
         if (piece instanceof King k && Math.abs(direction) == 2) {
             // arrocco corto
             if (direction > 0) {
-                k.setPosition(to);
-                k.setHasMovedTrue();
-                this.setPiece(k);
-                this.setNull(from);
-
-                // spostamento della torre affianco al re
-                Rook rook = (Rook) this.getPiece(new Position(to.row(), 7));
-                rook.setPosition(new Position(to.row(), 5));
-                rook.setHasMovedTrue();
-                this.setPiece(rook);
-                this.setNull(new Position(to.row(), 7));
-                updateAfterMove(piece, from);
-                return new UndoInfo(piece, from, to, null, SpecialMoves.SHORT_CASTLING);
+                return physicalMovementShortCastling(k, from, to);
                 // arrocco lungo
             } else if (direction < 0) {
-                k.setPosition(to);
-                k.setHasMovedTrue();
-                this.setPiece(k);
-                this.setNull(from);
-
-                // spostamento della torre affianco al re
-                Rook rook = (Rook) this.getPiece(new Position(to.row(), 0));
-                rook.setPosition(new Position(to.row(), 3));
-                rook.setHasMovedTrue();
-                this.setPiece(rook);
-                this.setNull(new Position(to.row(), 0));
-                updateAfterMove(piece, from);
-                return new UndoInfo(piece, from, to, null, SpecialMoves.LONG_CASTLING);
+                return physicalMovementLongCastling(k, from, to);
             }
         }
         return null;
     } 
+
+    private UndoInfo physicalMovementShortCastling(King k, Position from, Position to){
+        k.setPosition(to);
+        k.setHasMovedTrue();
+        this.setPiece(k);
+        this.setNull(from);
+
+        // spostamento della torre affianco al re
+        Rook rook = (Rook) this.getPiece(new Position(to.row(), 7));
+        rook.setPosition(new Position(to.row(), 5));
+        rook.setHasMovedTrue();
+        this.setPiece(rook);
+        this.setNull(new Position(to.row(), 7));
+        updateAfterMove(k, from);
+        return new UndoInfo(k, from, to, null, SpecialMoves.SHORT_CASTLING);
+    }
+
+    private UndoInfo physicalMovementLongCastling(King k, Position from, Position to){
+        k.setPosition(to);
+        k.setHasMovedTrue();
+        this.setPiece(k);
+        this.setNull(from);
+
+        // spostamento della torre affianco al re
+        Rook rook = (Rook) this.getPiece(new Position(to.row(), 0));
+        rook.setPosition(new Position(to.row(), 3));
+        rook.setHasMovedTrue();
+        this.setPiece(rook);
+        this.setNull(new Position(to.row(), 0));
+        updateAfterMove(k, from);
+        return new UndoInfo(k, from, to, null, SpecialMoves.LONG_CASTLING);
+    }
 
     private UndoInfo physicalMovementPromotion(Piece piece, Colour pieceColour, Position from, Position to, String stringPiece){
         if (piece instanceof Pawn && ((piece.getColour() == Colour.WHITE && to.row() == 7) || piece.getColour() == Colour.BLACK && to.row() == 0)) {
@@ -706,10 +715,8 @@ public class ChessBoard {
             }
         }
 
-        int[][] linearDirections = { { 1, 1 }, { -1, 1 }, { -1, -1 }, { 1, -1 }, { 1, 0 }, { -1, 0 }, { 0, 1 },
-                { 0, -1 } };
-        int[][] knightDirections = { { 2, -1 }, { 2, 1 }, { 1, 2 }, { -1, 2 }, { -2, 1 }, { -2, -1 }, { -1, -2 },
-                { 1, -2 } };
+        int[][] linearDirections = { { 1, 1 }, { -1, 1 }, { -1, -1 }, { 1, -1 }, { 1, 0 }, { -1, 0 }, { 0, 1 }, { 0, -1 } };
+        int[][] knightDirections = { { 2, -1 }, { 2, 1 }, { 1, 2 }, { -1, 2 }, { -2, 1 }, { -2, -1 }, { -1, -2 }, { 1, -2 } };
 
         int kingRow = king.getPosition().row();
         int kingColumn = king.getPosition().column();
