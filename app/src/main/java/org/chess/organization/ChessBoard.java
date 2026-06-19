@@ -276,22 +276,14 @@ public class ChessBoard {
 
 
     private static boolean pinCasesForLegalMoves(Piece piece, Position piecePosition, Position to, Pin[][] kingPin, Position myKingPosition){
+        // caso in cui il re è sotto scacco lineare
         boolean legal = pinCasesCheckLinesCaseForLegalMoves(piece, piecePosition, to, kingPin, myKingPosition);
         if(!legal) { return false; }
 
         // caso cavalli
         // sotto scacco da cavallo
-        if (kingPin[myKingPosition.row()][myKingPosition.column()] == Pin.UNDER_CHECK_KNIGHT
-                && !(piece instanceof King)) {
-            // Se il pezzo è in PIN, non può muoversi comunque per difendere dal cavallo
-            if (kingPin[piecePosition.row()][piecePosition.column()] == Pin.PINNED) {
-                return false;
-            }
-            // Può muoversi solo se la casa d'arrivo coincide con l'attaccante (lo mangia)
-            if (kingPin[to.row()][to.column()] != Pin.KING_ATTACKER) {
-                return false;
-            }
-        }
+        legal = checkFromKnightCaseForLegalMoves(piece, piecePosition, to, kingPin, myKingPosition);
+        if(!legal) { return false; }
         return true;
     }
 
@@ -326,6 +318,20 @@ public class ChessBoard {
         return true;
     }
 
+    private static boolean checkFromKnightCaseForLegalMoves(Piece piece, Position piecePosition, Position to, Pin[][] kingPin, Position myKingPosition){
+        if (kingPin[myKingPosition.row()][myKingPosition.column()] == Pin.UNDER_CHECK_KNIGHT
+                && !(piece instanceof King)) {
+            // Se il pezzo è in PIN, non può muoversi comunque per difendere dal cavallo
+            if (kingPin[piecePosition.row()][piecePosition.column()] == Pin.PINNED) {
+                return false;
+            }
+            // Può muoversi solo se la casa d'arrivo coincide con l'attaccante (lo mangia)
+            if (kingPin[to.row()][to.column()] != Pin.KING_ATTACKER) {
+                return false;
+            }
+        }
+        return true;
+    }
 
     private boolean pieceIsKingCaseForLegalMoves(Piece piece, Position piecePosition, Position to, Position from, Pin[][] kingPin){
         if (piece instanceof King k) {
