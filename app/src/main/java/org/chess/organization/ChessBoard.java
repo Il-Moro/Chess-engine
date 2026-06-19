@@ -182,6 +182,28 @@ public class ChessBoard {
         return (colour == Colour.WHITE) ? whiteKingPin : blackKingPin;
     }
 
+
+    public King getKing(Colour colour){
+        return (colour == Colour.WHITE) ? whiteKing : blackKing;
+    }
+
+    public Pawn getLastPawnMoved(){
+        return lastPawnMoved;
+    }
+
+    public Position getLastPawnFromPosition(){
+        return lastPawnFromPosition;
+    }
+
+
+
+
+
+    public boolean isMoveLegal(Position from, Position to) {
+        return MoveValidator.isMoveLegal(this, from, to);
+    }
+
+/*
     // movement of pieces
     public boolean isMoveLegal(Position from, Position to) {
         
@@ -419,6 +441,8 @@ public class ChessBoard {
         }
         return legal;
     }
+
+*/
 
     /**
      * Esegue lo spostamento fisico dei pezzi sulla scacchiera. Gestisce nativamente
