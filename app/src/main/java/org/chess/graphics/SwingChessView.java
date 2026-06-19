@@ -73,7 +73,9 @@ public class SwingChessView  implements ChessView {
     }
 
     @Override
-    public void displayBoard(Piece[][] board) {}
+    public void displayBoard(Piece[][] board) {
+        
+    }
 
     @Override
     public void highlightSquare(int row, int col, boolean highlight) {}

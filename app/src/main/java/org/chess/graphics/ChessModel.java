@@ -70,14 +70,14 @@ public class ChessModel {
         return match.getState();
     }
 
-    public Move updateGameStateAfterMove(Move move){
+    public void updateGameStateAfterMove(Move move){
         if(move != Move.INVALID){
             board.physicalMovement(move.selectedPiece().getPosition(), move.to());
             match.updateMoveHistory(move);
             match.switchTurn();
         }
-        return;
     }
+
 
 
 }
