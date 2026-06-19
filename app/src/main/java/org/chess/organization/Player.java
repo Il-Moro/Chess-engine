@@ -48,10 +48,6 @@ public abstract class Player {
         return moves;
     }
 
-    public Colour getColour(){
-        return colour;
-    }
-
     public abstract Move decideMove();
 
     public Colour getColour(){

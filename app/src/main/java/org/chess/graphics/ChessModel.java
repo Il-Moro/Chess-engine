@@ -12,7 +12,7 @@ public class ChessModel {
     public Player player2 = null;
     private int DEPTH = 3;
 
-    ChessModel() {}
+    public ChessModel() {}
 
     public void setAgentVSAgent(){
         this.player1 = new PlayerAgent(Colour.WHITE, board, DEPTH, player2);
@@ -70,14 +70,44 @@ public class ChessModel {
         return match.getState();
     }
 
-    public void updateGameStateAfterMove(Move move){
+    public boolean updateGameStateAfterMove(Move move){
         if(move != Move.INVALID){
             board.physicalMovement(move.selectedPiece().getPosition(), move.to());
             match.updateMoveHistory(move);
             match.switchTurn();
+            return true;
         }
+        return false;
     }
 
+    public boolean updateGameStateAfterMove(Move move,String promotionPiece){
+        if(move != Move.INVALID){
+            board.physicalMovement(move.selectedPiece().getPosition(), move.to(),promotionPiece);
+            match.updateMoveHistory(move);
+            match.switchTurn();
+            return true;
+        }
+        return false;
+    }
 
+    public boolean isPromotionMove(Move move){
+        return move.selectedPiece() instanceof Pawn && (move.to().row() == 0 || move.to().row() == 7);
+    }
+
+    public Piece[][] getBoardAsArray() {
+        return board.getBoard();
+    }
+
+    public Colour getCurrentPlayerColour() {
+        return match.getCurrentPlayerTurn().getColour();
+    }
+
+    public End getGameState() {
+        return match.getState();
+    }
+
+    public boolean isAgentTurn() {
+        return match.getCurrentPlayerTurn() instanceof PlayerAgent;
+    }
 
 }
