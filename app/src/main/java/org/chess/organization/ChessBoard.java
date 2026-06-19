@@ -432,40 +432,22 @@ public class ChessBoard {
     public UndoInfo physicalMovement(Position from, Position to, String stringPiece) {
         Piece piece = this.getPiece(from);
         Colour pieceColour = piece.getColour();
-        boolean rowDiff = false;
-
-        if (lastPawnMoved != null) {
-            rowDiff = Math.abs(lastPawnFromPosition.row() - lastPawnMoved.getPosition().row()) == 2;
-        }
-
 
         // CASTLING
         UndoInfo undoInfo = physicalMovementCastling(piece, from, to);
-        if(undoInfo != null){return undoInfo;}
+        if(undoInfo != null){ return undoInfo; }
 
         // PROMOTION
         undoInfo = physicalMovementPromotion(piece, pieceColour, from, to, stringPiece);
-        if(undoInfo != null){return undoInfo;}
+        if(undoInfo != null){ return undoInfo; }
 
-       
+        // ENPASSANT
+        undoInfo = physicalMovementEnpassant(piece, from, to);
+        if(undoInfo != null){ return undoInfo; }
             
-        if (piece instanceof Pawn
-                && (from.row() != to.row() && from.column() != to.column() && this.isNull(to))) {
-            if (lastPawnMoved != null) {
-                if (to.column() == lastPawnMoved.getPosition().column()
-                        && from.row() == lastPawnMoved.getPosition().row()) {
-                    if (rowDiff) {
-                        piece.setPosition(to);
-                        this.setPiece(piece);
-                        this.setNull(from);
-                        this.setNull(lastPawnMoved.getPosition());
-                        updateAfterMove(piece, from);
-                        return new UndoInfo(piece, from, to, lastPawnMoved, SpecialMoves.ENPASSANT);
-                    }
-
-                }
-            }
-        }
+        // GENERAL CASE
+        undoInfo = physicalMovementGeneralCase(piece, this.getPiece(to), from, to);
+        
         if (piece instanceof Pawn) {
             lastPawnMoved = (Pawn) piece;
             lastPawnFromPosition = from;
@@ -474,13 +456,8 @@ public class ChessBoard {
             lastPawnFromPosition = null;
         }
 
-        // caso generale
-        Piece eatenPiece = this.getPiece(to);
-        piece.setPosition(to);
-        this.setNull(from);
-        this.setPiece(piece);
         updateAfterMove(piece, from);
-        return new UndoInfo(piece, from, to, eatenPiece, SpecialMoves.NONE);
+        return undoInfo;
     }
 
     private UndoInfo physicalMovementCastling(Piece piece, Position from, Position to){
@@ -539,6 +516,40 @@ public class ChessBoard {
         }
         
         return null;
+    }
+
+    private UndoInfo physicalMovementEnpassant(Piece piece, Position from, Position to){
+        boolean rowDiff = false;
+
+        if (lastPawnMoved != null) {
+            rowDiff = Math.abs(lastPawnFromPosition.row() - lastPawnMoved.getPosition().row()) == 2;
+        }
+
+        if (piece instanceof Pawn
+                && (from.row() != to.row() && from.column() != to.column() && this.isNull(to))) {
+            if (lastPawnMoved != null) {
+                if (to.column() == lastPawnMoved.getPosition().column()
+                        && from.row() == lastPawnMoved.getPosition().row()) {
+                    if (rowDiff) {
+                        piece.setPosition(to);
+                        this.setPiece(piece);
+                        this.setNull(from);
+                        this.setNull(lastPawnMoved.getPosition());
+                        updateAfterMove(piece, from);
+                        return new UndoInfo(piece, from, to, lastPawnMoved, SpecialMoves.ENPASSANT);
+                    }
+
+                }
+            }
+        }
+        return null;
+    }
+
+    private UndoInfo physicalMovementGeneralCase(Piece piece, Piece eatenPiece, Position from, Position to){
+        piece.setPosition(to);
+        this.setNull(from);
+        this.setPiece(piece);
+        return new UndoInfo(piece, from, to, eatenPiece, SpecialMoves.NONE);
     }
 
     private void updateAfterMove(Piece piece, Position from) {
