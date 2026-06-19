@@ -35,14 +35,13 @@ public class ChessController {
             default -> 3;
         });
 
-        selectedMode = mode;
-
         model.startMatch();
 
+        selectedMode = mode;
         board = model.getBoardAsArray();
         gameState = model.getGameState();
         currentPlayerColor = model.getCurrentPlayerColour();
         isAgentTurn = model.isAgentTurn();
-        
+
     }
 }
