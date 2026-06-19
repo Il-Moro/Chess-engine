@@ -55,6 +55,23 @@ public class SwingChessView  implements ChessView {
         JButton humanVsAi = new JButton("Human vs AI");
         JButton humanVsHuman = new JButton("Human vs Human");
 
+        // Styling
+        humanVsAi.setFont(new Font("Segoe UI", Font.BOLD, 20));
+        humanVsAi.setBackground(new Color(52, 73, 94));
+        humanVsAi.setForeground(Color.WHITE);
+        humanVsAi.setFocusPainted(false);
+        humanVsAi.setBorder(BorderFactory.createEmptyBorder(15, 30, 15, 30));
+        humanVsAi.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+        humanVsHuman.setFont(new Font("Segoe UI", Font.BOLD, 20));
+        humanVsHuman.setBackground(new Color(52, 73, 94));
+        humanVsHuman.setForeground(Color.WHITE);
+        humanVsHuman.setFocusPainted(false);
+        humanVsHuman.setBorder(BorderFactory.createEmptyBorder(15, 30, 15, 30));
+        humanVsHuman.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+
+
         modePanel.add(humanVsAi);
         modePanel.add(humanVsHuman);
 
@@ -73,7 +90,7 @@ public class SwingChessView  implements ChessView {
         // ONLY COLOR
 
         JLabel titleColor = new JLabel("Select Color", SwingConstants.CENTER);
-        titleMode.setFont(new Font("Arial", Font.BOLD, 50));
+        titleColor.setFont(new Font("Arial", Font.BOLD, 50));
         JPanel colorPanelContainer = new JPanel();
         colorPanelContainer.setLayout(new BorderLayout());
         JPanel colorPanel = new JPanel();
@@ -83,6 +100,21 @@ public class SwingChessView  implements ChessView {
 
         JButton white = new JButton("WHITE");
         JButton black = new JButton("BLACK");
+
+        // Styling
+        white.setFont(new Font("Segoe UI", Font.BOLD, 20));
+        white.setBackground(new Color(52, 73, 94));
+        white.setForeground(Color.WHITE);
+        white.setFocusPainted(false);
+        white.setBorder(BorderFactory.createEmptyBorder(15, 30, 15, 30));
+        white.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+        black.setFont(new Font("Segoe UI", Font.BOLD, 20));
+        black.setBackground(new Color(52, 73, 94));
+        black.setForeground(Color.WHITE);
+        black.setFocusPainted(false);
+        black.setBorder(BorderFactory.createEmptyBorder(15, 30, 15, 30));
+        black.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
         colorPanel.add(white);
         colorPanel.add(black);
@@ -107,10 +139,10 @@ public class SwingChessView  implements ChessView {
             }
         });
 
-        // COLOR AND DIFFICULTY
+        // DIFFICULTY
 
         JLabel titleDifficulty = new JLabel("Select Difficulty", SwingConstants.CENTER);
-        titleMode.setFont(new Font("Arial", Font.BOLD, 50));
+        titleDifficulty.setFont(new Font("Arial", Font.BOLD, 50));
         JPanel difficultyContainer = new JPanel();
         difficultyContainer.setLayout(new BorderLayout());
         JPanel difficuPanel = new JPanel();
@@ -146,6 +178,30 @@ public class SwingChessView  implements ChessView {
                 controller.startGame(selectedMode, selectedColor,selectedDifficulty);
             }      
         });
+
+
+        // Styling
+
+        easy.setFont(new Font("Segoe UI", Font.BOLD, 20));
+        easy.setBackground(new Color(52, 73, 94));
+        easy.setForeground(Color.WHITE);
+        easy.setFocusPainted(false);
+        easy.setBorder(BorderFactory.createEmptyBorder(15, 30, 15, 30));
+        easy.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+        normal.setFont(new Font("Segoe UI", Font.BOLD, 20));
+        normal.setBackground(new Color(52, 73, 94));
+        normal.setForeground(Color.WHITE);
+        normal.setFocusPainted(false);
+        normal.setBorder(BorderFactory.createEmptyBorder(15, 30, 15, 30));
+        normal.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+        hard.setFont(new Font("Segoe UI", Font.BOLD, 20));
+        hard.setBackground(new Color(52, 73, 94));
+        hard.setForeground(Color.WHITE);
+        hard.setFocusPainted(false);
+        hard.setBorder(BorderFactory.createEmptyBorder(15, 30, 15, 30));
+        hard.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
         setupPanel.add(modePanelContainer, "ModeSelection");
         setupPanel.add(colorPanelContainer, "Color selection");
