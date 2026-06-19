@@ -79,26 +79,26 @@ public class ChessBoardTest {
     @Test // a.1. copertura totale: dato un pezzo libero nella scacchiera, per ogni casa che controlla, la matrice di controllo deve essere settata a 1 nelle celle corrispondenti 
     void controlMapOpenBoard(){
         ChessBoard board = new ChessBoard();
-        Rook rock = new Rook(new Position(3,3), Colour.WHITE);
-        board.setPiece(rock);
+        Rook rook = new Rook(new Position(3,3), Colour.WHITE);
+        board.setPiece(rook);
         board.updateControl();
         int [][] squareControlled = board.getSquareControlledBy(Colour.WHITE);
 
-        int sumSquareControlledByRock = 0;
+        int sumSquareControlledByRook = 0;
         
         for(int[] riga : squareControlled ) {
-            for(int valore : riga) sumSquareControlledByRock += valore;
+            for(int valore : riga) sumSquareControlledByRook += valore;
         }
 
-        assertEquals(14, sumSquareControlledByRock, "La somma dei controlli non coincide!");
+        assertEquals(14, sumSquareControlledByRook, "La somma dei controlli non coincide!");
     }
 
     @Test // a.2. covrapposizione di forze: dati due pezzi nella scacchiera, per ogni casa che controlla, la matrice di controllo deve essere settata a come la somma dei due pezzi nelle celle corrispondenti 
     void controlMapTwoPieces(){
         ChessBoard board = new ChessBoard();
-        Rook rock = new Rook(new Position(3,3), Colour.WHITE);
+        Rook rook = new Rook(new Position(3,3), Colour.WHITE);
         Queen queen = new Queen(new Position(5,7), Colour.WHITE);
-        board.setPiece(rock);
+        board.setPiece(rook);
         board.setPiece(queen);
         board.updateControl();
 
@@ -174,22 +174,22 @@ public class ChessBoardTest {
         board = new ChessBoard();
         whitePawn = new Pawn(new Position(6,4), Colour.BLACK);
         blackPawn = new Pawn(new Position(4,3), Colour.WHITE);
-        Rook whiteRock = new Rook(new Position(7,0),Colour.WHITE);
-        Rook blackRock = new Rook(new Position(0,0) , Colour.WHITE);
+        Rook whiteRook = new Rook(new Position(7,0),Colour.WHITE);
+        Rook blackRook = new Rook(new Position(0,0) , Colour.WHITE);
         board.setPiece(new King(new Position(7,4), Colour.BLACK));
         board.setPiece(new King(new Position(0,4), Colour.WHITE));
 
         board.setPiece(whitePawn);
         board.setPiece(blackPawn);
-        board.setPiece(whiteRock);
-        board.setPiece(blackRock);
+        board.setPiece(whiteRook);
+        board.setPiece(blackRook);
 
         assertTrue(board.isMoveLegal(whitePawn.getPosition(),new Position(4,4)));
         board.physicalMovement(whitePawn.getPosition(), new Position(4,4));
-        assertTrue(board.isMoveLegal(blackRock.getPosition(),new Position(1,0)));
-        board.physicalMovement(blackRock.getPosition(), new Position(1,0));
-        assertTrue(board.isMoveLegal(whiteRock.getPosition(),new Position(6,0)));
-        board.physicalMovement(whiteRock.getPosition(), new Position(6,0));
+        assertTrue(board.isMoveLegal(blackRook.getPosition(),new Position(1,0)));
+        board.physicalMovement(blackRook.getPosition(), new Position(1,0));
+        assertTrue(board.isMoveLegal(whiteRook.getPosition(),new Position(6,0)));
+        board.physicalMovement(whiteRook.getPosition(), new Position(6,0));
 
         assertFalse(board.isMoveLegal(blackPawn.getPosition(),new Position(5,4)));
 
@@ -639,7 +639,7 @@ public class ChessBoardTest {
         assertNull(board.getPiece(new Position(1, 3)), "Il pedone di partenza deve essere rimosso");
         assertNotNull(board.getPiece(new Position(0, 3)), "Deve esserci un pezzo nella casa di arrivo");
         assertFalse(board.getPiece(new Position(0, 3)) instanceof Pawn, "Non deve più essere un pedone");
-        // Se hai rinominato la classe in Rook usa Rook.class, altrimenti Rock.class
+        // Se hai rinominato la classe in Rook usa Rook.class, altrimenti Rook.class
         assertTrue(board.getPiece(new Position(0, 3)) instanceof Rook, "Il pezzo promosso deve essere una Torre");
     }
 
@@ -672,11 +672,11 @@ public class ChessBoardTest {
     void testUndoMoveWithCapture() {
         ChessBoard board = new ChessBoard();
         Bishop bishop = new Bishop(new Position(0,6),Colour.WHITE);
-        Rook rock = new Rook(new Position(5,1),Colour.BLACK);
+        Rook rook = new Rook(new Position(5,1),Colour.BLACK);
         board.setPiece(new King(new Position(7,4), Colour.BLACK));
         board.setPiece(new King(new Position(0,4), Colour.WHITE));
         board.setPiece(bishop);
-        board.setPiece(rock);
+        board.setPiece(rook);
 
         assertTrue(board.isMoveLegal(new Position(0,6),new Position(5,1)));
         board.physicalMovement(new Position(0,6),new Position(5,1));
@@ -684,7 +684,7 @@ public class ChessBoardTest {
         assertTrue(board.isNull(new Position(0,6)));
         assertTrue(board.isNull(new Position(5,1)) == false && board.getPiece(new Position(5,1)) instanceof Bishop);
         
-        UndoInfo undo = new UndoInfo(bishop,new Position(0,6),new Position(5,1),rock,SpecialMoves.NONE);
+        UndoInfo undo = new UndoInfo(bishop,new Position(0,6),new Position(5,1),rook,SpecialMoves.NONE);
 
         board.undoMove(undo);
 
@@ -777,7 +777,7 @@ public class ChessBoardTest {
 
     @Test
     @StdIo("R")
-    void testUndoMoveRockPromotion() {
+    void testUndoMoveRookPromotion() {
 
         ChessBoard board = new ChessBoard();
         

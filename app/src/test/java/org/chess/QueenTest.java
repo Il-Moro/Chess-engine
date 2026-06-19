@@ -37,10 +37,10 @@ public class QueenTest {
 
         ChessBoard board = new ChessBoard();
         Queen queen = new Queen(new Position(4,4), Colour.WHITE);
-        Rook rock = new Rook(new Position(5, 5), Colour.BLACK);
+        Rook rook = new Rook(new Position(5, 5), Colour.BLACK);
         
         board.setPiece(queen);
-        board.setPiece(rock);
+        board.setPiece(rook);
 
         Set<Position> positionsCalculated = queen.getPotentialMoves(board);
         assertEquals(25, positionsCalculated.size());
@@ -50,10 +50,10 @@ public class QueenTest {
     void blockByOwnPieceQueen(){
         ChessBoard board = new ChessBoard();
         Queen queen = new Queen(new Position(4,4), Colour.WHITE);
-        Rook rock = new Rook(new Position(5, 5), Colour.WHITE);
+        Rook rook = new Rook(new Position(5, 5), Colour.WHITE);
         
         board.setPiece(queen);
-        board.setPiece(rock);
+        board.setPiece(rook);
 
         Set<Position> positionsCalculated = queen.getPotentialMoves(board);
         assertEquals(25, positionsCalculated.size());
