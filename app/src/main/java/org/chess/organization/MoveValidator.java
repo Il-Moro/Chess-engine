@@ -1,3 +1,4 @@
+
 package org.chess.organization;
 
 import java.util.Set;
