@@ -209,45 +209,8 @@ public class ChessBoard {
         if(!legal){ return false; }
 
         // re sotto scacco lineare
-        if (kingPin[myKingPosition.row()][myKingPosition.column()] == Pin.UNDER_CHECK_LINE
-                && !(piece instanceof King)) {
-            // considero prima se: il pezzo è in Pin NON può muoversi
-            if (kingPin[piecePosition.row()][piecePosition.column()] == Pin.PINNED) {
-                return false;
-            } // se il pezzo non è in PIN può solo coprire le case denotate come CHECK_PATH o
-              // come King_attacker
-            else if (kingPin[to.row()][to.column()] != Pin.CHECK_PATH
-                    && kingPin[to.row()][to.column()] != Pin.KING_ATTACKER) {
-                return false;
-            }
-        } else { // il re non è sotto scacco: controllo se il pezzo è in pin e la casa di arrivo
-                 // se si trova lungo la direzione di Pin
-            if (kingPin[piece.getPosition().row()][piece.getPosition().column()] == Pin.PINNED) {
-                // calcolo del determinante per verificare se hanno lo stesso verso
-                int deltaRowKing = piecePosition.row() - myKingPosition.row();
-                int deltaColKing = piecePosition.column() - myKingPosition.column();
-                int deltaRowTo = to.row() - myKingPosition.row();
-                int deltaColTo = to.column() - myKingPosition.column();
-
-                if ((deltaRowKing * deltaColTo) - (deltaColKing * deltaRowTo) != 0) {
-                    return false;
-                }
-            }
-        }
-
-        // caso cavalli
-        // sotto scacco da cavallo
-        if (kingPin[myKingPosition.row()][myKingPosition.column()] == Pin.UNDER_CHECK_KNIGHT
-                && !(piece instanceof King)) {
-            // Se il pezzo è in PIN, non può muoversi comunque per difendere dal cavallo
-            if (kingPin[piecePosition.row()][piecePosition.column()] == Pin.PINNED) {
-                return false;
-            }
-            // Può muoversi solo se la casa d'arrivo coincide con l'attaccante (lo mangia)
-            if (kingPin[to.row()][to.column()] != Pin.KING_ATTACKER) {
-                return false;
-            }
-        }
+        legal = pinCasesForLegalMoves(piece, piecePosition, to, kingPin, myKingPosition);
+        if(!legal){ return false; }
 
         if (piece instanceof King k) {
             // 1. non può muoversi su case controllate da avversario
@@ -349,6 +312,50 @@ public class ChessBoard {
             (!(piece instanceof King))) 
         {
             return false;
+        }
+        return true;
+    }
+
+
+    private static boolean pinCasesForLegalMoves(Piece piece, Position piecePosition, Position to, Pin[][] kingPin, Position myKingPosition){
+        if (kingPin[myKingPosition.row()][myKingPosition.column()] == Pin.UNDER_CHECK_LINE
+                && !(piece instanceof King)) {
+            // considero prima se: il pezzo è in Pin NON può muoversi
+            if (kingPin[piecePosition.row()][piecePosition.column()] == Pin.PINNED) {
+                return false;
+            } // se il pezzo non è in PIN può solo coprire le case denotate come CHECK_PATH o
+              // come King_attacker
+            else if (kingPin[to.row()][to.column()] != Pin.CHECK_PATH
+                    && kingPin[to.row()][to.column()] != Pin.KING_ATTACKER) {
+                return false;
+            }
+        } else { // il re non è sotto scacco: controllo se il pezzo è in pin e la casa di arrivo
+                 // se si trova lungo la direzione di Pin
+            if (kingPin[piece.getPosition().row()][piece.getPosition().column()] == Pin.PINNED) {
+                // calcolo del determinante per verificare se hanno lo stesso verso
+                int deltaRowKing = piecePosition.row() - myKingPosition.row();
+                int deltaColKing = piecePosition.column() - myKingPosition.column();
+                int deltaRowTo = to.row() - myKingPosition.row();
+                int deltaColTo = to.column() - myKingPosition.column();
+
+                if ((deltaRowKing * deltaColTo) - (deltaColKing * deltaRowTo) != 0) {
+                    return false;
+                }
+            }
+        }
+
+        // caso cavalli
+        // sotto scacco da cavallo
+        if (kingPin[myKingPosition.row()][myKingPosition.column()] == Pin.UNDER_CHECK_KNIGHT
+                && !(piece instanceof King)) {
+            // Se il pezzo è in PIN, non può muoversi comunque per difendere dal cavallo
+            if (kingPin[piecePosition.row()][piecePosition.column()] == Pin.PINNED) {
+                return false;
+            }
+            // Può muoversi solo se la casa d'arrivo coincide con l'attaccante (lo mangia)
+            if (kingPin[to.row()][to.column()] != Pin.KING_ATTACKER) {
+                return false;
+            }
         }
         return true;
     }
