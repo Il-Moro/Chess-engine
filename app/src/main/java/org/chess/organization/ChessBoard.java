@@ -191,7 +191,6 @@ public class ChessBoard {
         Piece piece = this.getPiece(from);
         Position piecePosition = from;
         Colour pieceColour = piece.getColour();
-
         Piece targetPiece = this.getPiece(to);
         
 
@@ -218,32 +217,9 @@ public class ChessBoard {
         if(!legal) { return false; }
 
         // gestione pedone (enpassant)
-        // legal = pieceIsPawnEnPassantCaseForLegalMoves(piece, to, from);
-        
-        boolean rowDiff = false;
-        if (lastPawnMoved != null) {
-            rowDiff = Math.abs(lastPawnFromPosition.row() - lastPawnMoved.getPosition().row()) != 2;
-        }
-
-        // pedone: sasa
-        if (piece instanceof Pawn) {
-            // 1. non può spostarsi in avanti se è presente un'altro pezzo
-            if (from.row() != to.row() && from.column() == to.column() && !this.isNull(to))
-                legal = false;
-            // 2. enpassant
-            if (from.row() != to.row() && from.column() != to.column() && this.isNull(to)) {
-                if (lastPawnMoved != null) {
-                    if (to.column() == lastPawnMoved.getPosition().column()
-                            && from.row() == lastPawnMoved.getPosition().row()) {
-                        if (rowDiff)
-                            legal = false;
-                    } else
-                        legal = false;
-                } else
-                    legal = false;
-            }
-        }
-        return legal;
+        legal = pieceIsPawnEnpassantCaseForLegalMoves(legal, piece, from, to);
+        if(!legal) {return false;}
+        return true;
     }
 
 
@@ -361,8 +337,7 @@ public class ChessBoard {
                 }
 
                 // Recuperiamo la matrice di controllo dell'avversario
-                int[][] adversaryControl = k.getColour() == (Colour.WHITE) ? squaresControlledByBlack
-                        : squaresControlledByWhite;
+                int[][] adversaryControl = k.getColour() == (Colour.WHITE) ? squaresControlledByBlack : squaresControlledByWhite;
 
                 // ARROCCO CORTO (Verso destra)
                 if (direction > 0) {
@@ -384,6 +359,33 @@ public class ChessBoard {
             }
         }
         return true;
+    }
+
+    private boolean pieceIsPawnEnpassantCaseForLegalMoves(boolean legal, Piece piece, Position from, Position to){
+        boolean rowDiff = false;
+        if (lastPawnMoved != null) {
+            rowDiff = Math.abs(lastPawnFromPosition.row() - lastPawnMoved.getPosition().row()) != 2;
+        }
+
+        // pedone: sasa
+        if (piece instanceof Pawn) {
+            // 1. non può spostarsi in avanti se è presente un'altro pezzo
+            if (from.row() != to.row() && from.column() == to.column() && !this.isNull(to))
+                legal = false;
+            // 2. enpassant
+            if (from.row() != to.row() && from.column() != to.column() && this.isNull(to)) {
+                if (lastPawnMoved != null) {
+                    if (to.column() == lastPawnMoved.getPosition().column()
+                            && from.row() == lastPawnMoved.getPosition().row()) {
+                        if (rowDiff)
+                            legal = false;
+                    } else
+                        legal = false;
+                } else
+                    legal = false;
+            }
+        }
+        return legal;
     }
 
     /**
