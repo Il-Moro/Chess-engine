@@ -80,7 +80,7 @@ public class ChessBoard {
         this.setPiece(new Rook(new Position(0, 7), Colour.WHITE, false));
 
         // Neri
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < BOARD_SIZE; i++) {
             this.setPiece(new Pawn(new Position(6, i), Colour.BLACK));
         }
         this.setPiece(new Rook(new Position(7, 0), Colour.BLACK, false));
@@ -106,7 +106,7 @@ public class ChessBoard {
     public void setPiece(Piece piece) {
         this.chessboard[piece.getPosition().row()][piece.getPosition().column()] = piece;
         if (piece instanceof King k) {
-            if (piece.getColour().equals(Colour.WHITE))
+            if (piece.getColour() == (Colour.WHITE))
                 whiteKing = k;
             else {
                 blackKing = k;
@@ -154,7 +154,7 @@ public class ChessBoard {
      * @return matrice di interi 8x8
      */
     public int[][] getSquareControlledBy(Colour colour) {
-        if (colour.equals(Colour.WHITE)) {
+        if (colour == Colour.WHITE) {
             return this.squaresControlledByWhite;
         } else {
             return this.squaresControlledByBlack;
@@ -179,7 +179,7 @@ public class ChessBoard {
      * @return matrice 8x8 di oggetti {@link Pin}
      */
     public Pin[][] getKingPin(Colour colour) {
-        return (colour.equals(Colour.WHITE)) ? whiteKingPin : blackKingPin;
+        return (colour == Colour.WHITE) ? whiteKingPin : blackKingPin;
     }
 
     // movement of pieces
@@ -209,14 +209,14 @@ public class ChessBoard {
         }
 
         if (this.getPiece(to) != null
-                && (piece.getColour().equals(this.getPiece(to).getColour()) || this.getPiece(to) instanceof King)) {
+                && (piece.getColour() == (this.getPiece(to).getColour()) || this.getPiece(to) instanceof King)) {
             return false;
         }
 
         // GESTIONE CASI PARTICOLARI
-        King myKing = (pieceColour.equals(Colour.WHITE)) ? this.whiteKing : this.blackKing;
+        King myKing = (pieceColour == (Colour.WHITE)) ? this.whiteKing : this.blackKing;
         Position myKingPosition = myKing.getPosition();
-        Pin[][] kingPin = (myKing.getColour().equals(Colour.WHITE)) ? whiteKingPin : blackKingPin;
+        Pin[][] kingPin = (myKing.getColour() == (Colour.WHITE)) ? whiteKingPin : blackKingPin;
 
         if (kingPin[myKingPosition.row()][myKingPosition.column()] == Pin.DOUBLE_CHECK && !(piece instanceof King)) {
             return false;
@@ -264,8 +264,8 @@ public class ChessBoard {
 
         if (piece instanceof King k) {
             // 1. non può muoversi su case controllate da avversario
-            if ((piece.getColour().equals(Colour.WHITE) && squaresControlledByBlack[to.row()][to.column()] != 0) ||
-                    (piece.getColour().equals(Colour.BLACK) && squaresControlledByWhite[to.row()][to.column()] != 0)) {
+            if ((piece.getColour() == (Colour.WHITE) && squaresControlledByBlack[to.row()][to.column()] != 0) ||
+                    (piece.getColour() == (Colour.BLACK) && squaresControlledByWhite[to.row()][to.column()] != 0)) {
                 return false;
             }
             // 3. controllo sull'arrocco
@@ -289,7 +289,7 @@ public class ChessBoard {
                 }
 
                 // Recuperiamo la matrice di controllo dell'avversario
-                int[][] adversaryControl = k.getColour().equals(Colour.WHITE) ? squaresControlledByBlack
+                int[][] adversaryControl = k.getColour() == (Colour.WHITE) ? squaresControlledByBlack
                         : squaresControlledByWhite;
 
                 // ARROCCO CORTO (Verso destra)
@@ -539,8 +539,8 @@ public class ChessBoard {
      *         attivo
      */
     public End isCheckmateOrStalemate(Colour colour) {
-        Position kingPosition = colour.equals(Colour.WHITE) ? whiteKing.getPosition() : blackKing.getPosition();
-        Pin[][] kingPin = (colour.equals(Colour.WHITE)) ? whiteKingPin : blackKingPin;
+        Position kingPosition = colour == (Colour.WHITE) ? whiteKing.getPosition() : blackKing.getPosition();
+        Pin[][] kingPin = (colour == (Colour.WHITE)) ? whiteKingPin : blackKingPin;
 
         boolean anyLegalMoves = hasAnyLegalMoves(colour);
 
@@ -560,7 +560,7 @@ public class ChessBoard {
             for (int column = 0; column < BOARD_SIZE; column++) {
                 Piece p = chessboard[row][column];
 
-                if (p != null && p.getColour().equals(colour)) {
+                if (p != null && p.getColour() == (colour)) {
                     for (Position to : p.getPotentialMoves(this)) {
                         if (this.isMoveLegal(p.getPosition(), to)) {
                             return true;
@@ -616,7 +616,7 @@ public class ChessBoard {
             while (Position.isInsideBounds(targetRow, targetColumn)) {
                 Piece targetPiece = chessboard[targetRow][targetColumn];
                 if (targetPiece != null) {
-                    if (targetPiece.getColour().equals(colour)) {
+                    if (targetPiece.getColour() == (colour)) {
                         if (ownPiece == null) {
                             ownPiece = targetPiece;
                         } else {
@@ -681,7 +681,7 @@ public class ChessBoard {
             if (Position.isInsideBounds(targetRow, targetColumn)) {
                 Piece targetPiece = chessboard[targetRow][targetColumn];
                 if (targetPiece != null) {
-                    if (!targetPiece.getColour().equals(colour) && targetPiece instanceof Knight) {
+                    if (!(targetPiece.getColour() == (colour)) && targetPiece instanceof Knight) {
                         checks += 1;
                         if (checks == 1) {
                             kingPin[kingRow][kingColumn] = Pin.UNDER_CHECK_KNIGHT;
@@ -729,7 +729,7 @@ public class ChessBoard {
     private void fillControlMap(Piece piece) {
         Set<Position> set = piece.getPotentialMoves(this);
 
-        if (piece.getColour().equals(Colour.WHITE)) {
+        if (piece.getColour() == (Colour.WHITE)) {
             for (Position s : set) {
                 this.squaresControlledByWhite[s.row()][s.column()] += 1;
             }
