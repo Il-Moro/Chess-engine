@@ -1,12 +1,8 @@
 package org.chess.organization;
 
-import org.chess.dataTypes.Colour;
-import org.chess.dataTypes.End;
+import org.chess.dataTypes.*;
 import java.util.ArrayList;
 import java.util.List;
-import org.chess.dataTypes.Move;
-import org.chess.dataTypes.Position;
-import org.chess.pieces.Piece;
 
 public class Match {
     private final ChessBoard board;
