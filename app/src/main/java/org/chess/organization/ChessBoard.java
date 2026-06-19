@@ -690,21 +690,12 @@ public class ChessBoard {
     }
 
     // scansiona se esistono mosse legali
-    private boolean hasAnyLegalMoves(Colour colour) {
-        for (int row = 0; row < BOARD_SIZE; row++) {
-            for (int column = 0; column < BOARD_SIZE; column++) {
-                Piece p = chessboard[row][column];
-
-                if (p != null && p.getColour() == (colour)) {
-                    for (Position to : p.getPotentialMoves(this)) {
-                        if (this.isMoveLegal(p.getPosition(), to)) {
-                            return true;
-                        }
-                    }
-                }
-            }
-        }
-        return false;
+    private boolean hasAnyLegalMoves(Colour colour) {        
+        return Arrays.stream(chessboard)
+            .flatMap(Arrays::stream) 
+            .filter(piece -> piece != null && piece.getColour().equals(colour))
+            .anyMatch(piece -> piece.getPotentialMoves(this).stream()
+            .anyMatch(to -> this.isMoveLegal(piece.getPosition(), to)));
     }
 
     /**
@@ -843,33 +834,25 @@ public class ChessBoard {
      * per entrambi i colori.
      */
     public void updateControlMap() {
-        for (int i = 0; i < BOARD_SIZE; i++) {
-            for (int j = 0; j < BOARD_SIZE; j++) {
-                this.squaresControlledByBlack[i][j] = 0;
-                this.squaresControlledByWhite[i][j] = 0;
-            }
-        }
 
-        for (Piece[] positions : this.chessboard) {
-            for (Piece p : positions) {
-                if (p != null) {
-                    this.fillControlMap(p);
-                }
-            }
-        }
+        Arrays.stream(this.squaresControlledByBlack)
+            .forEach(row -> Arrays.fill(row, 0));        
+
+        Arrays.stream(this.squaresControlledByWhite)
+            .forEach(row -> Arrays.fill(row, 0)); 
+
+        Arrays.stream(this.chessboard)
+            .flatMap(Arrays::stream)
+            .filter(p -> p != null)
+            .forEach(this::fillControlMap);
+
     }
 
     private void fillControlMap(Piece piece) {
-        Set<Position> set = piece.getPotentialMoves(this);
 
-        if (piece.getColour() == (Colour.WHITE)) {
-            for (Position s : set) {
-                this.squaresControlledByWhite[s.row()][s.column()] += 1;
-            }
-        } else {
-            for (Position s : set) {
-                this.squaresControlledByBlack[s.row()][s.column()] += 1;
-            }
-        }
+        int[][] targetMatrix = piece.getColour().equals(Colour.WHITE) ? this.squaresControlledByWhite : this.squaresControlledByBlack;
+        
+        piece.getPotentialMoves(this).stream()
+            .forEach(s -> targetMatrix[s.row()][s.column()] += 1);
     }
 }
