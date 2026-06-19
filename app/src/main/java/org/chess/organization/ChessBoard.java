@@ -234,7 +234,7 @@ public class ChessBoard {
             (targetPiece != null) && 
             (colourPiece == (targetPiece.getColour()) || 
             (targetPiece instanceof King))
-        ) {
+            ){
             return false;
         }
         return true;
@@ -244,7 +244,7 @@ public class ChessBoard {
         if (
             (kingPin[myKingPosition.row()][myKingPosition.column()] == Pin.DOUBLE_CHECK) && 
             (!(piece instanceof King))
-        ) {
+            ){
             return false;
         }
         return true;
@@ -267,7 +267,7 @@ public class ChessBoard {
         if (
             (kingPin[myKingPosition.row()][myKingPosition.column()] == Pin.UNDER_CHECK_LINE) && 
             !(piece instanceof King)
-        ) {
+            ){
             // considero prima se: il pezzo è in Pin NON può muoversi
             if (kingPin[piecePosition.row()][piecePosition.column()] == Pin.PINNED) {
                 return false;
@@ -276,7 +276,7 @@ public class ChessBoard {
             else if (
                 (kingPin[to.row()][to.column()] != Pin.CHECK_PATH) && 
                 (kingPin[to.row()][to.column()] != Pin.KING_ATTACKER)
-            ) {
+                ){
                 return false;
             }
         } else { // il re non è sotto scacco: controllo se il pezzo è in pin e la casa di arrivo
@@ -300,7 +300,7 @@ public class ChessBoard {
         if (
             (kingPin[myKingPosition.row()][myKingPosition.column()] == Pin.UNDER_CHECK_KNIGHT) && 
             (!(piece instanceof King))
-        ) {
+            ){
             // Se il pezzo è in PIN, non può muoversi comunque per difendere dal cavallo
             if (kingPin[piecePosition.row()][piecePosition.column()] == Pin.PINNED) {
                 return false;
@@ -319,7 +319,7 @@ public class ChessBoard {
             if (
                 (piece.getColour() == (Colour.WHITE) && squaresControlledByBlack[to.row()][to.column()] != 0) ||
                 (piece.getColour() == (Colour.BLACK) && squaresControlledByWhite[to.row()][to.column()] != 0)
-            ) {
+                ){
                 return false;
             }
             // 3. controllo sull'arrocco
@@ -343,7 +343,7 @@ public class ChessBoard {
                     ((Rook) rook).getHasMoved() ||
                     k.getHasMoved() || 
                     kingPin[row][piecePosition.column()] != null
-                ) {
+                    ){
                     return false;
                 }
 
@@ -358,7 +358,7 @@ public class ChessBoard {
                         this.chessboard[row][6] != null ||
                         adversaryControl[row][5] != 0 || 
                         adversaryControl[row][6] != 0
-                    ) {
+                        ){
                         return false;
                     }
                 }
@@ -370,7 +370,7 @@ public class ChessBoard {
                         this.chessboard[row][2] != null || 
                         this.chessboard[row][3] != null ||
                         adversaryControl[row][2] != 0 || adversaryControl[row][3] != 0
-                    ) {
+                        ){
                         return false;
                     }
                 }
@@ -392,25 +392,29 @@ public class ChessBoard {
                 from.row() != to.row() && 
                 from.column() == to.column() && 
                 !this.isNull(to)
-            )
+                ){
                 legal = false;
+            }
             // 2. enpassant
             if (
                 from.row() != to.row() && 
                 from.column() != to.column() && 
                 this.isNull(to)
-            ) {
+                ){
                 if (lastPawnMoved != null) {
                     if (
                         to.column() == lastPawnMoved.getPosition().column() && 
                         from.row() == lastPawnMoved.getPosition().row()
-                    ) {
-                        if (rowDiff)
+                        ){
+                        if (rowDiff){ 
                             legal = false;
-                    } else
+                        }
+                    } else{
                         legal = false;
-                } else
+                    }
+                } else{
                     legal = false;
+                }
             }
         }
         return legal;
@@ -508,8 +512,10 @@ public class ChessBoard {
     }
 
     private UndoInfo physicalMovementPromotion(Piece piece, Colour pieceColour, Position from, Position to, String stringPiece){
-        if (piece instanceof Pawn && ((piece.getColour() == Colour.WHITE && to.row() == 7) || piece.getColour() == Colour.BLACK && to.row() == 0)) {
-            
+        if (piece instanceof Pawn && (
+                (piece.getColour() == Colour.WHITE && to.row() == 7) || 
+                piece.getColour() == Colour.BLACK && to.row() == 0)
+            ){
             Piece promotionPiece = switch (stringPiece) {
                 case "R" -> new Rook(to, pieceColour, true);
                 case "B" -> new Bishop(to, pieceColour);
@@ -534,11 +540,16 @@ public class ChessBoard {
             rowDiff = Math.abs(lastPawnFromPosition.row() - lastPawnMoved.getPosition().row()) == 2;
         }
 
-        if (piece instanceof Pawn
-                && (from.row() != to.row() && from.column() != to.column() && this.isNull(to))) {
+        if (piece instanceof Pawn && (
+                from.row() != to.row() && 
+                from.column() != to.column() && 
+                this.isNull(to))
+            ){
             if (lastPawnMoved != null) {
-                if (to.column() == lastPawnMoved.getPosition().column()
-                        && from.row() == lastPawnMoved.getPosition().row()) {
+                if (
+                    to.column() == lastPawnMoved.getPosition().column() && 
+                    from.row() == lastPawnMoved.getPosition().row()
+                    ){
                     if (rowDiff) {
                         piece.setPosition(to);
                         this.setPiece(piece);
