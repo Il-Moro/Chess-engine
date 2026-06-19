@@ -11,7 +11,8 @@ public class Chess {
     }
 
     public static void main(String[] args) {
-        System.out.println(new Chess().getGreeting());
-        new SwingChessView();
+        ChessModel model = new ChessModel();
+        SwingChessView view = new SwingChessView();
+        ChessController controller = new ChessController(view, model);
     }
 }
