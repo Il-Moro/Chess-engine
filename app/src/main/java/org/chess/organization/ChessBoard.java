@@ -200,6 +200,7 @@ public class ChessBoard {
         if(!legal) { return false; }
 
         // GESTIONE CASI PARTICOLARI
+
         King myKing = (pieceColour == (Colour.WHITE)) ? this.whiteKing : this.blackKing;
         Position myKingPosition = myKing.getPosition();
         Pin[][] kingPin = (myKing.getColour() == (Colour.WHITE)) ? whiteKingPin : blackKingPin;
@@ -208,59 +209,13 @@ public class ChessBoard {
         legal = doubleCheckCaseForLegalMoves(piece, kingPin, myKingPosition);
         if(!legal){ return false; }
 
-        // re sotto scacco lineare
+        // piece non è il re, ma il re è sotto scacco
         legal = pinCasesForLegalMoves(piece, piecePosition, to, kingPin, myKingPosition);
         if(!legal){ return false; }
 
-        if (piece instanceof King k) {
-            // 1. non può muoversi su case controllate da avversario
-            if ((piece.getColour() == (Colour.WHITE) && squaresControlledByBlack[to.row()][to.column()] != 0) ||
-                    (piece.getColour() == (Colour.BLACK) && squaresControlledByWhite[to.row()][to.column()] != 0)) {
-                return false;
-            }
-            // 3. controllo sull'arrocco
-            int direction = to.column() - from.column(); // Destra (+) o Sinistra (-)
-
-            if (Math.abs(direction) == 2) {
-                int row = piecePosition.row();
-                Piece rook;
-
-                // Trova la torre corretta in base alla direzione
-                if (direction > 0) { // Verso Destra -> Arrocco Corto
-                    rook = this.chessboard[row][7];
-                } else { // Verso Sinistra -> Arrocco Lungo
-                    rook = this.chessboard[row][0];
-                }
-
-                // Validazione base dei pezzi coinvolti e dello scacco attuale
-                if (rook == null || !(rook instanceof Rook) || ((Rook) rook).getHasMoved() ||
-                        k.getHasMoved() || kingPin[row][piecePosition.column()] != null) {
-                    return false;
-                }
-
-                // Recuperiamo la matrice di controllo dell'avversario
-                int[][] adversaryControl = k.getColour() == (Colour.WHITE) ? squaresControlledByBlack
-                        : squaresControlledByWhite;
-
-                // ARROCCO CORTO (Verso destra)
-                if (direction > 0) {
-                    // Le case di passaggio (colonne 5 e 6) devono essere VUOTE e NON CONTROLLATE
-                    if (this.chessboard[row][5] != null || this.chessboard[row][6] != null ||
-                            adversaryControl[row][5] != 0 || adversaryControl[row][6] != 0) {
-                        return false;
-                    }
-                }
-                // ARROCCO LUNGO (Verso sinistra)
-                else {
-                    // Le case di passaggio (colonne 1, 2, 3) devono essere VUOTE
-                    if (this.chessboard[row][1] != null || this.chessboard[row][2] != null
-                            || this.chessboard[row][3] != null ||
-                            adversaryControl[row][2] != 0 || adversaryControl[row][3] != 0) {
-                        return false;
-                    }
-                }
-            }
-        }
+        // piece è re
+        legal = pieceIsKingCaseForLegalMoves(piece, piecePosition, to, from, kingPin);
+        if(!legal) { return false; }
 
         boolean rowDiff = false;
         if (lastPawnMoved != null) {
@@ -318,8 +273,10 @@ public class ChessBoard {
 
 
     private static boolean pinCasesForLegalMoves(Piece piece, Position piecePosition, Position to, Pin[][] kingPin, Position myKingPosition){
-        if (kingPin[myKingPosition.row()][myKingPosition.column()] == Pin.UNDER_CHECK_LINE
-                && !(piece instanceof King)) {
+        if (
+            (kingPin[myKingPosition.row()][myKingPosition.column()] == Pin.UNDER_CHECK_LINE) && 
+            !(piece instanceof King)) 
+        {
             // considero prima se: il pezzo è in Pin NON può muoversi
             if (kingPin[piecePosition.row()][piecePosition.column()] == Pin.PINNED) {
                 return false;
@@ -355,6 +312,59 @@ public class ChessBoard {
             // Può muoversi solo se la casa d'arrivo coincide con l'attaccante (lo mangia)
             if (kingPin[to.row()][to.column()] != Pin.KING_ATTACKER) {
                 return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean pieceIsKingCaseForLegalMoves(Piece piece, Position piecePosition, Position to, Position from, Pin[][] kingPin){
+        if (piece instanceof King k) {
+            // 1. non può muoversi su case controllate da avversario
+            if ((piece.getColour() == (Colour.WHITE) && squaresControlledByBlack[to.row()][to.column()] != 0) ||
+                    (piece.getColour() == (Colour.BLACK) && squaresControlledByWhite[to.row()][to.column()] != 0)) {
+                return false;
+            }
+            // 3. controllo sull'arrocco
+            int direction = to.column() - from.column(); // Destra (+) o Sinistra (-)
+
+            if (Math.abs(direction) == 2) {
+                int row = piecePosition.row();
+                Piece rook;
+
+                // Trova la torre corretta in base alla direzione
+                if (direction > 0) { // Verso Destra -> Arrocco Corto
+                    rook = this.chessboard[row][7];
+                } else { // Verso Sinistra -> Arrocco Lungo
+                    rook = this.chessboard[row][0];
+                }
+
+                // Validazione base dei pezzi coinvolti e dello scacco attuale
+                if (rook == null || !(rook instanceof Rook) || ((Rook) rook).getHasMoved() ||
+                        k.getHasMoved() || kingPin[row][piecePosition.column()] != null) {
+                    return false;
+                }
+
+                // Recuperiamo la matrice di controllo dell'avversario
+                int[][] adversaryControl = k.getColour() == (Colour.WHITE) ? squaresControlledByBlack
+                        : squaresControlledByWhite;
+
+                // ARROCCO CORTO (Verso destra)
+                if (direction > 0) {
+                    // Le case di passaggio (colonne 5 e 6) devono essere VUOTE e NON CONTROLLATE
+                    if (this.chessboard[row][5] != null || this.chessboard[row][6] != null ||
+                            adversaryControl[row][5] != 0 || adversaryControl[row][6] != 0) {
+                        return false;
+                    }
+                }
+                // ARROCCO LUNGO (Verso sinistra)
+                else {
+                    // Le case di passaggio (colonne 1, 2, 3) devono essere VUOTE
+                    if (this.chessboard[row][1] != null || this.chessboard[row][2] != null
+                            || this.chessboard[row][3] != null ||
+                            adversaryControl[row][2] != 0 || adversaryControl[row][3] != 0) {
+                        return false;
+                    }
+                }
             }
         }
         return true;
