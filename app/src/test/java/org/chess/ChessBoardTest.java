@@ -57,7 +57,7 @@ public class ChessBoardTest {
         board.setPiece(new Knight(new Position(5,1), Colour.BLACK));
         board.setPiece(new Bishop(new Position(3,7), Colour.BLACK));
         
-        board.updateControl();
+        board.updateControlMap();
 
         return board;
     }
@@ -69,7 +69,7 @@ public class ChessBoardTest {
         // posizione nero
         board.setPiece(new King(new Position(7,4), Colour.BLACK, false));
         
-        board.updateControl();
+        board.updateControlMap();
 
         return board;
     }
@@ -81,8 +81,8 @@ public class ChessBoardTest {
         ChessBoard board = new ChessBoard();
         Rook rook = new Rook(new Position(3,3), Colour.WHITE);
         board.setPiece(rook);
-        board.updateControl();
-        int [][] squareControlled = board.getSquareControlledBy(Colour.WHITE);
+        board.updateControlMap();
+        int [][] squareControlled = board.getSquaresControlledBy(Colour.WHITE);
 
         int sumSquareControlledByRook = 0;
         
@@ -100,9 +100,9 @@ public class ChessBoardTest {
         Queen queen = new Queen(new Position(5,7), Colour.WHITE);
         board.setPiece(rook);
         board.setPiece(queen);
-        board.updateControl();
+        board.updateControlMap();
 
-        int[][] squareControlled = board.getSquareControlledBy(Colour.WHITE);
+        int[][] squareControlled = board.getSquaresControlledBy(Colour.WHITE);
         
         assertEquals(2, squareControlled[5][3], "matrice di controllo: control map two pieces");
     }
@@ -110,7 +110,7 @@ public class ChessBoardTest {
     @Test // a.3. bloccco da pezzi propri: se un pezzo controlla un altro pezzo dello stesso colore, la matrice di controllo deve essere a 1 nelle posizione del pezzo controllato
     void controlMapOwnPiececs(){
         ChessBoard board = settings();
-        int[][] squareControlled = board.getSquareControlledBy(Colour.WHITE);
+        int[][] squareControlled = board.getSquaresControlledBy(Colour.WHITE);
         assertEquals(1, squareControlled[1][0], "matrice di controllo: control map own pieces");
     }
 
@@ -260,7 +260,7 @@ public class ChessBoardTest {
         board.setPiece(new Bishop(new Position(2, 6), Colour.WHITE));
         board.setPiece(new Bishop(new Position(3, 7), Colour.BLACK));
         
-        board.updateControl();
+        board.updateControlMap();
         board.updateKingPin();
 
         // Mossa ILLEGALE: uscire dalla diagonale andando in (4,4)
@@ -276,7 +276,7 @@ public class ChessBoardTest {
         board.setPiece(new Pawn(new Position(1, 5), Colour.WHITE));
         board.setPiece(new Queen(new Position(3, 7), Colour.BLACK));
         
-        board.updateControl();
+        board.updateControlMap();
         board.updateKingPin();
 
         // Un pedone pinnato in diagonale non può MAI muoversi in avanti (riga 2, colonna 5), perché uscirebbe dalla linea
@@ -290,7 +290,7 @@ public class ChessBoardTest {
         board.setPiece(new Rook(new Position(2, 4), Colour.WHITE));
         board.setPiece(new Rook(new Position(5, 4), Colour.BLACK));
         
-        board.updateControl();
+        board.updateControlMap();
         board.updateKingPin();
 
         // Mossa ILLEGALE: muoversi lateralmente sulla riga in (2,5) rompe il pin
@@ -306,7 +306,7 @@ public class ChessBoardTest {
         board.setPiece(new Queen(new Position(0, 5), Colour.WHITE));
         board.setPiece(new Rook(new Position(0, 7), Colour.BLACK));
         
-        board.updateControl();
+        board.updateControlMap();
         board.updateKingPin();
 
         // Mossa ILLEGALE: muoversi in diagonale fuori dalla riga in (1,6)
@@ -323,7 +323,7 @@ public class ChessBoardTest {
         // C'è un Alfiere bianco libero in (2,2) che può intercettare lo scacco in (2,4)
         board.setPiece(new Bishop(new Position(2, 2), Colour.WHITE));
         
-        board.updateControl();
+        board.updateControlMap();
         board.updateKingPin();
 
         // Mossa ILLEGALE: l'alfiere si muove in una casa a caso (3,3) ignorando lo scacco al Re
@@ -340,7 +340,7 @@ public class ChessBoardTest {
         // C'è una Regina bianca in (2,2) che può mangiare il cavallo
         board.setPiece(new Queen(new Position(2, 2), Colour.WHITE));
         
-        board.updateControl();
+        board.updateControlMap();
         board.updateKingPin();
 
         // Mossa ILLEGALE: la regina prova a mettersi in mezzo in (1,4). Contro un cavallo non serve a nulla parare la linea
@@ -358,7 +358,7 @@ public class ChessBoardTest {
         // C'è una Regina bianca in (2,2) che teoricamente potrebbe mangiare il cavallo
         board.setPiece(new Queen(new Position(2, 2), Colour.WHITE));
         
-        board.updateControl();
+        board.updateControlMap();
         board.updateKingPin();
 
         // Mossa ILLEGALE: in doppio scacco, qualsiasi mossa di pezzi che non siano il Re deve essere bloccata (ritorna false)
@@ -376,7 +376,7 @@ public class ChessBoardTest {
         board.setNull(new Position(3,7));
         board.setPiece(new Bishop(new Position(3, 1), Colour.BLACK));
         
-        board.updateControl();
+        board.updateControlMap();
         board.updateKingPin(); // Questo imposterà UNDER_CHECK_LINE su (0,4)
 
         // Il Re è sotto scacco -> L'arrocco corto deve essere cancellato
@@ -419,7 +419,7 @@ public class ChessBoardTest {
         board.setPiece(new King(new Position(0, 4), Colour.BLACK));      
         board.setPiece(new Rook(new Position(0, 7), Colour.WHITE, false));
         
-        board.updateControl();
+        board.updateControlMap();
         board.updateKingPin();
 
         // Il Re ha mosso -> Arrocco nullo
@@ -438,7 +438,7 @@ public class ChessBoardTest {
         Rook rookMoved = new Rook(new Position(0, 7), Colour.WHITE, true);
         board.setPiece(rookMoved);
         
-        board.updateControl();
+        board.updateControlMap();
         board.updateKingPin();
 
         // La torre ha mosso -> Arrocco corto nullo
@@ -453,7 +453,7 @@ public class ChessBoardTest {
         // Piazziamo un Cavallo bianco in (0,6) che blocca la strada
         board.setPiece(new Knight(new Position(0, 6), Colour.WHITE));
         
-        board.updateControl();
+        board.updateControlMap();
         board.updateKingPin();
 
         assertFalse(board.isMoveLegal(new Position(0, 4), new Position(0, 6)), "Arrocco illegale: c'è un pezzo (Cavallo) di intralcio tra il Re e la Torre");
@@ -465,7 +465,7 @@ public class ChessBoardTest {
         
         board.setPiece(new Queen(new Position(0, 7), Colour.WHITE));
         
-        board.updateControl();
+        board.updateControlMap();
         board.updateKingPin();
 
         // Non c'è la torre nell'angolo -> l'arrocco non esiste geometricamente
@@ -480,7 +480,7 @@ public class ChessBoardTest {
         // Caso da regolamento ufficiale FIDE: la TORRE è sotto attacco, ma il Re no.
         board.setPiece(new Bishop(new Position(3, 4), Colour.BLACK));
         
-        board.updateControl();
+        board.updateControlMap();
         board.updateKingPin();
 
         // Regola FIDE: Se la Torre è sotto attacco (o la casa b1/b8 nell'arrocco lungo), l'arrocco è comunque legale
@@ -495,7 +495,7 @@ public class ChessBoardTest {
         board.setPiece(new King(new Position(7,0), Colour.BLACK, true));
         board.setPiece(new Rook(new Position(0,7), Colour.BLACK, true));
         board.setPiece(new Queen(new Position(1,7), Colour.BLACK));
-        board.updateControl();
+        board.updateControlMap();
         board.updateKingPin();
 
         assertEquals(End.CHECKMATE, board.isCheckmateOrStalemate(Colour.WHITE));
@@ -508,7 +508,7 @@ public class ChessBoardTest {
         board.setPiece(new King(new Position(7,0), Colour.BLACK, true));
         board.setPiece(new Rook(new Position(7,1), Colour.BLACK, true));
         board.setPiece(new Queen(new Position(1,7), Colour.BLACK));
-        board.updateControl();
+        board.updateControlMap();
         board.updateKingPin();
 
         assertEquals(End.STALEMATE, board.isCheckmateOrStalemate(Colour.WHITE));
@@ -522,7 +522,7 @@ public class ChessBoardTest {
         // libero le case f1 (0,5) e g1 (0,6) togliendo Alfiere e Cavallo
         board.setNull(new Position(0, 5));
         board.setNull(new Position(0, 6));
-        board.updateControl();
+        board.updateControlMap();
         board.updateKingPin();
 
         // verifico che la mossa si possa eseguire e la eseguo
@@ -543,7 +543,7 @@ public class ChessBoardTest {
         board.setNull(new Position(0, 1));
         board.setNull(new Position(0, 2));
         board.setNull(new Position(0, 3));
-        board.updateControl();
+        board.updateControlMap();
         board.updateKingPin();
 
         // verifico che la mossa possa essere eseguita e poi la eseguo
@@ -565,7 +565,7 @@ public class ChessBoardTest {
         // libero f8 (7,5) e g8 (7,6)
         board.setNull(new Position(7, 5));
         board.setNull(new Position(7, 6));
-        board.updateControl();
+        board.updateControlMap();
         board.updateKingPin();
 
         // Il Re nero si sposta da e8(7,4) a g8(7,6)
@@ -587,7 +587,7 @@ public class ChessBoardTest {
         board.setNull(new Position(7, 1));
         board.setNull(new Position(7, 2));
         board.setNull(new Position(7, 3));
-        board.updateControl();
+        board.updateControlMap();
         board.updateKingPin();
 
         // Il Re nero si sposta da e8(7,4) a c8(7,2)
@@ -609,7 +609,7 @@ public class ChessBoardTest {
         // Pedone bianco a un passo dalla promozione (riga 6)
         Pawn whitePawn = new Pawn(new Position(6, 4), Colour.WHITE);
         board.setPiece(whitePawn);
-        board.updateControl();
+        board.updateControlMap();
         board.updateKingPin();
 
         // Spinta in ottava traversa (riga 7)
@@ -629,7 +629,7 @@ public class ChessBoardTest {
         // Pedone nero a un passo dalla promozione (riga 1)
         Pawn blackPawn = new Pawn(new Position(1, 3), Colour.BLACK);
         board.setPiece(blackPawn);
-        board.updateControl();
+        board.updateControlMap();
         board.updateKingPin();
 
         // Spinta in prima traversa (riga 0)

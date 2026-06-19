@@ -183,11 +183,11 @@ public class StateEvaluation {
         Set<Position> kingMoves;
         
         if (king.getColour()==player.getColour()) {
-            squaresControlledOpponent = board.getSquareControlledBy(opponent.getColour());
+            squaresControlledOpponent = board.getSquaresControlledBy(opponent.getColour());
             kingMoves = king.getPotentialMoves(board);
         }
         else{
-            squaresControlledOpponent = board.getSquareControlledBy(player.getColour());
+            squaresControlledOpponent = board.getSquaresControlledBy(player.getColour());
             kingMoves = king.getPotentialMoves(board);
         }
 
@@ -237,7 +237,7 @@ public class StateEvaluation {
         int [][] squaresControlled;
         int sum = 0;
         
-        squaresControlled = board.getSquareControlledBy(colour);
+        squaresControlled = board.getSquaresControlledBy(colour);
 
         for (Position center : square) {
             sum+=squaresControlled[center.row()][center.column()];

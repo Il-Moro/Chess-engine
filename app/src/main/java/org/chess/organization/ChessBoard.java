@@ -93,7 +93,7 @@ public class ChessBoard {
         this.setPiece(new Rook(new Position(7, 7), Colour.BLACK, false));
 
         // Inizializzazione automatica dello stato
-        updateControl();
+        updateControlMap();
         updateKingPin();
     }
 
@@ -153,7 +153,7 @@ public class ChessBoard {
      *               controllo
      * @return matrice di interi 8x8
      */
-    public int[][] getSquareControlledBy(Colour colour) {
+    public int[][] getSquaresControlledBy(Colour colour) {
         if (colour == Colour.WHITE) {
             return this.squaresControlledByWhite;
         } else {
@@ -439,7 +439,7 @@ public class ChessBoard {
 
     private void updateAfterMove(Piece piece, Position from) {
 
-        this.updateControl();
+        this.updateControlMap();
 
         if (this.whiteKing != null && this.blackKing != null) {
             updateKingPin();
@@ -524,7 +524,7 @@ public class ChessBoard {
                 break;
         }
         // Ricalcolo Pin e del control Maps
-        this.updateControl();
+        this.updateControlMap();
         if (this.whiteKing != null && this.blackKing != null) {
             updateKingPin();
         }
@@ -601,12 +601,12 @@ public class ChessBoard {
 
         int checks = 0;
 
-        checks += calculateLinearDirections(king.getColour(), linearDirections, kingRow, kingColumn, checks, kingPin);
-        checks += calculatePawnDirections(king.getColour(), kingRow, kingColumn, checks, kingPin);
-        calculateKnightDirections(king.getColour(), knightDirections, kingRow, kingColumn, checks, kingPin);        
+        checks += calculateLinearDirectionsForKingPin(king.getColour(), linearDirections, kingRow, kingColumn, checks, kingPin);
+        checks += calculatePawnDirectionsForKingPin(king.getColour(), kingRow, kingColumn, checks, kingPin);
+        calculateKnightDirectionsForKingPin(king.getColour(), knightDirections, kingRow, kingColumn, checks, kingPin);        
     }
 
-    private int calculateLinearDirections(Colour colour, int[][] directions, int kingRow, int kingColumn, int checks,
+    private int calculateLinearDirectionsForKingPin(Colour colour, int[][] directions, int kingRow, int kingColumn, int checks,
             Pin[][] kingPin) {
 
         for (int[] d : directions) {
@@ -639,7 +639,7 @@ public class ChessBoard {
                             }
 
                             kingPin[targetRow][targetColumn] = Pin.KING_ATTACKER;
-                            markCheckPath(kingRow, kingColumn, targetRow, targetColumn, d, kingPin);
+                            markCheckPathForKingPin(kingRow, kingColumn, targetRow, targetColumn, d, kingPin);
                         }
                         break;
                     }
@@ -651,7 +651,7 @@ public class ChessBoard {
         return checks;
     }
 
-    private int calculatePawnDirections(Colour colour, int kingRow, int kingColumn, int checks, Pin[][] kingPin){
+    private int calculatePawnDirectionsForKingPin(Colour colour, int kingRow, int kingColumn, int checks, Pin[][] kingPin){
         int[][] directions = (colour == Colour.WHITE) ? new int[][] {{1,-1}, {1,1}} : new int[][] {{-1,-1}, {-1,1}};
         
         for (int[] d : directions){
@@ -673,7 +673,7 @@ public class ChessBoard {
         return checks;
     }
 
-    private void calculateKnightDirections(Colour colour, int[][] directions, int kingRow, int kingColumn, int checks, Pin[][] kingPin) {
+    private void calculateKnightDirectionsForKingPin(Colour colour, int[][] directions, int kingRow, int kingColumn, int checks, Pin[][] kingPin) {
         for (int[] d : directions) {           
             int targetRow = kingRow + d[0];
             int targetColumn = kingColumn + d[1];
@@ -695,7 +695,7 @@ public class ChessBoard {
         }
     }
 
-    private static void markCheckPath(int startRow, int startCol, int endRow, int endCol, int[] d, Pin[][] kingPin) {
+    private static void markCheckPathForKingPin(int startRow, int startCol, int endRow, int endCol, int[] d, Pin[][] kingPin) {
         int row = startRow + d[0];
         int column = startCol + d[1];
         while (row != endRow || column != endCol) {
@@ -709,7 +709,7 @@ public class ChessBoard {
      * Azzera ed esegue l'aggiornamento completo delle mappe di controllo geometrico
      * per entrambi i colori.
      */
-    public void updateControl() {
+    public void updateControlMap() {
         for (int i = 0; i < BOARD_SIZE; i++) {
             for (int j = 0; j < BOARD_SIZE; j++) {
                 this.squaresControlledByBlack[i][j] = 0;

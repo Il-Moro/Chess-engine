@@ -126,7 +126,7 @@ public class PlayerAgentTest {
         customBoard.setPiece(new King(new Position(0, 4), Colour.WHITE, false));
         customBoard.setPiece(new King(new Position(7, 4), Colour.BLACK, false));
         customBoard.setPiece(new Knight(new Position(0, 1), Colour.WHITE));
-        customBoard.updateControl();
+        customBoard.updateControlMap();
         customBoard.updateKingPin();
  
         PlayerHuman blackPlayer = new PlayerHuman(Colour.BLACK, customBoard);
