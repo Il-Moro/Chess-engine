@@ -10,7 +10,7 @@ import org.chess.organization.*;
 
 public class ChessModel {
 
-    private ChessBoard board;
+    private ChessBoard board = new ChessBoard(true);;
     private Match match = null;
     private Player player1 = null;
     private Player player2 = null;
@@ -70,7 +70,6 @@ public class ChessModel {
 
     public void startMatch(){
         this.match = new Match(player1, player2);
-        this.board = match.getBoard();
     }
 
     public End isCheckmateOrStalemate(){
@@ -126,7 +125,7 @@ public class ChessModel {
 
     public List<Move> getLegalMovesForPiece(Piece selectedPiece){
         legalMoves=new ArrayList<>();
-        
+
         Set<Position> potentialMoves=selectedPiece.getPotentialMoves(board);
         
         for(Position m:potentialMoves){

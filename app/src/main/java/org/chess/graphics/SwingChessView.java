@@ -204,9 +204,6 @@ public class SwingChessView  implements ChessView {
         for (int row = 0; row < 8; row++) {
             for (int col = 0; col < 8; col++) {
 
-                final int r = row;
-                final int c = col;
-
                 squares[row][col] = new JButton();
                 squares[row][col].setPreferredSize(new Dimension(60, 60));
                 
@@ -221,7 +218,10 @@ public class SwingChessView  implements ChessView {
                 squares[row][col].setOpaque(true);
                 squares[row][col].setBorderPainted(false);
                 boardPanel.add(squares[row][col]);
-                squares[r][c].addActionListener(e -> handleSquareClick(r, c));
+                
+                final int r = row;
+                final int c = col;
+                squares[row][col].addActionListener(e -> handleSquareClick(r, c));
             }
         }
         setupPanel.add(boardPanel,"Chessboard");
@@ -229,13 +229,21 @@ public class SwingChessView  implements ChessView {
     }
 
     private void handleSquareClick(int row, int col) {
-        if(selectedMode.equals("Human vs AI"))
-            if(!playerTurn.equals(selectedColor))
+        if(selectedMode.equals("Human vs AI")){
+            if(!playerTurn.equals(selectedColor)){
                 controller.agentTurn();
+            }
+        }
 
         if (!selectedPiece) {
-            if (squares[row][col].getIcon() == null) return;
-            if (!squares[row][col].getName().equals(playerTurn)) return;
+
+            if (squares[row][col].getIcon() == null){
+                System.out.println("Errore in get icon");
+                return;
+            } 
+            if (!squares[row][col].getName().equals(playerTurn)){
+                return;
+            } 
             selectedPiece = true;
             selectedRow = row;
             selectedColumn = col;
@@ -398,7 +406,7 @@ public class SwingChessView  implements ChessView {
     @Override
     public void highlightSquares(int row, int col){
 
-        squares[row][col].setBackground(new Color(100, 150, 80));
+        squares[row][col].setBackground(new Color(255, 215, 0));
     }
 
     @Override
@@ -439,7 +447,9 @@ public class SwingChessView  implements ChessView {
     }
 
     @Override
-    public void gameover(String result) {}
+    public void gameover(String result) {
+
+    }
 
     @Override
     public void setPlayerTurn(String playerTurn){
