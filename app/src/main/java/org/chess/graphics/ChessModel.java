@@ -85,7 +85,6 @@ public class ChessModel {
 
     public boolean updateGameStateAfterMove(Move move){
         if(move != Move.INVALID){
-            board.physicalMovement(move.selectedPiece().getPosition(), move.to());
             match.updateMoveHistory(move);
             match.switchTurn();
             return true;

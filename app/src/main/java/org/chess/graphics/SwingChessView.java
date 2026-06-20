@@ -229,42 +229,51 @@ public class SwingChessView  implements ChessView {
     }
 
     private void handleSquareClick(int row, int col) {
-        if(selectedMode.equals("Human vs AI")){
-            if(!playerTurn.equals(selectedColor)){
+        
+        int actualRow = selectedColor.equals("BLACK") ? row : (7 - row);
+
+        if(selectedMode.equals("Human vs AI")) {
+            if(!playerTurn.equals(selectedColor)) {
                 controller.agentTurn();
+                return;
             }
         }
 
         if (!selectedPiece) {
-
-            if (squares[row][col].getIcon() == null){
-                System.out.println("Errore in get icon");
-                return;
-            } 
-            if (!squares[row][col].getName().equals(playerTurn)){
-                return;
-            } 
+            
+            if (squares[row][col].getIcon() == null) return;
+            
+            
+            if (!squares[row][col].getName().equals(playerTurn)) return;
+            
             selectedPiece = true;
             selectedRow = row;
             selectedColumn = col;
-            controller.onSquareSelected(row, col);
+            
+            controller.onSquareSelected(actualRow, col);
 
         } else {
+            // Se riclicchi la stessa casella, deseleziona
             if (row == selectedRow && col == selectedColumn) {
                 deselect();
                 return;
             }
-            if (squares[row][col].getIcon() != null &&
-                squares[row][col].getName().equals(playerTurn)) {
+            
+            // Se clicchi un altro tuo pezzo dello stesso colore, cambia selezione
+            if (squares[row][col].getIcon() != null && squares[row][col].getName().equals(playerTurn)) {
                 deselect();
                 selectedPiece = true;
                 selectedRow = row;
                 selectedColumn = col;
-                controller.onSquareSelected(row, col);
+                controller.onSquareSelected(actualRow, col);
                 return;
             }
 
-            controller.onMoveAttempt(selectedRow, selectedColumn, row, col);
+            // Calcola la riga di partenza reale nel modello
+            int actualFromRow = selectedColor.equals("BLACK") ? selectedRow : (7 - selectedRow);
+
+            // Invia il tentativo di mossa con le coordinate reali del modello
+            controller.onMoveAttempt(actualFromRow, selectedColumn, actualRow, col);
             deselect();
         }
     }
@@ -326,8 +335,16 @@ public class SwingChessView  implements ChessView {
                     icon = null;
                 }
 
-                if(icon != null){
+                if (icon != null) {
                     squares[row][column].setIcon(icon);
+                    if (board[row][column].getColour() == Colour.WHITE)
+                        squares[row][column].setName("WHITE");
+                    else
+                        squares[row][column].setName("BLACK");
+                } else {
+                    // Svuota il bottone grafico se nel modello non c'è più il pezzo
+                    squares[row][column].setIcon(null);
+                    squares[row][column].setName("EMPTY");
                 }
             }   
         }
@@ -372,12 +389,16 @@ public class SwingChessView  implements ChessView {
                     icon = null;
                 }
 
-                if(icon != null){
+                if (icon != null) {
                     squares[row][column].setIcon(icon);
-                    if(board[modelRow][column].getColour() == Colour.WHITE)
+                    if (board[modelRow][column].getColour() == Colour.WHITE)
                         squares[row][column].setName("WHITE");
                     else
                         squares[row][column].setName("BLACK");
+                } else {
+                    // Se la casella nel modello è vuota, svuota il bottone e resetta il Name
+                    squares[row][column].setIcon(null);
+                    squares[row][column].setName("EMPTY"); 
                 }
 
             }
@@ -401,7 +422,6 @@ public class SwingChessView  implements ChessView {
         
         return scaledIcon;
     }
-
 
     @Override
     public void highlightSquares(int row, int col){

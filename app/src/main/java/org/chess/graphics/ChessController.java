@@ -56,9 +56,21 @@ public class ChessController {
     }
 
     public void onSquareSelected(int row, int col) {
-        List <Move> moves = model.getLegalMovesForPiece(board[row][col]);
-        for(Move m : moves){
-            view.highlightSquares(m.to().row(),m.to().column());
+        System.out.println("OK");
+        // Prendi i movimenti legali basati sulla riga corretta del modello
+        List<Move> moves = model.getLegalMovesForPiece(board[row][col]);
+
+        for (Move m : moves) {
+            int targetRow = m.to().row();
+            int targetCol = m.to().column();
+
+            // Se l'utente sta giocando come BIANCO, la View è specchiata.
+            // Dobbiamo convertire la riga del modello in riga grafica per la View.
+            if (currentPlayerColor == Colour.WHITE) {
+                targetRow = 7 - targetRow;
+            }
+
+            view.highlightSquares(targetRow, targetCol);
         }
     }
 
@@ -82,12 +94,15 @@ public class ChessController {
                 
                 model.updateGameStateAfterMove(move,selectedPromotion);
             }
-            else
+            else{
                 model.updateGameStateAfterMove(move);
-            if(model.getCurrentPlayerColour() == Colour.WHITE)
+            }
+            if(model.getCurrentPlayerColour() == Colour.WHITE){
                 view.setPlayerTurn("WHITE");
-            else
+            }
+            else{
                 view.setPlayerTurn("BLACK");
+            }
             view.displayBoard(board);
         }
     }
