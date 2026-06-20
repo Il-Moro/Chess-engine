@@ -6,6 +6,8 @@ import org.chess.pieces.*;
 import javax.swing.*;
 import java.awt.*;
 
+import java.net.URL;
+
 public class SwingChessView  implements ChessView {
         
     private ChessController controller;
@@ -227,68 +229,113 @@ public class SwingChessView  implements ChessView {
     }
 
     private void displayBlack(Piece[][] board){
-
-    }
-
-    private void displayWhite(Piece[][] board){
+        ImageIcon icon = null;
         for(int row = 0; row< 8; row++){
             for(int column = 0; column< 8; column++){
 
                 if(board[row][column] instanceof Pawn){
-                    if(board[row][column].getColour() == Colour.WHITE){
-                        squares[row][column].setText("♟");
-                    }
-                    else
-                        squares[row][column].setText("♙");
+                    icon = board[row][column].getColour() == Colour.WHITE
+                        ? loadIcon("whitePawn.png")
+                        : loadIcon("blackPawn.png");
                 }
                 else if(board[row][column] instanceof Bishop){
-
-                    if(board[row][column].getColour() == Colour.WHITE){
-                        squares[row][column].setText("♝");
-                    }
-                    else
-                        squares[row][column].setText("♗");
-
+                    icon = board[row][column].getColour() == Colour.WHITE
+                            ? loadIcon("whiteBishop.png")
+                            : loadIcon("blackBishop.png");
                 }
                 else if(board[row][column] instanceof King){
-
-                    if(board[row][column].getColour() == Colour.WHITE){
-                        squares[row][column].setText("♚");
-                    }
-                    else
-                        squares[row][column].setText("♔");
+                    icon = board[row][column].getColour() == Colour.WHITE
+                            ? loadIcon("whiteKing.png")
+                            : loadIcon("blackKing.png");
                 }
                 else if(board[row][column] instanceof Knight){
-
-                    if(board[row][column].getColour() == Colour.WHITE){
-                        squares[row][column].setText("♞");
-                    }
-                    else
-                        squares[row][column].setText("♘");
-
+                    icon = board[row][column].getColour() == Colour.WHITE
+                            ? loadIcon("whiteKnight.png")
+                            : loadIcon("blackKnight.png");
                 }
                 else if(board[row][column] instanceof Queen){
-
-                    if(board[row][column].getColour() == Colour.WHITE){
-                        squares[row][column].setText("♛");
-                    }
-                    else
-                        squares[row][column].setText("♕");
+                    icon = board[row][column].getColour() == Colour.WHITE
+                            ? loadIcon("whiteQueen.png")
+                            : loadIcon("blackQueen.png");
                 }
                 else if(board[row][column] instanceof Rook){
-
-                    if(board[row][column].getColour() == Colour.WHITE){
-                        squares[row][column].setText("♜");
-                    }
-                    else
-                        squares[row][column].setText("♖");
-
+                    icon = board[row][column].getColour() == Colour.WHITE
+                            ? loadIcon("whiteRook.png")
+                            : loadIcon("blackRook.png");
                 }
-                squares[row][column].setFont(new Font("DejaVu Sans", Font.PLAIN, 48));
+                else{
+                    icon = null;
+                }
+
+                if(icon != null){
+                    System.out.println(icon.getIconWidth());
+                    squares[row][column].setIcon(icon);
+                }
             }   
         }
     }
 
+    private void displayWhite(Piece[][] board){
+        ImageIcon icon = null;
+        for(int row = 0; row< 8; row++){
+            for(int column = 0; column< 8; column++){
+                int modelRow = 7 - row;
+                if(board[modelRow][column] instanceof Pawn){
+                    icon = board[modelRow][column].getColour() == Colour.WHITE
+                        ? loadIcon("whitePawn.png")
+                        : loadIcon("blackPawn.png");
+                }
+                else if(board[modelRow][column] instanceof Bishop){
+                    icon = board[modelRow][column].getColour() == Colour.WHITE
+                            ? loadIcon("whiteBishop.png")
+                            : loadIcon("blackBishop.png");
+                }
+                else if(board[modelRow][column] instanceof King){
+                    icon = board[modelRow][column].getColour() == Colour.WHITE
+                            ? loadIcon("whiteKing.png")
+                            : loadIcon("blackKing.png");
+                }
+                else if(board[modelRow][column] instanceof Knight){
+                    icon = board[modelRow][column].getColour() == Colour.WHITE
+                            ? loadIcon("whiteKnight.png")
+                            : loadIcon("blackKnight.png");
+                }
+                else if(board[modelRow][column] instanceof Queen){
+                    icon = board[modelRow][column].getColour() == Colour.WHITE
+                            ? loadIcon("whiteQueen.png")
+                            : loadIcon("blackQueen.png");
+                }
+                else if(board[modelRow][column] instanceof Rook){
+                    icon = board[modelRow][column].getColour() == Colour.WHITE
+                            ? loadIcon("whiteRook.png")
+                            : loadIcon("blackRook.png");
+                }
+                else{
+                    icon = null;
+                }
+
+                if(icon != null){
+                    squares[row][column].setIcon(icon);
+                }
+            }
+        }
+    }
+
+    private ImageIcon loadIcon(String fileName) {
+        URL url = getClass().getResource("/org/chess/graphics/png/" + fileName);
+
+        if (url == null) {
+            System.out.println("Immagine non trovata: /graphics/png/" + fileName);
+            return null;
+        }
+        
+        ImageIcon original = new ImageIcon(url);
+
+        Image scaled = original.getImage().getScaledInstance(70, 70, Image.SCALE_SMOOTH);
+        ImageIcon scaledIcon = new ImageIcon(scaled);
+        
+        return scaledIcon;
+    }
 
 
     @Override
