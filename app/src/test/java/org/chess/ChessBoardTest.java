@@ -835,4 +835,20 @@ public class ChessBoardTest {
         assertFalse(board.isNull(new Position(6, 3)));
         assertTrue(board.getPiece(new Position(6, 3)) instanceof Pawn);
     }
+
+    @Test
+    void kingCannotMoveBehindRayOfSlidingPiece() {
+        ChessBoard board = new ChessBoard();
+        Rook whiteRook = new Rook(new Position(0, 3), Colour.WHITE); // d1
+        King blackKing = new King(new Position(1, 3), Colour.BLACK); // d2
+        board.setPiece(whiteRook);
+        board.setPiece(blackKing);
+        board.setPiece(new King(new Position(7, 7), Colour.WHITE)); // safe king for White
+        
+        board.updateControlMap();
+        board.updateKingPin();
+        
+        assertFalse(board.isMoveLegal(new Position(1, 3), new Position(2, 3)), 
+            "The Black King should not be allowed to move to d3 along the Rook's ray");
+    }
 }
