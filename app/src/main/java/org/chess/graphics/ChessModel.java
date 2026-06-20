@@ -70,7 +70,7 @@ public class ChessModel {
             board.physicalMovement(move.selectedPiece().getPosition(), move.to());
         }
         return move;
-    }
+     }
 
     public void startMatch(){
         if (player1.getColour() == Colour.WHITE) {

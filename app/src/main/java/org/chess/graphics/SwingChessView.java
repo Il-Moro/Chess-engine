@@ -294,7 +294,6 @@ public class SwingChessView  implements ChessView {
         else{
             this.displayWhite(board);
         }
-        
     }
 
     private void displayBlack(Piece[][] board){

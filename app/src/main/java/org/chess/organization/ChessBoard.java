@@ -476,12 +476,14 @@ public class ChessBoard {
 
         // caso generale
         Piece eatenPiece = this.getPiece(to);
+
         boolean originallyMoved = false;
         if (piece instanceof King k) {
             originallyMoved = k.getHasMoved();
         } else if (piece instanceof Rook r) {
             originallyMoved = r.getHasMoved();
         }
+
         piece.setPosition(to);
         this.setNull(from);
         this.setPiece(piece);
@@ -630,6 +632,14 @@ public class ChessBoard {
                     this.setPiece(undo.eatenPiece());
                 else {
                     this.setNull(undo.to());
+                }
+
+                if (piece instanceof King kingPiece) {
+                    if (undo.hasMoved()) kingPiece.setHasMovedTrue();
+                    else kingPiece.setHasMovedFalse();
+                } else if (piece instanceof Rook rookPiece) {
+                    if (undo.hasMoved()) rookPiece.setHasMovedTrue();
+                    else rookPiece.setHasMovedFalse();
                 }
                 break;
         }

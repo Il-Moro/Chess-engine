@@ -2,8 +2,8 @@ package org.chess.graphics;
 
 import org.chess.pieces.*;
 
+import java.lang.annotation.ElementType;
 import java.util.List;
-
 import javax.swing.SwingWorker;
 
 import org.chess.dataTypes.*;
@@ -16,7 +16,8 @@ public class ChessController {
     private End gameState;
     private Colour currentPlayerColor;
     private Colour playerColor;
-    private boolean isAgentTurn = false;
+    private boolean isAgentTurn;
+    private boolean isAgentMoving = false;
     private String selectedPromotion; 
 
     public ChessController(ChessView view, ChessModel model) {
@@ -25,21 +26,21 @@ public class ChessController {
         view.setController(this);
     }
 
-    public void startGame(String mode, String color, String difficulty) {
-        
+        public void startGame(String mode, String color, String difficulty) {
+
+        model.setDifficulty(switch (difficulty) {
+            case "EASY" -> 2;
+            case "MEDIUM", "NORMAL" -> 3;
+            case "HARD" -> 4;
+            default -> 3;
+        });
+
         model.choosePlayerColors(color);
         switch (mode) {
             case "Human vs AI" -> model.setHumanVSAgent();
             case "Human vs Human" -> model.setHumanVSHuman();
             default -> model.setHumanVSAgent();
         }
-
-        model.setDifficulty(switch (difficulty) {
-            case "EASY" -> 3;
-            case "MEDIUM" -> 4;
-            case "HARD" -> 12;
-            default -> 3;
-        });
 
         model.startMatch();
         selectedMode = mode;
@@ -50,13 +51,11 @@ public class ChessController {
         isAgentTurn = model.isAgentTurn();
         if (currentPlayerColor == Colour.WHITE) {
             view.setPlayerTurn("WHITE");
-        }
-        else
+        } else
             view.setPlayerTurn("BLACK");
-            
+
         view.gameScreen();
         view.displayBoard(board);
-        isAgentTurn = model.isAgentTurn();
         if (isAgentTurn) {
             agentTurn();
         }
@@ -121,8 +120,9 @@ public class ChessController {
                 view.setPlayerTurn("BLACK");
             }
             view.displayBoard(board);
+
             isAgentTurn = model.isAgentTurn();
-            if(isAgentTurn){
+            if (isAgentTurn) {
                 agentTurn();
             }
         }
@@ -148,21 +148,28 @@ public class ChessController {
         }        
     }
 
-    public void agentTurn() {
+    public void agentTurn(){
         if (gameState != End.IN_PROGRESS) return;
-        new SwingWorker<Move, Void>() {
+        if (isAgentMoving) return;
+
+        isAgentMoving = true;
+
+        SwingWorker<Move, Void> worker = new SwingWorker<Move, Void>() {
             @Override
-            protected Move doInBackground() {
+            protected Move doInBackground() throws Exception {
                 return model.agentMove();
             }
+
             @Override
             protected void done() {
                 try {
                     Move move = get();
                     if (move != Move.INVALID) {
                         model.updateGameStateAfterMove(move);
+
                         currentPlayerColor = model.getCurrentPlayerColour();
                         gameState = model.isCheckmateOrStalemate();
+
                         if (gameState == End.CHECKMATE) {
                             view.displayBoard(board);
                             view.gameover("CHECKMATE");
@@ -172,17 +179,27 @@ public class ChessController {
                             view.gameover("STALEMATE");
                             return;
                         }
-                        if (currentPlayerColor == Colour.WHITE)
+
+                        if (currentPlayerColor == Colour.WHITE) {
                             view.setPlayerTurn("WHITE");
-                        else
+                        } else {
                             view.setPlayerTurn("BLACK");
+                        }
                         view.displayBoard(board);
+
+                        isAgentTurn = model.isAgentTurn();
+                        if (isAgentTurn) {
+                            agentTurn();
+                        }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
+                } finally {
+                    isAgentMoving = false;
                 }
             }
-        }.execute();
+        };
+        worker.execute();
     }
 
 
