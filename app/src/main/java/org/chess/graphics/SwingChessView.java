@@ -227,7 +227,11 @@ public class SwingChessView  implements ChessView {
     }
 
     private void displayBlack(Piece[][] board){
-        for(int row = 0; row< 8; row++){
+        
+    }
+
+    private void displayWhite(Piece[][] board){
+                for(int row = 0; row< 8; row++){
             for(int column = 0; column< 8; column++){
 
                 if(board[row][column] instanceof Pawn){
@@ -283,10 +287,6 @@ public class SwingChessView  implements ChessView {
                 squares[row][column].setFont(squares[row][column].getFont().deriveFont(40f));
             }   
         }
-    }
-
-    private void displayWhite(Piece[][] board){
-
     }
 
 
