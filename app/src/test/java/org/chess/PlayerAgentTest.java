@@ -111,6 +111,19 @@ public class PlayerAgentTest {
         shallow.decideMove();
         assertEquals(before, boardSnapshot(board));
     }
+
+    @Test
+    public void testDecideMove_doesNotPermanentlyLoseCastlingRights() {
+        assertFalse(((King) board.getPiece(new Position(0, 4))).getHasMoved());
+        assertFalse(((Rook) board.getPiece(new Position(0, 0))).getHasMoved());
+        assertFalse(((Rook) board.getPiece(new Position(0, 7))).getHasMoved());
+
+        agentWhite.decideMove();
+
+        assertFalse(((King) board.getPiece(new Position(0, 4))).getHasMoved());
+        assertFalse(((Rook) board.getPiece(new Position(0, 0))).getHasMoved());
+        assertFalse(((Rook) board.getPiece(new Position(0, 7))).getHasMoved());
+    }
  
     @Test
     public void testDecideMove_depth3_doesNotAlterBoard() {

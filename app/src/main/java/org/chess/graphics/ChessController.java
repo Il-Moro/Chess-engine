@@ -2,7 +2,6 @@ package org.chess.graphics;
 
 import org.chess.pieces.*;
 
-import java.lang.annotation.ElementType;
 import java.util.List;
 
 import javax.swing.SwingWorker;

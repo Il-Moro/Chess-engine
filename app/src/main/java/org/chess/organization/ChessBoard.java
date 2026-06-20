@@ -476,11 +476,17 @@ public class ChessBoard {
 
         // caso generale
         Piece eatenPiece = this.getPiece(to);
+        boolean originallyMoved = false;
+        if (piece instanceof King k) {
+            originallyMoved = k.getHasMoved();
+        } else if (piece instanceof Rook r) {
+            originallyMoved = r.getHasMoved();
+        }
         piece.setPosition(to);
         this.setNull(from);
         this.setPiece(piece);
         updateAfterMove(piece, from);
-        return new UndoInfo(piece, from, to, eatenPiece, SpecialMoves.NONE);
+        return new UndoInfo(piece, from, to, eatenPiece, SpecialMoves.NONE, originallyMoved);
     }
 
     private UndoInfo physicalMovementCastling(Piece piece, Position from, Position to){
