@@ -284,8 +284,7 @@ public class SwingChessView  implements ChessView {
                         squares[row][column].setText("♖");
 
                 }
-                Font currentFont = squares[row][column].getFont();
-                squares[row][column].setFont(currentFont.deriveFont(48f));
+                squares[row][column].setFont(new Font("DejaVu Sans", Font.PLAIN, 48));
             }   
         }
     }
