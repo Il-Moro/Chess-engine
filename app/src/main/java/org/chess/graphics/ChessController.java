@@ -56,16 +56,13 @@ public class ChessController {
     }
 
     public void onSquareSelected(int row, int col) {
-        System.out.println("OK");
-        // Prendi i movimenti legali basati sulla riga corretta del modello
+
         List<Move> moves = model.getLegalMovesForPiece(board[row][col]);
 
         for (Move m : moves) {
             int targetRow = m.to().row();
             int targetCol = m.to().column();
 
-            // Se l'utente sta giocando come BIANCO, la View è specchiata.
-            // Dobbiamo convertire la riga del modello in riga grafica per la View.
             if (currentPlayerColor == Colour.WHITE) {
                 targetRow = 7 - targetRow;
             }
@@ -108,7 +105,23 @@ public class ChessController {
     }
 
     public void onPromotion(String promotion){
-        selectedPromotion = promotion;        
+        switch (promotion) {
+            case "Rook":
+                selectedPromotion = "R";
+                break;
+            
+            case "Bishop":
+                selectedPromotion = "B";
+                break;
+
+            case "Knight":
+                selectedPromotion = "K";
+                break;
+        
+            default:
+                selectedPromotion = "Q";
+                break;
+        }        
     }
 
     public void agentTurn(){

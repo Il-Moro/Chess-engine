@@ -425,17 +425,19 @@ public class SwingChessView  implements ChessView {
 
     @Override
     public void highlightSquares(int row, int col){
-
-        squares[row][col].setBackground(new Color(255, 215, 0));
+        squares[row][col].setBackground(new Color(100, 180, 255));
+        squares[row][col].setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+        squares[row][col].setBorderPainted(true);
     }
 
     @Override
     public void clearHighlights(int row, int col) {
         if ((row + col) % 2 == 0) {
             squares[row][col].setBackground(Color.WHITE);
-        }
-        else
+        } else {
             squares[row][col].setBackground(new Color(100, 150, 80));
+        }
+        squares[row][col].setBorderPainted(false);
     }
 
     @Override
@@ -447,7 +449,7 @@ public class SwingChessView  implements ChessView {
         dialog.setLocationRelativeTo(frame);
         dialog.setUndecorated(true);
 
-        String[] pieces = {"Q", "R", "B", "K"};
+        String[] pieces = {"Queen", "Rook", "Bishop", "Knight"};
 
         for (String piece : pieces) {
             String iconName = colour.equals("WHITE") 
