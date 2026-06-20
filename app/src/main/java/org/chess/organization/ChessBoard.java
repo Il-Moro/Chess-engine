@@ -831,7 +831,21 @@ public class ChessBoard {
     }
 
     private void fillControlMap(Piece piece) {
-        Set<Position> set = piece.getPotentialMoves(this);
+        Set<Position> set;
+
+        if (piece instanceof Pawn p) {
+            // pedone: controlla solo in diagonale
+            set = new HashSet<>();
+            int dir = (p.getColour() == Colour.WHITE) ? 1 : -1;
+            int pieceRow = p.getPosition().row();
+            int pieceColumn = p.getPosition().column();
+            if (Position.isInsideBounds(pieceRow + dir, pieceColumn - 1))
+                set.add(new Position(pieceRow + dir, pieceColumn - 1));
+            if (Position.isInsideBounds(pieceRow + dir, pieceColumn + 1))
+                set.add(new Position(pieceRow + dir, pieceColumn + 1));
+        } else {
+            set = piece.getPotentialMoves(this);
+        }
 
         if (piece.getColour() == (Colour.WHITE)) {
             for (Position s : set) {
