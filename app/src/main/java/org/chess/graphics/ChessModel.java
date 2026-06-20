@@ -1,5 +1,9 @@
 package org.chess.graphics;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
 import org.chess.dataTypes.*;
 import org.chess.pieces.*;
 import org.chess.organization.*;
@@ -12,6 +16,7 @@ public class ChessModel {
     private Player player2 = null;
     private Colour playerColor;
     private Colour opponentColor;
+    private List <Move> legalMoves;
     private int DEPTH = 3;
 
     public ChessModel() {}
@@ -119,4 +124,17 @@ public class ChessModel {
         return match.getCurrentPlayerTurn() instanceof PlayerAgent;
     }
 
+    public List<Move> getLegalMovesForPiece(Piece selectedPiece){
+        legalMoves=new ArrayList<>();
+        
+        Set<Position> potentialMoves=selectedPiece.getPotentialMoves(board);
+        
+        for(Position m:potentialMoves){
+            if (board.isMoveLegal(selectedPiece.getPosition(), m)) {
+                legalMoves.add(new Move(selectedPiece,m));
+            }
+        }
+
+        return legalMoves;
+    }
 }

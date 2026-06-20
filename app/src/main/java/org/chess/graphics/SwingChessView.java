@@ -8,6 +8,7 @@ import java.awt.*;
 
 import java.net.URL;
 
+
 public class SwingChessView  implements ChessView {
         
     private ChessController controller;
@@ -16,9 +17,13 @@ public class SwingChessView  implements ChessView {
     private String selectedMode="";
     private String selectedColor="";
     private String selectedDifficulty ="";
+    private String playerTurn = selectedColor;
     private boolean humanVsAi = false;
     private CardLayout cardLayout = new CardLayout();
     private JButton[][] squares = new JButton[8][8];
+    private boolean selectedPiece = false;
+    private int selectedRow = -1;
+    private int selectedColumn = -1;
 
     public SwingChessView() {
         initFrame();
@@ -198,23 +203,69 @@ public class SwingChessView  implements ChessView {
         frame.add(boardPanel);
         for (int row = 0; row < 8; row++) {
             for (int col = 0; col < 8; col++) {
+
+                final int r = row;
+                final int c = col;
+
                 squares[row][col] = new JButton();
                 squares[row][col].setPreferredSize(new Dimension(60, 60));
                 
                 if ((row + col) % 2 == 0) {
                     squares[row][col].setBackground(Color.WHITE);
+                    squares[row][col].setName("WHITE");
                 } else {
                     squares[row][col].setBackground(new Color(100, 150, 80));
+                    squares[row][col].setName("BLACK");
                 }
 
                 squares[row][col].setOpaque(true);
                 squares[row][col].setBorderPainted(false);
-                //Action listener
                 boardPanel.add(squares[row][col]);
+                squares[r][c].addActionListener(e -> handleSquareClick(r, c));
             }
         }
         setupPanel.add(boardPanel,"Chessboard");
         cardLayout.show(setupPanel, "Chessboard");
+    }
+
+    private void handleSquareClick(int row, int col) {
+        if(selectedMode.equals("Human vs AI"))
+            if(!playerTurn.equals(selectedColor))
+                controller.agentTurn();
+
+        if (!selectedPiece) {
+            if (squares[row][col].getIcon() == null) return;
+            if (!squares[row][col].getName().equals(playerTurn)) return;
+            selectedPiece = true;
+            selectedRow = row;
+            selectedColumn = col;
+            controller.onSquareSelected(row, col);
+
+        } else {
+            if (row == selectedRow && col == selectedColumn) {
+                deselect();
+                return;
+            }
+            if (squares[row][col].getIcon() != null &&
+                squares[row][col].getName().equals(playerTurn)) {
+                deselect();
+                selectedPiece = true;
+                selectedRow = row;
+                selectedColumn = col;
+                controller.onSquareSelected(row, col);
+                return;
+            }
+
+            controller.onMoveAttempt(selectedRow, selectedColumn, row, col);
+            deselect();
+        }
+    }
+
+    private void deselect() {
+        selectedPiece = false;
+        selectedRow = -1;
+        selectedColumn = -1;
+        controller.clearAllHighlights();
     }
 
 
@@ -268,7 +319,6 @@ public class SwingChessView  implements ChessView {
                 }
 
                 if(icon != null){
-                    System.out.println(icon.getIconWidth());
                     squares[row][column].setIcon(icon);
                 }
             }   
@@ -316,10 +366,17 @@ public class SwingChessView  implements ChessView {
 
                 if(icon != null){
                     squares[row][column].setIcon(icon);
+                    if(board[modelRow][column].getColour() == Colour.WHITE)
+                        squares[row][column].setName("WHITE");
+                    else
+                        squares[row][column].setName("BLACK");
                 }
+
             }
         }
     }
+
+
 
     private ImageIcon loadIcon(String fileName) {
         URL url = getClass().getResource("/org/chess/graphics/png/" + fileName);
@@ -339,10 +396,19 @@ public class SwingChessView  implements ChessView {
 
 
     @Override
-    public void highlightSquare(int row, int col, boolean highlight) {}
+    public void highlightSquares(int row, int col){
+
+        squares[row][col].setBackground(new Color(100, 150, 80));
+    }
 
     @Override
-    public void clearHighlights() {}
+    public void clearHighlights(int row, int col) {
+        if ((row + col) % 2 == 0) {
+            squares[row][col].setBackground(Color.WHITE);
+        }
+        else
+            squares[row][col].setBackground(new Color(100, 150, 80));
+    }
 
     @Override
     public void setStatus(String message) {
@@ -353,7 +419,13 @@ public class SwingChessView  implements ChessView {
     public void gameover(String result) {}
 
     @Override
+    public void setPlayerTurn(String playerTurn){
+        this.playerTurn=playerTurn;
+    }
+
+    @Override
     public void show() {
         frame.setVisible(true);
     }
+
 }

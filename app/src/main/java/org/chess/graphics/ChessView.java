@@ -12,13 +12,16 @@ public interface ChessView {
 
     void displayBoard(Piece[][] board);
 
-    void highlightSquare(int row, int col, boolean highlight);
+    void highlightSquares(int row, int col);
 
-    void clearHighlights();
+    void clearHighlights(int row, int col);
 
     void setStatus(String message);
 
     void gameover(String result);
 
+    void setPlayerTurn(String playerTurn);
+
     void show();
+
 }
