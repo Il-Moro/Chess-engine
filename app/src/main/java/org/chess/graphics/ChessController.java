@@ -14,6 +14,7 @@ public class ChessController {
     private Piece[][] board;
     private End gameState;
     private Colour currentPlayerColor;
+    private Colour playerColor;
     private boolean isAgentTurn;
     private String selectedPromotion; 
 
@@ -44,6 +45,7 @@ public class ChessController {
         board = model.getBoardAsArray();
         gameState = model.getGameState();
         currentPlayerColor = model.getCurrentPlayerColour();
+        playerColor = currentPlayerColor;
         isAgentTurn = model.isAgentTurn();
         if (currentPlayerColor == Colour.WHITE) {
             view.setPlayerTurn("WHITE");
@@ -63,7 +65,7 @@ public class ChessController {
             int targetRow = m.to().row();
             int targetCol = m.to().column();
 
-            if (currentPlayerColor == Colour.WHITE) {
+            if (playerColor == Colour.WHITE) {
                 targetRow = 7 - targetRow;
             }
 
@@ -80,24 +82,37 @@ public class ChessController {
     }
 
     public void onMoveAttempt(int fromRow, int fromCol, int toRow, int toCol) {
-        Move move = model.humanMove(board[fromRow][fromCol],new Position(toRow,toCol));
-        if(move != Move.INVALID){
-            if(model.isPromotionMove(move)){
-                if(currentPlayerColor == Colour.WHITE){
+        if (gameState != End.IN_PROGRESS) return;
+
+        Move move = model.humanMove(board[fromRow][fromCol], new Position(toRow, toCol));
+        if (move != Move.INVALID) {
+            if (model.isPromotionMove(move)) {
+                if (currentPlayerColor == Colour.WHITE) {
                     view.showPromotionDialog("WHITE", toRow, toCol);
-                }
-                else
+                } else
                     view.showPromotionDialog("BLACK", toRow, toCol);
-                
-                model.updateGameStateAfterMove(move,selectedPromotion);
-            }
-            else{
+
+                model.updateGameStateAfterMove(move, selectedPromotion);
+            } else {
                 model.updateGameStateAfterMove(move);
             }
-            if(model.getCurrentPlayerColour() == Colour.WHITE){
-                view.setPlayerTurn("WHITE");
+
+            currentPlayerColor = model.getCurrentPlayerColour();
+            gameState = model.isCheckmateOrStalemate();
+
+            if (gameState == End.CHECKMATE) {
+                view.displayBoard(board);
+                view.gameover("CHECKMATE");
+                return;
+            } else if (gameState == End.STALEMATE) {
+                view.displayBoard(board);
+                view.gameover("STALEMATE");
+                return;
             }
-            else{
+
+            if (currentPlayerColor == Colour.WHITE) {
+                view.setPlayerTurn("WHITE");
+            } else {
                 view.setPlayerTurn("BLACK");
             }
             view.displayBoard(board);

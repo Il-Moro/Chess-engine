@@ -470,7 +470,34 @@ public class SwingChessView  implements ChessView {
 
     @Override
     public void gameover(String result) {
+        String message = result.equals("CHECKMATE") ? "Scacco Matto!" : "Stallo!";
 
+        JDialog dialog = new JDialog(frame, "Fine Partita", true);
+        dialog.setLayout(new BorderLayout(10, 10));
+        dialog.setSize(350, 160);
+        dialog.setLocationRelativeTo(frame);
+        dialog.setUndecorated(true);
+
+        JLabel label = new JLabel(message, SwingConstants.CENTER);
+        label.setFont(new Font("Arial", Font.BOLD, 32));
+        label.setForeground(Color.WHITE);
+        label.setBorder(BorderFactory.createEmptyBorder(20, 20, 10, 20));
+
+        JButton btn = new JButton("Chiudi");
+        buttonStyling(btn);
+        btn.addActionListener(e -> {
+            dialog.dispose();
+            System.exit(0);
+        });
+
+        JPanel btnPanel = new JPanel();
+        btnPanel.setBackground(new Color(52, 73, 94));
+        btnPanel.add(btn);
+
+        dialog.getContentPane().setBackground(new Color(52, 73, 94));
+        dialog.add(label, BorderLayout.CENTER);
+        dialog.add(btnPanel, BorderLayout.SOUTH);
+        dialog.setVisible(true);
     }
 
     @Override
