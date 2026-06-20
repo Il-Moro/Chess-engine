@@ -56,19 +56,8 @@ public class SwingChessView  implements ChessView {
         JButton humanVsHuman = new JButton("Human vs Human");
 
         // Styling
-        humanVsAi.setFont(new Font("Segoe UI", Font.BOLD, 20));
-        humanVsAi.setBackground(new Color(52, 73, 94));
-        humanVsAi.setForeground(Color.WHITE);
-        humanVsAi.setFocusPainted(false);
-        humanVsAi.setBorder(BorderFactory.createEmptyBorder(15, 30, 15, 30));
-        humanVsAi.setCursor(new Cursor(Cursor.HAND_CURSOR));
-
-        humanVsHuman.setFont(new Font("Segoe UI", Font.BOLD, 20));
-        humanVsHuman.setBackground(new Color(52, 73, 94));
-        humanVsHuman.setForeground(Color.WHITE);
-        humanVsHuman.setFocusPainted(false);
-        humanVsHuman.setBorder(BorderFactory.createEmptyBorder(15, 30, 15, 30));
-        humanVsHuman.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        buttonStyling(humanVsAi);
+        buttonStyling(humanVsHuman);
 
 
 
@@ -102,19 +91,9 @@ public class SwingChessView  implements ChessView {
         JButton black = new JButton("BLACK");
 
         // Styling
-        white.setFont(new Font("Segoe UI", Font.BOLD, 20));
-        white.setBackground(new Color(52, 73, 94));
-        white.setForeground(Color.WHITE);
-        white.setFocusPainted(false);
-        white.setBorder(BorderFactory.createEmptyBorder(15, 30, 15, 30));
-        white.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
-        black.setFont(new Font("Segoe UI", Font.BOLD, 20));
-        black.setBackground(new Color(52, 73, 94));
-        black.setForeground(Color.WHITE);
-        black.setFocusPainted(false);
-        black.setBorder(BorderFactory.createEmptyBorder(15, 30, 15, 30));
-        black.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        buttonStyling(white);
+        buttonStyling(black);
 
         colorPanel.add(white);
         colorPanel.add(black);
@@ -182,26 +161,9 @@ public class SwingChessView  implements ChessView {
 
         // Styling
 
-        easy.setFont(new Font("Segoe UI", Font.BOLD, 20));
-        easy.setBackground(new Color(52, 73, 94));
-        easy.setForeground(Color.WHITE);
-        easy.setFocusPainted(false);
-        easy.setBorder(BorderFactory.createEmptyBorder(15, 30, 15, 30));
-        easy.setCursor(new Cursor(Cursor.HAND_CURSOR));
-
-        normal.setFont(new Font("Segoe UI", Font.BOLD, 20));
-        normal.setBackground(new Color(52, 73, 94));
-        normal.setForeground(Color.WHITE);
-        normal.setFocusPainted(false);
-        normal.setBorder(BorderFactory.createEmptyBorder(15, 30, 15, 30));
-        normal.setCursor(new Cursor(Cursor.HAND_CURSOR));
-
-        hard.setFont(new Font("Segoe UI", Font.BOLD, 20));
-        hard.setBackground(new Color(52, 73, 94));
-        hard.setForeground(Color.WHITE);
-        hard.setFocusPainted(false);
-        hard.setBorder(BorderFactory.createEmptyBorder(15, 30, 15, 30));
-        hard.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        buttonStyling(easy);
+        buttonStyling(normal);
+        buttonStyling(hard);
 
         setupPanel.add(modePanelContainer, "ModeSelection");
         setupPanel.add(colorPanelContainer, "Color selection");
@@ -211,6 +173,15 @@ public class SwingChessView  implements ChessView {
 
         frame.revalidate();
         frame.repaint();
+    }
+
+    private void buttonStyling(JButton button){
+        button.setFont(new Font("Segoe UI", Font.BOLD, 20));
+        button.setBackground(new Color(52, 73, 94));
+        button.setForeground(Color.WHITE);
+        button.setFocusPainted(false);
+        button.setBorder(BorderFactory.createEmptyBorder(15, 30, 15, 30));
+        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
     }
 
     @Override
