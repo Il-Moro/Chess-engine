@@ -4,6 +4,8 @@ import org.chess.pieces.Piece;
 
 public interface ChessView {
 
+    void setController(ChessController controller);
+
     void setupScreen();
 
     void gameScreen();

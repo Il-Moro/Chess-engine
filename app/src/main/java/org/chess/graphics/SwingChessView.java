@@ -1,5 +1,6 @@
 package org.chess.graphics;
 
+import org.chess.dataTypes.Colour;
 import org.chess.pieces.*;
 
 import javax.swing.*;
@@ -10,10 +11,12 @@ public class SwingChessView  implements ChessView {
     private ChessController controller;
     private JFrame frame;
     private JPanel setupPanel;
-    private String selectedMode;
-    private String selectedColor;
-    private String selectedDifficulty;
+    private String selectedMode="";
+    private String selectedColor="";
+    private String selectedDifficulty ="";
     private boolean humanVsAi = false;
+    private CardLayout cardLayout = new CardLayout();
+    private JButton[][] squares = new JButton[8][8];
 
     public SwingChessView() {
         initFrame();
@@ -22,9 +25,6 @@ public class SwingChessView  implements ChessView {
     }
 
 
-    public void setController(ChessController controller) {
-        this.controller = controller;
-    }
 
     private void initFrame() {
         frame = new JFrame("Chess Game");
@@ -34,11 +34,16 @@ public class SwingChessView  implements ChessView {
         frame.setLayout(new BorderLayout());
     }
 
+    
+    @Override
+    public void setController(ChessController controller) {
+        this.controller = controller;
+    }
+
 
     @Override
     public void setupScreen() {
         
-        CardLayout cardLayout = new CardLayout();
         setupPanel = new JPanel(cardLayout);
         setupPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         
@@ -176,7 +181,7 @@ public class SwingChessView  implements ChessView {
     }
 
     private void buttonStyling(JButton button){
-        button.setFont(new Font("Segoe UI", Font.BOLD, 20));
+        button.setFont(new Font("Arial", Font.BOLD, 20));
         button.setBackground(new Color(52, 73, 94));
         button.setForeground(Color.WHITE);
         button.setFocusPainted(false);
@@ -185,14 +190,106 @@ public class SwingChessView  implements ChessView {
     }
 
     @Override
-    public void gameScreen() { 
+    public void gameScreen() {
+        JPanel boardPanel = new JPanel(new GridLayout(8, 8));
+
+        frame.add(boardPanel);
+        for (int row = 0; row < 8; row++) {
+            for (int col = 0; col < 8; col++) {
+                squares[row][col] = new JButton();
+                squares[row][col].setPreferredSize(new Dimension(60, 60));
+                
+                if ((row + col) % 2 == 0) {
+                    squares[row][col].setBackground(Color.WHITE);
+                } else {
+                    squares[row][col].setBackground(new Color(100, 150, 80));
+                }
+
+                squares[row][col].setOpaque(true);
+                squares[row][col].setBorderPainted(false);
+                //Action listener
+                boardPanel.add(squares[row][col]);
+            }
+        }
+        setupPanel.add(boardPanel,"Chessboard");
+        cardLayout.show(setupPanel, "Chessboard");
     }
 
 
     @Override
     public void displayBoard(Piece[][] board) {
-        
+        if (selectedColor.equals("BLACK")) {
+            this.displayBlack(board);
+        }
+        else{
+            this.displayWhite(board);
+        }
     }
+
+    private void displayBlack(Piece[][] board){
+        for(int row = 0; row< 8; row++){
+            for(int column = 0; column< 8; column++){
+
+                if(board[row][column] instanceof Pawn){
+                    if(board[row][column].getColour() == Colour.WHITE){
+                        squares[row][column].setText("♟");
+                    }
+                    else
+                        squares[row][column].setText("♙");
+                }
+                else if(board[row][column] instanceof Bishop){
+
+                    if(board[row][column].getColour() == Colour.WHITE){
+                        squares[row][column].setText("♝");
+                    }
+                    else
+                        squares[row][column].setText("♗");
+
+                }
+                else if(board[row][column] instanceof King){
+
+                    if(board[row][column].getColour() == Colour.WHITE){
+                        squares[row][column].setText("♚");
+                    }
+                    else
+                        squares[row][column].setText("♔");
+                }
+                else if(board[row][column] instanceof Knight){
+
+                    if(board[row][column].getColour() == Colour.WHITE){
+                        squares[row][column].setText("♞");
+                    }
+                    else
+                        squares[row][column].setText("♘");
+
+                }
+                else if(board[row][column] instanceof Queen){
+
+                    if(board[row][column].getColour() == Colour.WHITE){
+                        squares[row][column].setText("♛");
+                    }
+                    else
+                        squares[row][column].setText("♕");
+                }
+                else if(board[row][column] instanceof Rook){
+
+                    if(board[row][column].getColour() == Colour.WHITE){
+                        squares[row][column].setText("♜");
+                    }
+                    else
+                        squares[row][column].setText("♖");
+
+                }
+                squares[row][column].setFont(squares[row][column].getFont().deriveFont(40f));
+            }   
+        }
+    }
+
+    private void displayWhite(Piece[][] board){
+
+    }
+
+
 
     @Override
     public void highlightSquare(int row, int col, boolean highlight) {}

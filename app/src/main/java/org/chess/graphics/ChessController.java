@@ -15,6 +15,7 @@ public class ChessController {
     public ChessController(ChessView view, ChessModel model) {
         this.view = view;
         this.model = model;
+        view.setController(this);
     }
 
     public void startGame(String mode, String color, String difficulty) {
@@ -43,5 +44,7 @@ public class ChessController {
         currentPlayerColor = model.getCurrentPlayerColour();
         isAgentTurn = model.isAgentTurn();
 
+        view.gameScreen();
+        view.displayBoard(board);
     }
 }
