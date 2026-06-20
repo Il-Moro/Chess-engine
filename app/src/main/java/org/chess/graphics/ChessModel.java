@@ -60,16 +60,24 @@ public class ChessModel {
     }
 
     public Move agentMove(){
+        Move move = Move.INVALID;
         if(player1 instanceof PlayerAgent){
-            return player1.decideMove();
+            move = player1.decideMove();
         } else if(player2 instanceof PlayerAgent){
-            return player2.decideMove();
+            move = player2.decideMove();
         }
-        return Move.INVALID;
-     }
+        if(move != Move.INVALID) {
+            board.physicalMovement(move.selectedPiece().getPosition(), move.to());
+        }
+        return move;
+    }
 
     public void startMatch(){
-        this.match = new Match(player1, player2);
+        if (player1.getColour() == Colour.WHITE) {
+            this.match = new Match(player1, player2);
+        } else {
+            this.match = new Match(player2, player1);
+        }
     }
 
     public End isCheckmateOrStalemate(){

@@ -5,6 +5,8 @@ import org.chess.pieces.*;
 import java.lang.annotation.ElementType;
 import java.util.List;
 
+import javax.swing.SwingWorker;
+
 import org.chess.dataTypes.*;
 
 public class ChessController {
@@ -15,7 +17,7 @@ public class ChessController {
     private End gameState;
     private Colour currentPlayerColor;
     private Colour playerColor;
-    private boolean isAgentTurn;
+    private boolean isAgentTurn = false;
     private String selectedPromotion; 
 
     public ChessController(ChessView view, ChessModel model) {
@@ -36,7 +38,7 @@ public class ChessController {
         model.setDifficulty(switch (difficulty) {
             case "EASY" -> 3;
             case "MEDIUM" -> 4;
-            case "HARD" -> 5;
+            case "HARD" -> 12;
             default -> 3;
         });
 
@@ -45,7 +47,7 @@ public class ChessController {
         board = model.getBoardAsArray();
         gameState = model.getGameState();
         currentPlayerColor = model.getCurrentPlayerColour();
-        playerColor = currentPlayerColor;
+        playerColor = color.equals("BLACK") ? Colour.BLACK : Colour.WHITE;
         isAgentTurn = model.isAgentTurn();
         if (currentPlayerColor == Colour.WHITE) {
             view.setPlayerTurn("WHITE");
@@ -55,6 +57,10 @@ public class ChessController {
             
         view.gameScreen();
         view.displayBoard(board);
+        isAgentTurn = model.isAgentTurn();
+        if (isAgentTurn) {
+            agentTurn();
+        }
     }
 
     public void onSquareSelected(int row, int col) {
@@ -116,6 +122,10 @@ public class ChessController {
                 view.setPlayerTurn("BLACK");
             }
             view.displayBoard(board);
+            isAgentTurn = model.isAgentTurn();
+            if(isAgentTurn){
+                agentTurn();
+            }
         }
     }
 
@@ -139,7 +149,41 @@ public class ChessController {
         }        
     }
 
-    public void agentTurn(){
+    public void agentTurn() {
+        if (gameState != End.IN_PROGRESS) return;
+        new SwingWorker<Move, Void>() {
+            @Override
+            protected Move doInBackground() {
+                return model.agentMove();
+            }
+            @Override
+            protected void done() {
+                try {
+                    Move move = get();
+                    if (move != Move.INVALID) {
+                        model.updateGameStateAfterMove(move);
+                        currentPlayerColor = model.getCurrentPlayerColour();
+                        gameState = model.isCheckmateOrStalemate();
+                        if (gameState == End.CHECKMATE) {
+                            view.displayBoard(board);
+                            view.gameover("CHECKMATE");
+                            return;
+                        } else if (gameState == End.STALEMATE) {
+                            view.displayBoard(board);
+                            view.gameover("STALEMATE");
+                            return;
+                        }
+                        if (currentPlayerColor == Colour.WHITE)
+                            view.setPlayerTurn("WHITE");
+                        else
+                            view.setPlayerTurn("BLACK");
+                        view.displayBoard(board);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }.execute();
     }
 
 
