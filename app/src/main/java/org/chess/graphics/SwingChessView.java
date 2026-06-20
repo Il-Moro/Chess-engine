@@ -411,8 +411,31 @@ public class SwingChessView  implements ChessView {
     }
 
     @Override
-    public void setStatus(String message) {
+    public void showPromotionDialog(String colour, int row, int col) {
 
+        JDialog dialog = new JDialog(frame, "Promozione", true);
+        dialog.setLayout(new GridLayout(1, 4, 10, 10));
+        dialog.setSize(400, 120);
+        dialog.setLocationRelativeTo(frame);
+        dialog.setUndecorated(true);
+
+        String[] pieces = {"Q", "R", "B", "K"};
+
+        for (String piece : pieces) {
+            String iconName = colour.equals("WHITE") 
+                ? "white" + piece + ".png" 
+                : "black" + piece + ".png";
+
+            JButton btn = new JButton(loadIcon(iconName));
+            btn.setName(piece);
+            buttonStyling(btn);
+            btn.addActionListener(e -> {
+                controller.onPromotion(btn.getName());
+                dialog.dispose();
+            });
+            dialog.add(btn);
+        }
+        dialog.setVisible(true);
     }
 
     @Override

@@ -16,7 +16,7 @@ public interface ChessView {
 
     void clearHighlights(int row, int col);
 
-    void setStatus(String message);
+    void showPromotionDialog(String colour, int row, int col);
 
     void gameover(String result);
 

@@ -14,6 +14,7 @@ public class ChessController {
     private End gameState;
     private Colour currentPlayerColor;
     private boolean isAgentTurn;
+    private String selectedPromotion; 
 
     public ChessController(ChessView view, ChessModel model) {
         this.view = view;
@@ -52,6 +53,7 @@ public class ChessController {
     }
 
     public void onSquareSelected(int row, int col) {
+        System.out.println("OK");
         List <Move> moves = model.getLegalMovesForPiece(board[row][col]);
         for(Move m : moves){
             view.highlightSquares(m.to().row(),m.to().column());
@@ -59,6 +61,7 @@ public class ChessController {
     }
 
     public void clearAllHighlights() {
+        System.out.println("OK");
         for (int row = 0; row < 8; row++) {
             for (int col = 0; col < 8; col++) {
                 view.clearHighlights(row, col);
@@ -67,16 +70,32 @@ public class ChessController {
     }
 
     public void onMoveAttempt(int fromRow, int fromCol, int toRow, int toCol) {
+        System.out.println("OK");
         Move move = model.humanMove(board[fromRow][fromCol],new Position(toRow,toCol));
         if(move != Move.INVALID){
+            if(model.isPromotionMove(move)){
+                if(currentPlayerColor == Colour.WHITE){
+                    view.showPromotionDialog("WHITE", toRow, toCol);
+                }
+                else
+                    view.showPromotionDialog("BLACK", toRow, toCol);
+                
+                model.updateGameStateAfterMove(move,selectedPromotion);
+            }
             model.updateGameStateAfterMove(move);
+            if(model.getCurrentPlayerColour() == Colour.WHITE)
+                view.setPlayerTurn("WHITE");
+            else
+                view.setPlayerTurn("BLACK");
+            view.displayBoard(board);
         }
+    }
 
-
+    public void onPromotion(String promotion){
+        selectedPromotion = promotion;        
     }
 
     public void agentTurn(){
-        
     }
 
 
