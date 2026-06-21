@@ -7,7 +7,7 @@ import java.util.List;
 public class Match {
     private final Player whitePlayer;
     private final Player blackPlayer;
-    private List<Move> moveHistory;
+    //Future feature  -> private List<Move> moveHistory;
     private Player currentPlayerTurn;
     private End state;
 
@@ -18,7 +18,7 @@ public class Match {
         this.blackPlayer = black;
         this.currentPlayerTurn = white;          
         this.state = End.IN_PROGRESS;
-        this.moveHistory = new ArrayList<>();
+        // this.moveHistory = new ArrayList<>();
     }
 
     // switches the current player turn
@@ -37,14 +37,22 @@ public class Match {
     }
 
     // adds a move to the move history
-    public void updateMoveHistory(Move move) {
-        moveHistory.add(move);
-    }
+    /*
+        Future feature
+
+        public void updateMoveHistory(Move move) {
+            moveHistory.add(move);
+        }
+     */
 
     // returns the move history
+    /*
+    Future feature
+    
     public List<Move> getMoveHistory() {
         return moveHistory;
     }
+     */
 
     // returns the current player turn
     public Player getCurrentPlayerTurn() {

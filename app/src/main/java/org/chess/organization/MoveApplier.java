@@ -120,6 +120,20 @@ public class MoveApplier {
                 else {
                     board.setNull(undo.to());
                 }
+
+                if (piece instanceof King kingPiece) {
+                    if (undo.hasMoved()) {
+                        kingPiece.setHasMovedTrue();
+                    } else {
+                        kingPiece.setHasMovedFalse();
+                    }
+                } else if (piece instanceof Rook rookPiece) {
+                    if (undo.hasMoved()) {
+                        rookPiece.setHasMovedTrue();
+                    } else {
+                        rookPiece.setHasMovedFalse();
+                    }
+                }
                 break;
         }
         // Ricalcolo Pin e del control Maps
@@ -250,18 +264,18 @@ public class MoveApplier {
     }
 
     private static UndoInfo physicalMovementGeneralCase(ChessBoard board, Piece piece, Piece eatenPiece, Position from, Position to){
-        boolean originalHasMoved = false;
+        boolean originallyMoved = false;
         if (piece instanceof King k) {
-            originalHasMoved = k.getHasMoved();
+            originallyMoved = k.getHasMoved();
         } else if (piece instanceof Rook r) {
-            originalHasMoved = r.getHasMoved();
+            originallyMoved = r.getHasMoved();
         }
 
         piece.setPosition(to);
         board.setNull(from);
         board.setPiece(piece);
         updateAfterMove(board, piece, from);
-        return new UndoInfo(piece, from, to, eatenPiece, SpecialMoves.NONE, originalHasMoved);
+        return new UndoInfo(piece, from, to, eatenPiece, SpecialMoves.NONE, originallyMoved);
     }
 
     private static void updateAfterMove(ChessBoard board, Piece piece, Position from) {
