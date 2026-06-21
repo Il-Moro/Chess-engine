@@ -93,7 +93,7 @@ public class ChessModel {
 
     public boolean updateGameStateAfterMove(Move move){
         if(move != Move.INVALID){
-            match.updateMoveHistory(move);
+            //match.updateMoveHistory(move);
             match.switchTurn();
             return true;
         }
@@ -103,7 +103,7 @@ public class ChessModel {
     public boolean updateGameStateAfterMove(Move move,String promotionPiece){
         if(move != Move.INVALID){
             board.physicalMovement(move.selectedPiece().getPosition(), move.to(),promotionPiece);
-            match.updateMoveHistory(move);
+            //match.updateMoveHistory(move);
             match.switchTurn();
             return true;
         }
