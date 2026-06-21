@@ -238,6 +238,10 @@ public class ChessBoard {
      *         attivo
      */
     public End isCheckmateOrStalemate(Colour colour) {
+        if (hasInsufficientMaterial()) {
+            return End.STALEMATE;
+        }
+
         Position kingPosition = colour == (Colour.WHITE) ? whiteKing.getPosition() : blackKing.getPosition();
         Pin[][] kingPin = (colour == (Colour.WHITE)) ? whiteKingPin : blackKingPin;
 
@@ -251,6 +255,54 @@ public class ChessBoard {
         } else {
             return End.IN_PROGRESS;
         }
+    }
+
+    private boolean hasInsufficientMaterial() {
+        int kingCount = 0;
+        int bishopCount = 0;
+        int knightCount = 0;
+        int otherCount = 0;
+
+        for (int row = 0; row < BOARD_SIZE; row++) {
+            for (int col = 0; col < BOARD_SIZE; col++) {
+                Piece p = chessboard[row][col];
+                if (p != null) {
+                    if (p instanceof King) {
+                        kingCount++;
+                    } else if (p instanceof Bishop) {
+                        bishopCount++;
+                    } else if (p instanceof Knight) {
+                        knightCount++;
+                    } else {
+                        otherCount++;
+                    }
+                }
+            }
+        }
+
+        // If there are pawns, rooks, queens, etc., it's not insufficient material
+        if (otherCount > 0) {
+            return false;
+        }
+
+        // Both players must have a king
+        if (kingCount != 2) {
+            return false;
+        }
+
+        int totalPieces = kingCount + bishopCount + knightCount;
+
+        // King vs King
+        if (totalPieces == 2) {
+            return true;
+        }
+
+        // King + Bishop vs King OR King + Knight vs King
+        if (totalPieces == 3 && (bishopCount == 1 || knightCount == 1)) {
+            return true;
+        }
+
+        return false;
     }
 
     // scansiona se esistono mosse legali

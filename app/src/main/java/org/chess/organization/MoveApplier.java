@@ -101,6 +101,20 @@ public class MoveApplier {
                 piece.setPosition(undo.from());
                 board.setPiece(piece);
 
+                if (piece instanceof King king) {
+                    if (undo.hasMoved()) {
+                        king.setHasMovedTrue();
+                    } else {
+                        king.setHasMovedFalse();
+                    }
+                } else if (piece instanceof Rook rookPiece) {
+                    if (undo.hasMoved()) {
+                        rookPiece.setHasMovedTrue();
+                    } else {
+                        rookPiece.setHasMovedFalse();
+                    }
+                }
+
                 if (undo.eatenPiece() != null)
                     board.setPiece(undo.eatenPiece());
                 else {
