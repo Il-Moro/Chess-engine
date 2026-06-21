@@ -101,6 +101,20 @@ public class MoveApplier {
                 piece.setPosition(undo.from());
                 board.setPiece(piece);
 
+                if (piece instanceof King king) {
+                    if (undo.hasMoved()) {
+                        king.setHasMovedTrue();
+                    } else {
+                        king.setHasMovedFalse();
+                    }
+                } else if (piece instanceof Rook rookPiece) {
+                    if (undo.hasMoved()) {
+                        rookPiece.setHasMovedTrue();
+                    } else {
+                        rookPiece.setHasMovedFalse();
+                    }
+                }
+
                 if (undo.eatenPiece() != null)
                     board.setPiece(undo.eatenPiece());
                 else {
@@ -236,11 +250,18 @@ public class MoveApplier {
     }
 
     private static UndoInfo physicalMovementGeneralCase(ChessBoard board, Piece piece, Piece eatenPiece, Position from, Position to){
+        boolean originalHasMoved = false;
+        if (piece instanceof King k) {
+            originalHasMoved = k.getHasMoved();
+        } else if (piece instanceof Rook r) {
+            originalHasMoved = r.getHasMoved();
+        }
+
         piece.setPosition(to);
         board.setNull(from);
         board.setPiece(piece);
         updateAfterMove(board, piece, from);
-        return new UndoInfo(piece, from, to, eatenPiece, SpecialMoves.NONE);
+        return new UndoInfo(piece, from, to, eatenPiece, SpecialMoves.NONE, originalHasMoved);
     }
 
     private static void updateAfterMove(ChessBoard board, Piece piece, Position from) {

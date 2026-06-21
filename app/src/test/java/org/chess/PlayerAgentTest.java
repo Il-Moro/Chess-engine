@@ -124,6 +124,24 @@ public class PlayerAgentTest {
         assertFalse(((Rook) board.getPiece(new Position(0, 0))).getHasMoved());
         assertFalse(((Rook) board.getPiece(new Position(0, 7))).getHasMoved());
     }
+
+    @Test
+    public void testDecideMove_doesNotPermanentlyLoseCastlingRightsWithOpenBoard() {
+        ChessBoard openBoard = new ChessBoard();
+        King king = new King(new Position(0, 4), Colour.WHITE, false);
+        openBoard.setPiece(king);
+        King opponentKing = new King(new Position(7, 4), Colour.BLACK, false);
+        openBoard.setPiece(opponentKing);
+        openBoard.updateControlMap();
+        openBoard.updateKingPin();
+
+        PlayerHuman blackPlayer = new PlayerHuman(Colour.BLACK, openBoard);
+        PlayerAgent whiteAgent  = new PlayerAgent(Colour.WHITE, openBoard, 2, blackPlayer);
+
+        assertFalse(king.getHasMoved());
+        whiteAgent.decideMove();
+        assertFalse(king.getHasMoved(), "King's hasMoved should be restored to false after search simulation");
+    }
  
     @Test
     public void testDecideMove_depth3_doesNotAlterBoard() {
