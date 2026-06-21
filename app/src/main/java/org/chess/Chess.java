@@ -3,12 +3,16 @@
  */
 package org.chess;
 
+import org.chess.graphics.*;
+
 public class Chess {
     public String getGreeting() {
         return "Hello World!";
     }
 
     public static void main(String[] args) {
-        System.out.println(new Chess().getGreeting());
+        ChessModel model = new ChessModel();
+        SwingChessView view = new SwingChessView();
+        ChessController controller = new ChessController(view, model);
     }
 }

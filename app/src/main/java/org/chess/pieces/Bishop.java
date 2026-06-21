@@ -10,7 +10,6 @@ public class Bishop extends Piece {
     
     public Bishop(Position position, Colour colour) {
         super(position, colour);
-        this.value = 3;
     }
 
     
@@ -34,9 +33,14 @@ public class Bishop extends Piece {
                 
                 if (board.isNull(targetPosition)) {
                     moves.add(targetPosition);
-                } else{                    
+                } else {                    
                     moves.add(targetPosition); 
-                    break;
+                    Piece hitPiece = board.getPiece(targetPosition);
+                    if (hitPiece instanceof King && hitPiece.getColour() != this.colour) {
+                        // The ray continues through the opponent's King
+                    } else {
+                        break;
+                    }
                 }
                 targetRow += d[0];
                 targetColumn += d[1];

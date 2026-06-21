@@ -9,7 +9,6 @@ public abstract class Piece {
     
     protected Position position;
     protected Colour colour;
-    protected int value;
 
     //costruttori
     public Piece(Position position, Colour colour){
@@ -24,10 +23,6 @@ public abstract class Piece {
 
     public Colour getColour(){
         return this.colour;
-    }
-
-    public int getValue(){
-        return this.value;
     }
     
     // setter

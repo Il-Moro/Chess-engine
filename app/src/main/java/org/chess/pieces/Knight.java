@@ -10,7 +10,6 @@ public class Knight extends Piece{
 
     public Knight(Position position, Colour colour){
         super(position, colour);
-        this.value = 3;
     }
 
     @Override

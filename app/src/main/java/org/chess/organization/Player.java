@@ -23,8 +23,8 @@ public abstract class Player {
 
     protected List<Piece> getAlivePieces(){
         List<Piece> pieces = new ArrayList<>();
-        for(int i = 0; i<8; i++){
-            for(int j = 0; j<8; j++){
+        for(int i = 0; i<ChessBoard.BOARD_SIZE; i++){
+            for(int j = 0; j<ChessBoard.BOARD_SIZE; j++){
                 Piece piece=board.getPiece(new Position(i,j));
                 if(piece != null && piece.getColour() == colour)
                     pieces.add(piece);
@@ -50,4 +50,7 @@ public abstract class Player {
 
     public abstract Move decideMove();
 
+    public Colour getColour(){
+        return this.colour;
+    }
 }

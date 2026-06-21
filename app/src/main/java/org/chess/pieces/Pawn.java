@@ -12,7 +12,6 @@ public class Pawn extends Piece{
 
     public Pawn(Position position, Colour colour){
         super(position, colour);
-        this.value = 3;
     }
 
     @Override
@@ -29,7 +28,7 @@ public class Pawn extends Piece{
             
             int targetRow, targetColumn;
             
-            if(this.colour.equals(Colour.WHITE)){
+            if(this.colour == (Colour.WHITE)){
                 targetRow = pieceRow + d[0];
                 targetColumn = pieceColumn + d[1];
             } else {
@@ -44,9 +43,9 @@ public class Pawn extends Piece{
                 moves.add(targetPosition);
                 
                 if(d[0] * d[1] == 0){ 
-                    if(this.colour.equals(Colour.WHITE) && pieceRow == 1){
+                    if(this.colour == (Colour.WHITE) && pieceRow == 1){
                         moves.add(new Position(targetRow + 1, targetColumn));
-                    } else if(this.colour.equals(Colour.BLACK) && pieceRow == 6){
+                    } else if(this.colour == (Colour.BLACK) && pieceRow == 6){
                         moves.add(new Position(targetRow - 1, targetColumn));
                     }
                 }

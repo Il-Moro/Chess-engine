@@ -36,12 +36,12 @@ public class KingTest {
         ChessBoard board = new ChessBoard();
         King king = new King(new Position(0, 0), Colour.WHITE);
         Bishop bishop = new Bishop(new Position(1, 0), Colour.WHITE);
-        Rook rock = new Rook(new Position(1, 1), Colour.WHITE);
+        Rook rook = new Rook(new Position(1, 1), Colour.WHITE);
         Queen queen = new Queen(new Position(0, 1), Colour.WHITE);
 
         board.setPiece(king);
         board.setPiece(bishop);
-        board.setPiece(rock);
+        board.setPiece(rook);
         board.setPiece(queen);
 
         Set<Position> movesCalculated = king.getPotentialMoves(board);
@@ -54,12 +54,12 @@ public class KingTest {
         ChessBoard board = new ChessBoard();
         King king = new King(new Position(0, 0), Colour.BLACK);
         Bishop bishop = new Bishop(new Position(1, 0), Colour.BLACK);
-        Rook rock = new Rook(new Position(1, 1), Colour.BLACK);
+        Rook rook = new Rook(new Position(1, 1), Colour.BLACK);
         Queen queen = new Queen(new Position(0, 1), Colour.BLACK);
 
         board.setPiece(king);
         board.setPiece(bishop);
-        board.setPiece(rock);
+        board.setPiece(rook);
         board.setPiece(queen);
 
         Set<Position> movesCalculated = king.getPotentialMoves(board);

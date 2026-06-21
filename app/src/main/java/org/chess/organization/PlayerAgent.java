@@ -1,20 +1,14 @@
 package org.chess.organization;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
-import org.chess.dataTypes.Colour;
-import org.chess.dataTypes.UndoInfo;
-import org.chess.dataTypes.Move;
-import org.chess.dataTypes.Position;
-import org.chess.pieces.Piece;
+import org.chess.dataTypes.*;
 
 
 public class PlayerAgent extends Player{
 
     private final int SEARCH_DEPTH;
-    private Move bestMove = null;
+    private Move bestMove = Move.INVALID;
     private StateEvaluation evaluator;
     private Player opponent;
 

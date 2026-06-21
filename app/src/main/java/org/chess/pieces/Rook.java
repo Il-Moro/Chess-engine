@@ -12,12 +12,10 @@ public class Rook extends Piece {
 
     public Rook(Position position, Colour colour){
         super(position, colour);
-        this.value = 5;
     }
 
     public Rook(Position position, Colour colour, boolean hasMoved){
         super(position, colour);
-        this.value = 5;
         this.hasMoved = hasMoved;
     }
 
@@ -45,7 +43,12 @@ public class Rook extends Piece {
                     moves.add(targePosition);
                 } else {
                     moves.add(targePosition);
-                    break;
+                    Piece hitPiece = board.getPiece(targePosition);
+                    if (hitPiece instanceof King && hitPiece.getColour() != this.colour) {
+                        // The ray continues through the opponent's King
+                    } else {
+                        break;
+                    }
                 }
                 targetRow += d[0];
                 targetColumn += d[1];
