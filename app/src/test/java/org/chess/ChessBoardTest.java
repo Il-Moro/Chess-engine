@@ -851,4 +851,42 @@ public class ChessBoardTest {
         assertFalse(board.isMoveLegal(new Position(1, 3), new Position(2, 3)), 
             "The Black King should not be allowed to move to d3 along the Rook's ray");
     }
+
+    @Test
+    void testDrawInsufficientMaterialKingVsKing() {
+        ChessBoard board = new ChessBoard();
+        board.setPiece(new King(new Position(0, 4), Colour.WHITE));
+        board.setPiece(new King(new Position(7, 4), Colour.BLACK));
+        board.updateControlMap();
+        board.updateKingPin();
+
+        assertEquals(End.STALEMATE, board.isCheckmateOrStalemate(Colour.WHITE));
+        assertEquals(End.STALEMATE, board.isCheckmateOrStalemate(Colour.BLACK));
+    }
+
+    @Test
+    void testDrawInsufficientMaterialKingBishopVsKing() {
+        ChessBoard board = new ChessBoard();
+        board.setPiece(new King(new Position(0, 4), Colour.WHITE));
+        board.setPiece(new King(new Position(7, 4), Colour.BLACK));
+        board.setPiece(new Bishop(new Position(3, 3), Colour.WHITE));
+        board.updateControlMap();
+        board.updateKingPin();
+
+        assertEquals(End.STALEMATE, board.isCheckmateOrStalemate(Colour.WHITE));
+        assertEquals(End.STALEMATE, board.isCheckmateOrStalemate(Colour.BLACK));
+    }
+
+    @Test
+    void testDrawInsufficientMaterialKingKnightVsKing() {
+        ChessBoard board = new ChessBoard();
+        board.setPiece(new King(new Position(0, 4), Colour.WHITE));
+        board.setPiece(new King(new Position(7, 4), Colour.BLACK));
+        board.setPiece(new Knight(new Position(3, 3), Colour.BLACK));
+        board.updateControlMap();
+        board.updateKingPin();
+
+        assertEquals(End.STALEMATE, board.isCheckmateOrStalemate(Colour.WHITE));
+        assertEquals(End.STALEMATE, board.isCheckmateOrStalemate(Colour.BLACK));
+    }
 }
