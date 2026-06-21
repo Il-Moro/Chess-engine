@@ -37,4 +37,40 @@ public class PawnWhiteTest {
         assertEquals(3, movesCalculated.size());
         assertTrue(movesCalculated.contains(new Position(4, 4)));
     }    
+
+    @Test
+    void InitialPushOfWhitePawnBlockedAtOneStep(){
+        ChessBoard board = new ChessBoard();
+        Pawn pawn = new Pawn(new Position(1,4), Colour.WHITE);
+        board.setPiece(pawn);
+
+        Pawn blockPiece = new Pawn(new Position(2, 4), Colour.BLACK);
+        board.setPiece(blockPiece);
+
+        Set<Position> movesCalculated = pawn.getPotentialMoves(board);
+
+        assertEquals(2, movesCalculated.size());
+        assertTrue(movesCalculated.contains(new Position(2, 3)));
+        assertTrue(movesCalculated.contains(new Position(2, 5)));
+        assertFalse(movesCalculated.contains(new Position(2, 4)));
+        assertFalse(movesCalculated.contains(new Position(3, 4)));
+    }
+
+    @Test
+    void InitialPushOfWhitePawnBlockedAtTwoSteps(){
+        ChessBoard board = new ChessBoard();
+        Pawn pawn = new Pawn(new Position(1,4), Colour.WHITE);
+        board.setPiece(pawn);
+
+        Pawn blockPiece = new Pawn(new Position(3, 4), Colour.BLACK);
+        board.setPiece(blockPiece);
+
+        Set<Position> movesCalculated = pawn.getPotentialMoves(board);
+
+        assertEquals(3, movesCalculated.size());
+        assertTrue(movesCalculated.contains(new Position(2, 4)));
+        assertTrue(movesCalculated.contains(new Position(2, 3)));
+        assertTrue(movesCalculated.contains(new Position(2, 5)));
+        assertFalse(movesCalculated.contains(new Position(3, 4)));
+    }
 }
