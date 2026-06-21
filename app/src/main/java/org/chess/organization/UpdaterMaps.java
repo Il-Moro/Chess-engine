@@ -1,6 +1,8 @@
 package org.chess.organization;
 
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.chess.dataTypes.*;
 import org.chess.pieces.*;
@@ -147,10 +149,31 @@ public class UpdaterMaps {
     
 
     private static void fillControlMap(ChessBoard board, Piece piece) {
+        Set<Position> set;
 
-        int[][] targetMatrix = piece.getColour().equals(Colour.WHITE) ? board.getSquaresControlledBy(Colour.WHITE) : board.getSquaresControlledBy(Colour.BLACK);
-        
-        piece.getPotentialMoves(board).stream()
-            .forEach(s -> targetMatrix[s.row()][s.column()] += 1);
+        if (piece instanceof Pawn p) {
+            // pedone: controlla solo in diagonale
+            set = new HashSet<>();
+            int dir = (p.getColour() == Colour.WHITE) ? 1 : -1;
+            int pieceRow = p.getPosition().row();
+            int pieceColumn = p.getPosition().column();
+            if (Position.isInsideBounds(pieceRow + dir, pieceColumn - 1))
+                set.add(new Position(pieceRow + dir, pieceColumn - 1));
+            if (Position.isInsideBounds(pieceRow + dir, pieceColumn + 1))
+                set.add(new Position(pieceRow + dir, pieceColumn + 1));
+        } else {
+            set = piece.getPotentialMoves(board);
+        }
+
+        if (piece.getColour() == (Colour.WHITE)) {
+            for (Position s : set) {
+                board.getSquaresControlledBy(Colour.WHITE)[s.row()][s.column()] += 1;
+            }
+        } else {
+            for (Position s : set) {
+                board.getSquaresControlledBy(Colour.BLACK)[s.row()][s.column()] += 1;
+            }
+        }
     }
+    
 }
