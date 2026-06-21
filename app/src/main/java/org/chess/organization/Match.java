@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Match {
-    private final ChessBoard board;
     private final Player whitePlayer;
     private final Player blackPlayer;
     private List<Move> moveHistory;
@@ -17,15 +16,9 @@ public class Match {
         
         this.whitePlayer = white;
         this.blackPlayer = black;
-        this.board = new ChessBoard();
         this.currentPlayerTurn = white;          
         this.state = End.IN_PROGRESS;
         this.moveHistory = new ArrayList<>();
-    }
-
-    // returns the chess board
-    public ChessBoard getBoard() {
-        return board;
     }
 
     // switches the current player turn
@@ -67,4 +60,5 @@ public class Match {
     public Player getBlackPlayer() {
         return blackPlayer;
     }
+
 }

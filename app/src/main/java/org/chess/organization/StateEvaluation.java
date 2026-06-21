@@ -11,11 +11,11 @@ import java.util.Set;
 public class StateEvaluation {
 
     private static final double MATERIAL_WEIGHT = 1.0;
-    private static final double MOBILITY_WEIGHT = 0.1;
-    private static final double KING_SAFETY_WEIGHT = 0.5;
-    private static final double CENTER_CONTROL_WEIGHT = 0.3;
-    private static final double PAWN_STRUCTURE_WEIGHT = 0.4;
-    private static final double KING_TROPISM_WEIGHT = 0.2;
+    private static final double MOBILITY_WEIGHT = 0.3;
+    private static final double KING_SAFETY_WEIGHT = 0.6;
+    private static final double CENTER_CONTROL_WEIGHT = 0.5;
+    private static final double PAWN_STRUCTURE_WEIGHT = 0.5;
+    private static final double KING_TROPISM_WEIGHT = 0.12;
     
     private static final int PAWN_VALUE = 100;
     private static final int KNIGHT_VALUE = 320;
@@ -196,7 +196,7 @@ public class StateEvaluation {
         }
 
         if(squaresControlledOpponent[king.getPosition().row()][king.getPosition().column()] != 0)
-            attackCount +=100;
+            attackCount +=20;
 
         return attackCount;
     }

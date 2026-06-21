@@ -8,7 +8,7 @@ import org.chess.dataTypes.*;
 public class PlayerAgent extends Player{
 
     private final int SEARCH_DEPTH;
-    private Move bestMove = null;
+    private Move bestMove = Move.INVALID;
     private StateEvaluation evaluator;
     private Player opponent;
 
