@@ -1,8 +1,5 @@
 # Chess Engine (Java) 
-### NOTE: progetto ancora in fase di completamento
-- elo teorico stimato finale: 1500-1800, dipenderà molto dalla funzione di valutazione e dall'algoritmo di ricerca con ottimizzazioni
-- da aggiungere ancora una libreria di aperture
---- 
+
 Il progetto sviluppa un motore scacchichisto in java, seguendo l'approccio TDD per il corso di studi Software Development Methods all'università degli studi di Trieste. 
 
 
@@ -27,7 +24,6 @@ L'algoritmo utilizzato dall'agente è il minimax con potatura alpha-beta pruning
 ### Prerequisiti
 Assicurati di avere installato sul tuo sistema:
 - Java Development Kit (JDK) 17 o superiore.
-- Un build tool come Gradle o Maven (opzionale, se gestito tramite IDE).
 
 ### Clona la repository
 ```bash
@@ -42,13 +38,6 @@ Se utilizzi Gradle:
 ./gradlew build
 ./gradlew run
 ```
-Se utilizzi Maven:
-
-``` Bash
-mvn clean package
-java -jar target/chess-engine-1.0.jar
-```
-
 
 ### Testing
 
@@ -57,7 +46,6 @@ Per eseguire l'intera suite di test unitari e verificare la correttezza della lo
 ``` Bash
 ./gradlew test
 ```
-(o mvn test se utilizzi Maven)
 
 # Crediti:
 - Morello Filippo: link https://github.com/Il-Moro
