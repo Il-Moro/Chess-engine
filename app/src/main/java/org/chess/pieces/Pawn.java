@@ -39,15 +39,23 @@ public class Pawn extends Piece{
             Position targetPosition = new Position(targetRow, targetColumn); 
             
             if(Position.isInsideBounds(targetRow, targetColumn)){
-                
-                moves.add(targetPosition);
-                
                 if(d[0] * d[1] == 0){ 
-                    if(this.colour == (Colour.WHITE) && pieceRow == 1){
-                        moves.add(new Position(targetRow + 1, targetColumn));
-                    } else if(this.colour == (Colour.BLACK) && pieceRow == 6){
-                        moves.add(new Position(targetRow - 1, targetColumn));
+                    if(board.isNull(targetPosition)){
+                        moves.add(targetPosition);
+                        if(this.colour == (Colour.WHITE) && pieceRow == 1){
+                            Position doubleStepPosition = new Position(targetRow + 1, targetColumn);
+                            if(board.isNull(doubleStepPosition)){
+                                moves.add(doubleStepPosition);
+                            }
+                        } else if(this.colour == (Colour.BLACK) && pieceRow == 6){
+                            Position doubleStepPosition = new Position(targetRow - 1, targetColumn);
+                            if(board.isNull(doubleStepPosition)){
+                                moves.add(doubleStepPosition);
+                            }
+                        }
                     }
+                } else {
+                    moves.add(targetPosition);
                 }
             }
         }
